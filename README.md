@@ -10,8 +10,8 @@ progetto-afse/
 │   ├── login.html                   # Pagina di login
 │   ├── register.html                # Pagina di registrazione
 │   ├── dashboard.html               # Dashboard dell'utente
-│   ├── profile.html                 # Gestione del profilo utente
-│   ├── album.html                   # Visualizzazione e gestione dell'album
+│   ├── profile.html                 # Gestione del profilo utente (collegata al back-end)
+│   ├── album.html                   # Visualizzazione e gestione dell'album => mettere barra di ricerca
 │   ├── exchange.html                # Scambio figurine
 │   ├── credits.html                 # Gestione e acquisto crediti
 │   ├── statistics.html              # Statistiche dell'album
@@ -41,3 +41,40 @@ progetto-afse/
 │   ├── album.test.js                # Test per gestione dell'album
 │   └── exchange.test.js             # Test per lo scambio figurine
 └── README.md                        # Descrizione del progetto
+
+
+
+
+
+
+
+
+profile.html:
+
+    Permette agli utenti di modificare le informazioni personali.
+    Collegata al back-end per gestire il profilo.
+
+album.html:
+
+    Visualizzazione di tutte le figurine raccolte.
+    Griglia o tabella con dettagli delle figurine.
+    barra di ricerca.
+
+exchange.html:
+
+    Gestione degli scambi di figurine.
+    Form per proporre nuovi scambi.
+
+credits.html:
+
+    Visualizza il saldo dei crediti.
+    Pulsante o form per acquistare nuovi crediti.
+
+statistics.html:
+
+    Visualizza i progressi dell'utente.
+    Percentuale di completamento dell'album, figurine doppie, ecc.
+
+logout.html:
+
+    Conferma il logout e reindirizza alla pagina principale.
