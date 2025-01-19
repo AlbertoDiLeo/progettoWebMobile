@@ -6,10 +6,10 @@ progetto-afse/
 │   │   └── scripts.js             # Script JavaScript lato client
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
-│   ├── index.html                 # Pagina principale dell'app
+│   ├── index.html                 # Pagina principale dell'app 
 │   ├── login.html                 # Pagina di login
 │   ├── register.html              # Pagina di registrazione
-│   ├── dashboard.html             # Pagina principale dell'album
+│   ├── dashboard.html             # Pagina principale dell'album 
 │   └── exchange.html              # Pagina per lo scambio di figurine
 ├── back-end/
 │   ├── controllers/
