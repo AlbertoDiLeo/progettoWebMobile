@@ -61,8 +61,10 @@ footer {
 }
 
 /* Responsività */
-@media (max-width: 768px) {
-    .card {
+@media (max-width: 768px) { 
+    /*  Rendere il design responsivo, adattandolo a diverse dimensioni dello schermo o dispositivi. */
+    /* Questa regola viene applicata solo se la larghezza dello schermo è inferiore o uguale a 768px. */
+    .card { 
         margin-bottom: 15px;
     }
 
