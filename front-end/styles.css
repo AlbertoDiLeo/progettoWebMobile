@@ -101,3 +101,11 @@ footer {
         padding: 5px 0;
     }
 }
+
+
+.alert {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+

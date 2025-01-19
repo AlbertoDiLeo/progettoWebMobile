@@ -46,3 +46,21 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+router.get('/test-login', async (req, res) => {
+    try {
+        const User = require('../models/user');
+        const user = await User.findOne({ email: 'mario.rossi@example.com' });
+        if (!user) return res.status(404).send('Utente non trovato');
+
+        const isPasswordValid = await user.comparePassword('password123');
+        if (!isPasswordValid) return res.status(401).send('Password errata');
+
+        res.send('Login riuscito!');
+    } catch (err) {
+        res.status(500).send('Errore nel login: ' + err.message);
+    }
+});
+// http://localhost:5000/api/auth/test-login

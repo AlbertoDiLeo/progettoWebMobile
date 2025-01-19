@@ -1,9 +1,13 @@
 require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Importa il middleware CORS
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Abilita CORS
+app.use(cors());
 
 // Middleware per parsing JSON (deve essere posizionato prima delle rotte)
 app.use(express.json());
@@ -22,6 +26,27 @@ app.get('/', (req, res) => res.send('Server connesso a MongoDB!'));
 
 // Avvia il server
 app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
+
+
+
+
+
+app.get('/test-register', async (req, res) => {
+    try {
+        const User = require('./models/user'); // Modello utente
+        const newUser = new User({
+            name: 'Mario Rossi',
+            email: 'mario.rossi@example.com',
+            password: 'password123',
+            favoriteHero: 'Iron Man',
+        });
+        await newUser.save();
+        res.send('Utente registrato con successo!');
+    } catch (err) {
+        res.status(500).send('Errore nella registrazione: ' + err.message);
+    }
+});
+// http://localhost:5000/test-register
 
 
 /*
