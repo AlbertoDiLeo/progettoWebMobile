@@ -1,0 +1,15 @@
+# Node.js modules
+node_modules/
+
+# Variabili di ambiente
+.env
+
+# File di log
+*.log
+
+# File di sistema (Mac/Linux/Windows)
+.DS_Store
+Thumbs.db
+
+# Altri file di build o temporanei
+package-lock.json
