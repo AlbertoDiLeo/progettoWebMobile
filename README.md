@@ -10,39 +10,36 @@ progetto-afse/
 │   ├── login.html                   # Pagina di login
 │   ├── register.html                # Pagina di registrazione
 │   ├── dashboard.html               # Dashboard dell'utente
-│   ├── profile.html                 # Gestione del profilo utente (collegata al back-end)
-│   ├── album.html                   # Visualizzazione e gestione dell'album => mettere barra di ricerca
+│   ├── profile.html                 # Gestione del profilo utente
+│   ├── album.html                   # Visualizzazione e gestione dell'album
 │   ├── exchange.html                # Scambio figurine
 │   ├── credits.html                 # Gestione e acquisto crediti
-│   ├── statistics.html              # Statistiche dell'album
-│   └── logout.html                  # Pagina di logout o conferma
+│   └── statistics.html              # Statistiche dell'album
 ├── back-end/
 │   ├── controllers/
-│   │   └── userController.js        # Gestione utenti (es. login, registrazione)
-│   │   └── albumController.js       # Gestione dell'album e figurine
-│   │   └── exchangeController.js    # Gestione degli scambi di figurine
+│   │   ├── authController.js        # Logica per registrazione e login
+│   │   ├── userController.js        # Logica per operazioni sugli utenti
+│   │   └── albumController.js       # Logica per gestione dell'album e figurine
 │   ├── models/
-│   │   └── user.js                  # Modello utente per MongoDB
+│   │   ├── user.js                  # Modello utente per MongoDB
 │   │   └── album.js                 # Modello album per MongoDB
 │   ├── routes/
-│   │   └── userRoutes.js            # Rotte utenti (es. login, registrazione)
-│   │   └── albumRoutes.js           # Rotte per l'album
-│   │   └── exchangeRoutes.js        # Rotte per lo scambio di figurine
+│   │   ├── authRoutes.js            # Rotte per autenticazione (login, registrazione)
+│   │   ├── userRoutes.js            # Rotte per operazioni generali sugli utenti
+│   │   └── albumRoutes.js           # Rotte per gestione album e figurine
 │   ├── config/
-│   │   └── db.js                    # Configurazione connessione MongoDB
+│   │   └── db.js                    # Configurazione connessione a MongoDB
 │   ├── app.js                       # Configurazione principale di Node.js
 │   ├── package.json                 # Dipendenze del progetto
-│   ├── swagger.json                 # Documentazione API con Swagger
-│   └── .env                         # Variabili di ambiente
+│   ├── .env                         # Variabili di ambiente (es. credenziali MongoDB)
+│   └── swagger.json                 # Documentazione delle API con Swagger
 ├── docs/
 │   └── relazione.pdf                # Documentazione del progetto
 ├── tests/
-│   ├── user.test.js                 # Test per login e registrazione
-│   ├── album.test.js                # Test per gestione dell'album
-│   └── exchange.test.js             # Test per lo scambio figurine
+│   ├── auth.test.js                 # Test per registrazione e login
+│   ├── user.test.js                 # Test per operazioni sul profilo utente
+│   └── album.test.js                # Test per gestione dell'album
 └── README.md                        # Descrizione del progetto
-
-
 
 
 

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware per parsing JSON
+// Middleware per parsing JSON (deve essere posizionato prima delle rotte)
 app.use(express.json());
 
 // Connessione a MongoDB
@@ -13,11 +13,16 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connessione a MongoDB riuscita"))
     .catch(err => console.error("Errore nella connessione a MongoDB:", err));
 
-// Rotta di test
+// Importa e usa le rotte
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+// Rotta di test (opzionale)
 app.get('/', (req, res) => res.send('Server connesso a MongoDB!'));
 
 // Avvia il server
 app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
+
 
 /*
 Caricato Variabili di Ambiente:
