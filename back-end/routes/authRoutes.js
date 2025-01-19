@@ -28,13 +28,17 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Trova l'utente
+        // Controlla se l'utente esiste
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: 'Credenziali errate' });
+        if (!user) {
+            return res.status(404).json({ message: 'Utente non trovato' }); // Email non registrata
+        }
 
         // Verifica la password
         const isPasswordValid = await user.comparePassword(password);
-        if (!isPasswordValid) return res.status(400).json({ message: 'Credenziali errate' });
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Password errata' }); // Password sbagliata
+        }
 
         // Genera un token JWT
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });

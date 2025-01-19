@@ -79,14 +79,52 @@ if (loginForm) {
                     window.location.href = 'dashboard.html'; // Reindirizza dopo 3 secondi
                 }, 1000);    
             } else {
-                showNotification(`Errore: ${data.message}`, 'error');
+                 // Gestisce errori specifici
+                if (response.status === 404) {
+                    showNotification('Email non registrata.', 'error');
+                } else if (response.status === 401) {
+                    showNotification('Password errata.', 'error');
+                } else {
+                    showNotification(`Errore: ${data.message}`, 'error');
+                }
             }
         } catch (error) {
             console.error('Errore nel login:', error);
-            alert('Si è verificato un errore. Riprova più tardi.');
+            showNotification('Si è verificato un errore. Riprova più tardi.', 'error');
         }
     });
 }
+
+const confirmLogoutButton = document.getElementById('confirmLogout');
+
+if (confirmLogoutButton) {
+    confirmLogoutButton.addEventListener('click', () => {
+        // Rimuove il token JWT dal localStorage
+        localStorage.removeItem('token');
+
+        // Opzionale: Mostra un messaggio di logout
+        alert('Logout effettuato con successo!');
+
+        // Reindirizza l'utente alla pagina di login
+        window.location.href = 'login.html';
+    });
+}
+
+
+
+/*function checkAuthentication() { // non so quanto utile e non funziona correttamente
+    const token = localStorage.getItem('token'); // Recupera il token dal localStorage
+
+    if (!token) {
+        // Se il token manca, reindirizza alla pagina di login
+        alert('Devi effettuare il login per accedere a questa pagina.');
+        window.location.href = 'login.html';
+    }
+}*/
+
+// Chiama il controllo di autenticazione quando carica la pagina
+document.addEventListener('DOMContentLoaded', checkAuthentication);
+
 
 
 

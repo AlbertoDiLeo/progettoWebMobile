@@ -3,7 +3,7 @@ progetto-afse/
 │   ├── css/
 │   │   └── styles.css               # Stile personalizzato del progetto
 │   ├── js/
-|   |   ├── auth.js                  # Script per login e registrazione
+|   |   ├── auth.js                  # Script per login e registrazione e controlli
 │   │   └── scripts.js               # Script JavaScript lato client
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
@@ -16,6 +16,7 @@ progetto-afse/
 │   ├── exchange.html                # Scambio figurine
 │   ├── credits.html                 # Gestione e acquisto crediti
 │   └── statistics.html              # Statistiche dell'album
+|   └── logout.html                  # Pagina di logout (non elimina l'account)
 ├── back-end/
 │   ├── controllers/
 │   │   ├── authController.js        # Logica per registrazione e login
