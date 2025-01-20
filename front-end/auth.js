@@ -36,7 +36,7 @@ if (registerForm) {
             if (response.ok) {
                 showNotification('Registrazione completata! Ora puoi effettuare il login.');
                 setTimeout(() => {
-                    window.location.href = 'login.html'; // Reindirizza dopo 3 secondi
+                    window.location.href = 'login.html'; // Reindirizza dopo 1 secondo
                 }, 1000);
             } else {
                 showNotification(`Errore: ${data.message}`, 'error');
@@ -77,7 +77,6 @@ if (loginForm) {
                 showNotification('Login completato con successo!');
                 // Salva il token JWT nel localStorage
                 setLocalStorage('token', data.token);
-                //localStorage.setItem('token', data.token);
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'; // Reindirizza dopo 3 secondi
                 }, 1000);    

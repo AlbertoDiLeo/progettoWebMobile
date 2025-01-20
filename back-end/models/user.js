@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Definizione dello schema utente
 const userSchema = new mongoose.Schema({
@@ -7,18 +7,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     favoriteHero: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }, // Imposta la data di registrazione automaticamente
 });
-
-// Hashing della password prima di salvare l'utente
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10); // Cripta la password
-    next();
-});
-
-// Metodo per confrontare le password
-userSchema.methods.comparePassword = async function (candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
 
 module.exports = mongoose.model('User', userSchema);
