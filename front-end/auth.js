@@ -1,5 +1,7 @@
 console.log('File auth.js caricato correttamente');
 
+//import {setLocalStorage, removeToken, showNotification } from './lib.js';
+
 
 const registerForm = document.getElementById('registerForm'); //register.html
 
@@ -41,7 +43,7 @@ if (registerForm) {
             }
         } catch (error) {
             console.error('Errore nella registrazione:', error);
-            alert('Si è verificato un errore. Riprova più tardi.');
+            showNotification('Si è verificato un errore. Riprova più tardi.');
         }
     });
 } 
@@ -74,7 +76,8 @@ if (loginForm) {
             if (response.ok) {
                 showNotification('Login completato con successo!');
                 // Salva il token JWT nel localStorage
-                localStorage.setItem('token', data.token);
+                setLocalStorage('token', data.token);
+                //localStorage.setItem('token', data.token);
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'; // Reindirizza dopo 3 secondi
                 }, 1000);    
@@ -100,10 +103,10 @@ const confirmLogoutButton = document.getElementById('confirmLogout');
 if (confirmLogoutButton) {
     confirmLogoutButton.addEventListener('click', () => {
         // Rimuove il token JWT dal localStorage
-        localStorage.removeItem('token');
+        removeToken('token');
 
         // Opzionale: Mostra un messaggio di logout
-        alert('Logout effettuato con successo!');
+        showNotification('Logout effettuato con successo!');
 
         // Reindirizza l'utente alla pagina di login
         window.location.href = 'login.html';
@@ -120,35 +123,12 @@ if (confirmLogoutButton) {
         alert('Devi effettuare il login per accedere a questa pagina.');
         window.location.href = 'login.html';
     }
-}*/
+}
 
 // Chiama il controllo di autenticazione quando carica la pagina
-document.addEventListener('DOMContentLoaded', checkAuthentication);
+document.addEventListener('DOMContentLoaded', checkAuthentication);*/
 
 
 
-
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-
-    // Rimuove le classi precedenti
-    notification.className = 'alert';
-
-    // Aggiunge la classe per il tipo di alert
-    if (type === 'success') {
-        notification.classList.add('alert-success'); // Stile verde per i successi
-    } else {
-        notification.classList.add('alert-danger'); // Stile rosso per gli errori
-    }
-
-    // Mostra l'alert con il messaggio
-    notification.classList.remove('d-none');
-    notification.textContent = message;
-
-    // Nasconde l'alert dopo 5 secondi
-    setTimeout(() => {
-        notification.classList.add('d-none');
-    }, 5000);
-}
 
 

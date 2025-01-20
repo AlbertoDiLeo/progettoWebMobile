@@ -3,8 +3,9 @@ progetto-afse/
 │   ├── css/
 │   │   └── styles.css               # Stile personalizzato del progetto
 │   ├── js/
-|   |   ├── auth.js                  # Script per login e registrazione e controlli
-│   │   └── scripts.js               # Script JavaScript lato client
+|   |   ├── auth.js                  # Script per login, registrazione logout e controlli
+│   │   └── lib.js                   # Script JavaScript lato client
+|   |   └── dashboard.js             # Script per dashboard
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
 │   ├── index.html                   # Pagina principale del sito

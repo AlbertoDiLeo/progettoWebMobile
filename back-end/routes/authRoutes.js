@@ -39,9 +39,17 @@ router.post('/login', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Password errata' }); // Password sbagliata
         }
-
-        // Genera un token JWT
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        
+        // Genera il token JWT includendo i campi necessari
+        const token = jwt.sign(
+            {
+                id: user._id,
+                name: user.name,
+                favoriteHero: user.favoriteHero
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
 
         res.status(200).json({ token, message: 'Accesso riuscito' });
     } catch (err) {
