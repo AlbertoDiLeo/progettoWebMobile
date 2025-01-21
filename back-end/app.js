@@ -10,8 +10,7 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 
 // Abilita CORS
-//app.use(cors());
-app.use(cors({ origin: '*' })); // Consente richieste da qualsiasi origine
+app.use(cors());
 
 // Middleware per parsing JSON (deve essere posizionato prima delle rotte)
 app.use(express.json());
@@ -35,26 +34,6 @@ app.use((req, res, next) => {
     console.log(`Richiesta ricevuta: ${req.method} ${req.url}`);
     next();
 });
-
-
-
-app.get('/test-register', async (req, res) => {
-    try {
-        const User = require('./models/user'); // Modello utente
-        const newUser = new User({
-            name: 'Mario Rossi',
-            email: 'mario.rossi@example.com',
-            password: 'password123',
-            favoriteHero: 'Iron Man',
-        });
-        await newUser.save();
-        res.send('Utente registrato con successo!');
-    } catch (err) {
-        res.status(500).send('Errore nella registrazione: ' + err.message);
-    }
-});
-// http://localhost:5000/test-register
-
 
 /*
 Caricato Variabili di Ambiente:

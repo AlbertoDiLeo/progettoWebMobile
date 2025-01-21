@@ -114,20 +114,3 @@ if (confirmLogoutButton) {
 
 
 
-/*function checkAuthentication() { // non so quanto utile e non funziona correttamente
-    const token = localStorage.getItem('token'); // Recupera il token dal localStorage
-
-    if (!token) {
-        // Se il token manca, reindirizza alla pagina di login
-        alert('Devi effettuare il login per accedere a questa pagina.');
-        window.location.href = 'login.html';
-    }
-}
-
-// Chiama il controllo di autenticazione quando carica la pagina
-document.addEventListener('DOMContentLoaded', checkAuthentication);*/
-
-
-
-
-
