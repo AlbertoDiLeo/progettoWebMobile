@@ -27,3 +27,28 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     }
 });
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const creditsElement = document.querySelector('.card-text strong'); // Seleziona l'elemento dei crediti
+
+    try {
+        // Recupera il token JWT da localStorage
+        const token = getToken();
+        if (!token) throw new Error('Utente non autenticato');
+
+        // Decodifica il token per ottenere l'ID utente
+        const decoded = jwt_decode(token); // Richiede la libreria jwt-decode
+        const userId = decoded.id; // Assumendo che il tuo JWT abbia un campo "id"
+
+        // Effettua la richiesta al server
+        const response = await fetch(`/api/auth/user/credits?userId=${userId}`);
+        if (!response.ok) throw new Error('Errore nel recupero dei crediti');
+        
+        const data = await response.json();
+        creditsElement.textContent = data.credits; // Aggiorna i crediti dinamicamente
+    } catch (error) {
+        console.error('Errore:', error);
+        creditsElement.textContent = 'Errore'; // Mostra errore se la chiamata fallisce
+    }
+});
