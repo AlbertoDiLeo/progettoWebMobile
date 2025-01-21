@@ -3,15 +3,9 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-
 const router = express.Router();
 
-
-
-
-
-
-// Middleware per autenticare il token JWT
+/*// Middleware per autenticare il token JWT
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -29,7 +23,7 @@ const authenticateToken = (req, res, next) => {
         req.user = user; // Aggiunge i dati utente al `req` per l'uso successivo
         next();
     });
-};
+};*/
 
 // Rotta di registrazione
 router.post('/register', async (req, res) => {
