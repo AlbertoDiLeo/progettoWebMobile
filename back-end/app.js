@@ -25,6 +25,26 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/routes', (req, res) => {
+    const routes = [];
+
+    app._router.stack.forEach((middleware) => {
+        if (middleware.route) {
+            routes.push(middleware.route.path);
+        } else if (middleware.name === 'router') {
+            middleware.handle.stack.forEach((nested) => {
+                if (nested.route) {
+                    routes.push(nested.route.path);
+                }
+            });
+        }
+    });
+
+    res.json({ routes });
+});
+
+
+
 // Connessione a MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connessione a MongoDB riuscita"))

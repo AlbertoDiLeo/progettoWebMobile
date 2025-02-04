@@ -5,26 +5,6 @@ const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 
-/*// Middleware per autenticare il token JWT
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({ message: 'Accesso negato. Token mancante.' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            console.error('Errore di autenticazione:', err);
-            return res.status(403).json({ message: 'Token non valido.' });
-        }
-        console.log('Token decodificato:', user);
-        req.user = user; // Aggiunge i dati utente al `req` per l'uso successivo
-        next();
-    });
-};*/
-
 // Rotta di registrazione
 router.post('/register', async (req, res) => {
     try {
