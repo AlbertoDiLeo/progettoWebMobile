@@ -50,8 +50,6 @@ if (registerForm) {
 
 
 
-
-
 const loginForm = document.getElementById('loginForm'); //login.html
 
 if (loginForm) {
