@@ -76,7 +76,9 @@ if (loginForm) {
             if (response.ok) {
                 showNotification('Login completato con successo!');
                 // Salva il token JWT nel localStorage
+                console.log('Token ricevuto dal server:', data.token);  // Debug
                 setLocalStorage('token', data.token);
+                console.log('Token salvato in localStorage:', getToken()); // Controllo
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'; // Reindirizza dopo 3 secondi
                 }, 1000);    
@@ -113,4 +115,4 @@ if (confirmLogoutButton) {
 }
 
 
-
+//module.exports = router;

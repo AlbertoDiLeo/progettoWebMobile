@@ -7,9 +7,14 @@ function removeToken() {
     localStorage.removeItem('token');
 }
 
+//function setLocalStorage(chiave, valore){
+    //  localStorage.setItem(chiave, JSON.stringify(valore))
+//}
+
 function setLocalStorage(chiave, valore){
-    localStorage.setItem(chiave, JSON.stringify(valore))
+    localStorage.setItem(chiave, valore);
 }
+
 
 
 function getLocalStorage(chiave){

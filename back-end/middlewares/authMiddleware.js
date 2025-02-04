@@ -17,6 +17,7 @@ function authenticateToken(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Token decodificato:", decoded);
         req.user = decoded; // Salva i dati del token (es. userId) per l'uso nelle rotte
         next(); // Continua verso la rotta successiva
     } catch (err) {

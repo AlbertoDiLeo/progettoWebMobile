@@ -3,16 +3,18 @@
 document.addEventListener('DOMContentLoaded', initializeDashboard);
 
 function initializeDashboard() {
-    const token = getToken();
+    const token = localStorage.getItem('token');
+    console.log('Token recuperato nella dashboard:', token);
 
     if (!token) {
         showNotification('Accesso non autorizzato. Effettua il login.', 'danger');
-        window.location.href = 'login.html';
+        //window.location.href = 'login.html';
         return;
     }
 
     try {
         const decoded = jwt_decode(token); // Decodifica il token (includi jwt-decode nel progetto)
+        console.log('Token decodificato:', decoded);
         const welcomeMessage = document.getElementById('welcomeMessage');
         
         if (decoded.name && decoded.favoriteHero) {
