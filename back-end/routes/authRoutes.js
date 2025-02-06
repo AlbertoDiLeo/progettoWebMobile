@@ -10,6 +10,9 @@ router.post('/register', async (req, res) => {
     try {
         const { name, email, password, favoriteHero } = req.body;
 
+        // Controlla se l'email è già registrata
+        const existingName = await User.findOne({ name });
+        if (existingName) return res.status(400).json({ message: 'Username già in uso' });
 
         // Controlla se l'email è già registrata
         const existingUser = await User.findOne({ email });

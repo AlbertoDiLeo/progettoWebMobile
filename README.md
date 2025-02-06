@@ -4,8 +4,9 @@ progetto-afse/
 │   │   └── styles.css               # Stile personalizzato del progetto
 │   ├── js/
 |   |   ├── auth.js                  # Script per login, registrazione logout e controlli
-│   │   └── lib.js                   # Script JavaScript lato client
-|   |   └── dashboard.js             # Script per dashboard
+│   │   ├── lib.js                   # Script JavaScript lato client
+|   |   ├── dashboard.js             # Script per dashboard
+|   |   └── profile.js               # Script per il profilo
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
 │   ├── index.html                   # Pagina principale del sito
@@ -23,6 +24,8 @@ progetto-afse/
 │   │   ├── authController.js        # Logica per registrazione e login
 │   │   ├── userController.js        # Logica per operazioni sugli utenti
 │   │   └── albumController.js       # Logica per gestione dell'album e figurine
+|   ├── middleware/
+│   │   └── authMiddleware.js        # Middleware per l'autenticazione
 │   ├── models/
 │   │   ├── user.js                  # Modello utente per MongoDB
 │   │   └── album.js                 # Modello album per MongoDB

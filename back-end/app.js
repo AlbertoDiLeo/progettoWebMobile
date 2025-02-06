@@ -25,7 +25,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/routes', (req, res) => {
+/*app.get('/routes', (req, res) => {
     const routes = [];
 
     app._router.stack.forEach((middleware) => {
@@ -41,7 +41,7 @@ app.get('/routes', (req, res) => {
     });
 
     res.json({ routes });
-});
+});*/
 
 
 
