@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword,
             favoriteHero,
-            createdAt: new Date(),
+            //createdAt: new Date(),
         });
 
         await newUser.save();
