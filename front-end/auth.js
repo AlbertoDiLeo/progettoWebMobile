@@ -2,8 +2,41 @@ console.log('File auth.js caricato correttamente');
 
 //import {setLocalStorage, removeToken, showNotification } from './lib.js';
 
+/*document.getElementById("registerForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-const registerForm = document.getElementById('registerForm'); //register.html
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const favoriteHero = document.getElementById("favoriteHero").value;
+
+    try {
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password, favoriteHero }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (Array.isArray(data.messages)) {
+                // Mostra tutti gli errori ricevuti dal backend
+                data.messages.forEach(error => showNotification(error, "error"));
+            } else {
+                showNotification(data.message, "error");
+            }
+            return;
+        }
+
+        showNotification("Registrazione avvenuta con successo!", "success");
+    } catch (error) {
+        showNotification("Errore di connessione al server", "error");
+    }
+});*/
+
+
+/*const registerForm = document.getElementById('registerForm'); //register.html
 
 if (registerForm) {
     registerForm.addEventListener('submit', async (event) => {
@@ -45,6 +78,66 @@ if (registerForm) {
             console.error('Errore nella registrazione:', error);
             showNotification('Si è verificato un errore. Riprova più tardi.');
         }
+    });
+} */
+
+
+
+const registerForm = document.getElementById('registerForm'); //register.html
+
+if (registerForm) {
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Previene il refresh della pagina
+
+        // Ottieni i dati dal form
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const favoriteHero = document.getElementById('favoriteHero').value;
+
+        let errors = []; // ✅ Dichiara un array per raccogliere gli errori
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password, favoriteHero }),
+            });
+
+            const data = await response.json();
+
+           if (!response.ok) {
+                if (Array.isArray(data.messages)) {
+                    errors = errors.concat(data.messages); // ✅ Aggiunge errori dal backend
+                } else {
+                    errors.push(data.message);
+                }
+            }
+            
+        } catch (error) {
+            console.error('Errore nella registrazione:', error);
+            showNotification('Si è verificato un errore. Riprova più tardi.', "error");
+            return;
+        }
+
+        // Verifica che le password corrispondano
+        if (password !== confirmPassword) {
+            errors.push("Le password non corrispondono");
+        }
+
+        if (errors.length > 0) {
+            errors.forEach(error => showNotification(error, "error"));
+            return;
+        }
+
+        showNotification("Registrazione avvenuta con successo!", "success");
+        setTimeout(() => {
+            window.location.href = 'login.html'; // Reindirizza dopo 1 secondo
+        }, 1000);
+
     });
 } 
 

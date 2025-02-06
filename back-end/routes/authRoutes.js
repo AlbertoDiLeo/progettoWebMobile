@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 // Rotta di registrazione
-router.post('/register', async (req, res) => {
+/*router.post('/register', async (req, res) => {
     try {
         const { name, email, password, favoriteHero } = req.body;
 
@@ -35,7 +35,44 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Errore durante la registrazione', error: err.message });
     }
+});*/
+
+router.post('/register', async (req, res) => {
+    try {
+        const { name, email, password, favoriteHero } = req.body;
+        let errors = [];
+
+        // Controlla se il nome è già in uso
+        const existingName = await User.findOne({ name });
+        if (existingName) errors.push('Username già in uso');
+
+        // Controlla se l'email è già registrata
+        const existingUser = await User.findOne({ email });
+        if (existingUser) errors.push('Email già registrata');
+
+        // Se ci sono errori, restituiscili tutti insieme
+        if (errors.length > 0) {
+            return res.status(400).json({ messages: errors });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crea un nuovo utente
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+            favoriteHero,
+        });
+
+        await newUser.save();
+
+        res.status(201).json({ message: 'Registrazione completata' });
+    } catch (err) {
+        res.status(500).json({ message: 'Errore durante la registrazione', error: err.message });
+    }
 });
+
 
 
 

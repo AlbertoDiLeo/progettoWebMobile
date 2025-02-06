@@ -24,7 +24,7 @@ function getLocalStorage(chiave){
 
 
 
-function showNotification(message, type = 'success') {
+/*function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
 
     // Rimuove le classi precedenti
@@ -44,6 +44,39 @@ function showNotification(message, type = 'success') {
     // Nasconde l'alert dopo 5 secondi
     setTimeout(() => {
         notification.classList.add('d-none');
+    }, 5000);
+}*/
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+
+    // Se l'elemento non esiste, esci dalla funzione
+    if (!notification) return;
+
+    // Se è la prima volta che viene chiamata, svuota e prepara il contenitore
+    if (!notification.dataset.initialized) {
+        notification.innerHTML = "<ul class='mb-0'></ul>";
+        notification.dataset.initialized = "true";
+    }
+
+    // Rimuove le classi precedenti e imposta il tipo di alert
+    notification.className = 'alert alert-dismissible fade show';
+    notification.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+
+    // Recupera la lista UL e aggiunge il nuovo messaggio
+    const messageList = notification.querySelector("ul");
+    const newMessage = document.createElement("li");
+    newMessage.textContent = message;
+    messageList.appendChild(newMessage);
+
+    // Mostra l'alert
+    notification.classList.remove('d-none');
+
+    // Resetta il timer per nascondere la notifica dopo 5 secondi
+    clearTimeout(notification.hideTimeout);
+    notification.hideTimeout = setTimeout(() => {
+        notification.classList.add('d-none');
+        notification.dataset.initialized = ""; // Reset per la prossima volta
     }, 5000);
 }
 
