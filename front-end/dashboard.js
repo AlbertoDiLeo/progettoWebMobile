@@ -8,7 +8,7 @@ function initializeDashboard() {
 
     if (!token) {
         showNotification('Accesso non autorizzato. Effettua il login.', 'danger');
-        //window.location.href = 'login.html';
+        window.location.href = 'login.html';
         return;
     }
 

@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     //console.log(nameDisplay);
 
     try {
-        const token = getToken("token"); // Recupera il token
-        console.log("Token recuperato da localStorage:", token); // Log del token
+        const token = getToken(); // Recupera il token
+        //console.log("Token recuperato da localStorage:", token); // Log del token
 
         const response = await fetch("http://localhost:5000/api/user/profile", {
             method: "GET",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             },
         });
 
-        console.log("Risposta HTTP:", response); // Log della risposta HTTP
+        //console.log("Risposta HTTP:", response); // Log della risposta HTTP
 
         if (!response.ok) {
             const error = await response.json();
@@ -60,14 +60,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const user = await response.json();
-        console.log("Dati ricevuti dal server:", user); // Log dei dati utente ricevuti
+        //console.log("Dati ricevuti dal server:", user); // Log dei dati utente ricevuti
 
         nameDisplay.textContent = user.name || "Non specificato";
         emailDisplay.textContent = user.email || "Non specificato";
         favoriteHeroDisplay.textContent = user.favoriteHero || "Non specificato";
     } catch (err) {
         console.error("Errore nel recupero del profilo:", err.message); // Log dell'errore
-        alert("Errore nel caricamento del profilo.");
+        showNotification("Errore nel caricamento del profilo.");
     }
 });
 
