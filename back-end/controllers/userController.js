@@ -4,9 +4,9 @@ User = require("../models/user");
 exports.updateUserProfile = async (req, res) => {
     try {
 
-        console.log("🔍 DEBUG - Dati ricevuti per aggiornamento:", JSON.stringify(req.body, null, 2));
-        console.log("🔍 DEBUG - Parametro userId ricevuto:", req.params.id);
-        console.log("🔍 DEBUG - Utente autenticato dal token:", req.user);
+        //console.log("🔍 DEBUG - Dati ricevuti per aggiornamento:", JSON.stringify(req.body, null, 2));
+        //console.log("🔍 DEBUG - Parametro userId ricevuto:", req.params.id);
+        //console.log("🔍 DEBUG - Utente autenticato dal token:", req.user);
 
         const { name, favoriteHero, birthDate, phone } = req.body;
         //console.log("Dati ricevuti per aggiornamento:", req.body);
@@ -17,13 +17,21 @@ exports.updateUserProfile = async (req, res) => {
             return res.status(403).json({ error: "Non autorizzato" });
         }
 
-        if (name) {
-            console.log("⛔ DEBUG - Nome non presente nella richiesta");
+        if (name && name.trim() !== "") {
+            console.log("🔍 DEBUG - Controllo disponibilità nome utente:", name);
             const existingUser = await User.findOne({ name });
             if (existingUser && existingUser._id.toString() !== userId) {
+                console.log("⛔ DEBUG - Nome utente già in uso:", name);
                 return res.status(400).json({ error: "Nome utente già in uso. Scegline un altro." });
             }
         }
+        
+
+         // Controllo sulla data di nascita: deve essere la data di oggi
+         const today = new Date().toISOString().split("T")[0]; // Ottieni la data di oggi nel formato YYYY-MM-DD
+         if (birthDate && birthDate > today) {
+            return res.status(400).json({ error: "La data di nascita non è valida! Deve essere oggi." });
+         }
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,

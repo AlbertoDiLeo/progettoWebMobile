@@ -63,6 +63,22 @@ router.get("/users/:id", authenticateToken, async (req, res) => {
     }
 });
 
+router.get("/check-username/:name", async (req, res) => {
+    try {
+        const { name } = req.params;
+
+        const existingUser = await User.findOne({ name });
+        if (existingUser) {
+            return res.json({ available: false });
+        }
+
+        res.json({ available: true });
+    } catch (error) {
+        res.status(500).json({ error: "Errore nel controllo del nome utente." });
+    }
+});
+
+
 
 
 module.exports = router;
