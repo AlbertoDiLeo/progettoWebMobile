@@ -2,6 +2,8 @@ const express = require('express');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { login } = require("../controllers/authController");
+const { register } = require("../controllers/authController");
 
 const router = express.Router();
 
@@ -37,7 +39,7 @@ const router = express.Router();
     }
 });*/
 
-router.post('/register', async (req, res) => {
+/*router.post('/register', async (req, res) => {
     try {
         const { name, email, password, favoriteHero } = req.body;
         let errors = [];
@@ -71,14 +73,15 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Errore durante la registrazione', error: err.message });
     }
-});
+});*/
+
+router.post("/register", register);
 
 
-
-
+router.post("/login", login);
 
 // Rotta di login
-router.post('/login', async (req, res) => {
+/*router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -97,11 +100,10 @@ router.post('/login', async (req, res) => {
         // Genera il token JWT includendo i campi necessari
         const token = jwt.sign(
             {
-                id: user._id,
+                userId: user._id,
                 name: user.name,
                 email: user.email,
                 favoriteHero: user.favoriteHero,
-                createdAt: user.createdAt
             },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
@@ -112,6 +114,6 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Errore durante il login', error: err.message });
     }
-});
+});*/
 
 module.exports = router;

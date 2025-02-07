@@ -19,6 +19,12 @@ function authenticateToken(req, res, next) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         //console.log("Token decodificato:", decoded);
         req.user = decoded; // Salva i dati del token (es. userId) per l'uso nelle rotte
+
+
+        req.user = { userId: decoded.userId };
+
+        console.log("🔹 ID utente memorizzato in req.user:", req.user.userId); // Debug
+
         next(); // Continua verso la rotta successiva
     } catch (err) {
         return res.status(403).json({ message: "Token non valido" });

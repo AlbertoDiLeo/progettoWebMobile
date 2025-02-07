@@ -43,6 +43,18 @@ app.use((req, res, next) => {
     res.json({ routes });
 });*/
 
+app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+        console.log(middleware.route.path);
+    } else if (middleware.name === "router") {
+        middleware.handle.stack.forEach((handler) => {
+            if (handler.route) {
+                console.log(handler.route.stack[0].method.toUpperCase(), handler.route.path);
+            }
+        });
+    }
+});
+
 
 
 // Connessione a MongoDB

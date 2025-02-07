@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     favoriteHero: { type: String, required: true },
-    birthDate: { type: String, default: null }, // Campo opzionale
-    phone: { type: String, default: null }, // Campo opzionale
+    birthDate: { type: Date, default: null }, // Campo opzionale
+    phone: { type: String, match: /^[0-9]{10,15}$/, default: null }, // Campo opzionale
     //createdAt: { type: Date, default: Date.now }, // Imposta la data di registrazione automaticamente
 });
 
