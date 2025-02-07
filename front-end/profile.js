@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         // ✅ Controllo Numero di Telefono (frontend)
         if (!validatePhone(phone)) {
-            errorMessages.push("⚠️ Il numero di telefono deve avere esattamente 10 cifre.");
+            errorMessages.push("⚠️ Il numero di telefono non è valido.");
         }
     
         // ❌ Se ci sono errori frontend, li mostriamo e **blocchiamo la richiesta**
