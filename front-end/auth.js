@@ -43,6 +43,10 @@ if (registerForm) {
             return;
         }
 
+        if (usernameFeedback.classList.contains("text-danger") || usernameFeedback.classList.contains("text-warning")) {  
+            errors.push("❌ Utente non valido.");
+        }
+
         // Verifica che le password corrispondano
         if (password !== confirmPassword) {
             errors.push("Le password non corrispondono");

@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         let errorMessages = []; 
     
-        if (usernameFeedback.classList.contains("text-danger")) {  
+        if (usernameFeedback.classList.contains("text-danger") || usernameFeedback.classList.contains("text-warning")) {  
             errorMessages.push("❌ Utente non valido.");
         }
 
@@ -278,113 +278,6 @@ async function fetchUserProfile(userId) {
     }
 }
 
-
-let debounceTimer; // Per evitare troppe chiamate API
-
-async function checkUsernameAvailability(name) {
-    clearTimeout(debounceTimer); // Reset del timer
-
-    // Controlli iniziali per evitare chiamate inutili
-    if (!name) {
-        updateUsernameFeedback("", ""); // Reset messaggio se l'input è vuoto
-        return;
-    }
-    if (name.length < 3) {
-        updateUsernameFeedback("⚠️ Il nome deve essere di almeno 3 caratteri.", "warning");
-        return;
-    }
-    if (!/^[a-zA-Z0-9]+$/.test(name)) {
-        updateUsernameFeedback("❌ Il nome può contenere solo lettere e numeri.", "danger");
-        return;
-    }
-
-    // Evita chiamate API se l'utente continua a digitare rapidamente (debounce di 500ms)
-    debounceTimer = setTimeout(async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/user/check-username/${name}`);
-            const data = await response.json();
-
-            if (data.available) {
-                updateUsernameFeedback("✅ Nome disponibile!", "success");
-            } else {
-                updateUsernameFeedback("❌ Nome già in uso! Scegline un altro.", "danger");
-            }
-        } catch (error) {
-            console.error("Errore nel controllo del nome utente:", error);
-            updateUsernameFeedback("⚠️ Errore nel controllo del nome. Riprova.", "danger");
-        }
-    }, 500); // Attende 500ms prima di eseguire la chiamata API
-}
-
-
-function updateUsernameFeedback(message, type) {
-    const feedbackElement = document.getElementById("usernameFeedback");
-
-    if (!feedbackElement) return; // Se non esiste l'elemento, esci
-
-    feedbackElement.textContent = message;
-    feedbackElement.className = ""; // Reset classi
-    feedbackElement.classList.add("mt-1"); // Margine sopra
-
-    if (type === "success") {
-        feedbackElement.classList.add("text-success"); // Verde
-    } else if (type === "danger") {
-        feedbackElement.classList.add("text-danger"); // Rosso
-    } else if (type === "warning") {
-        feedbackElement.classList.add("text-warning"); // Giallo
-    }
-}
-
-
-
-/*function checkPasswordStrength(password) {
-    const feedbackElement = document.getElementById("passwordFeedback");
-
-    if (!feedbackElement) return; // Se non esiste l'elemento, esci
-
-    if (password.length < 3) {
-        feedbackElement.textContent = ""; // Nessun feedback prima di 3 caratteri
-        return;
-    }
-
-    let strength = 0;
-    let suggestion = "";
-
-    // Controlli sulla sicurezza della password (progressivi)
-    if (/[A-Z]/.test(password)) {
-        strength += 1;
-    } else {
-        suggestion = "Password non sicura. Aggiungi almeno una lettera maiuscola.";
-    }
-
-    if (/\d/.test(password)) {
-        strength += 1;
-    } else if (strength === 1) { // Mostra il suggerimento solo se la maiuscola è già presente
-        suggestion = "Password non sicura. Aggiungi almeno un numero.";
-    }
-
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-        strength += 1;
-    } else if (strength === 2) { // Mostra il suggerimento solo se i numeri sono già presenti
-        suggestion = "Password non sicura. Aggiungi almeno un carattere speciale.";
-    }
-
-    if (password.length >= 8) {
-        strength += 1;
-    } else if (strength === 3) { // Mostra il suggerimento solo alla fine
-        suggestion = "Password non sicura. Usa almeno 8 caratteri.";
-    }
-
-    // Cambiamo il messaggio in base alla sicurezza della password
-    feedbackElement.className = "form-text mt-1"; // Reset classi
-    if (strength === 4) {
-        feedbackElement.textContent = "✅ Password Sicura!";
-        feedbackElement.classList.add("text-success");
-    } else {
-        feedbackElement.textContent = suggestion || "⚠️ Password poco sicura.";
-        feedbackElement.classList.add("text-warning");
-    }
-}*/
 
 
 

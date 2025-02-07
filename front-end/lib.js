@@ -81,6 +81,65 @@ function showNotification(message, type = 'success') {
 }
 
 
+let debounceTimer; // Per evitare troppe chiamate API
+
+async function checkUsernameAvailability(name) {
+    clearTimeout(debounceTimer); // Reset del timer
+
+    // Controlli iniziali per evitare chiamate inutili
+    if (!name) {
+        updateUsernameFeedback("", ""); // Reset messaggio se l'input è vuoto
+        return;
+    }
+    if (name.length < 3) {
+        updateUsernameFeedback("⚠️ Il nome deve essere di almeno 3 caratteri.", "warning");
+        return;
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(name)) {
+        updateUsernameFeedback("❌ Il nome può contenere solo lettere e numeri.", "danger");
+        return;
+    }
+
+    // Evita chiamate API se l'utente continua a digitare rapidamente (debounce di 500ms)
+    debounceTimer = setTimeout(async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/user/check-username/${name}`);
+            const data = await response.json();
+
+            if (data.available) {
+                updateUsernameFeedback("✅ Nome disponibile!", "success");
+            } else {
+                updateUsernameFeedback("❌ Nome già in uso! Scegline un altro.", "danger");
+            }
+        } catch (error) {
+            console.error("Errore nel controllo del nome utente:", error);
+            updateUsernameFeedback("⚠️ Errore nel controllo del nome. Riprova.", "danger");
+        }
+    }, 500); // Attende 500ms prima di eseguire la chiamata API
+}
+
+
+function updateUsernameFeedback(message, type) {
+    const feedbackElement = document.getElementById("usernameFeedback");
+
+    if (!feedbackElement) return; // Se non esiste l'elemento, esci
+
+    feedbackElement.textContent = message;
+    feedbackElement.className = ""; // Reset classi
+    feedbackElement.classList.add("mt-1"); // Margine sopra
+
+    if (type === "success") {
+        feedbackElement.classList.add("text-success"); // Verde
+    } else if (type === "danger") {
+        feedbackElement.classList.add("text-danger"); // Rosso
+    } else if (type === "warning") {
+        feedbackElement.classList.add("text-warning"); // Giallo
+    }
+}
+
+
+
+
 
 
 
