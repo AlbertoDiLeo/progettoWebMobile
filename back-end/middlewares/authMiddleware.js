@@ -23,7 +23,7 @@ function authenticateToken(req, res, next) {
 
         req.user = { userId: decoded.userId };
 
-        console.log("🔹 ID utente memorizzato in req.user:", req.user.userId); // Debug
+        //console.log("🔹 ID utente memorizzato in req.user:", req.user.userId); 
 
         next(); // Continua verso la rotta successiva
     } catch (err) {

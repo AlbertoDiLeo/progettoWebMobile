@@ -1,4 +1,4 @@
-console.log('File auth.js caricato correttamente');
+//console.log('File auth.js caricato correttamente');
 
 //import {setLocalStorage, removeToken, showNotification } from './lib.js';
 
@@ -87,9 +87,9 @@ if (loginForm) {
             if (response.ok) {
                 showNotification('Login completato con successo!');
                 // Salva il token JWT nel localStorage
-                console.log('Token ricevuto dal server:', data.token);  // Debug
+                //console.log('Token ricevuto dal server:', data.token);  // Debug
                 localStorage.setItem('token', data.token);
-                console.log('Token salvato in localStorage:', localStorage.getItem('token')); // Controllo
+                //console.log('Token salvato in localStorage:', localStorage.getItem('token')); // Controllo
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'; // Reindirizza dopo 3 secondi
                 }, 1000);    

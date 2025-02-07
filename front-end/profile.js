@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
-    console.log("Token recuperato:", token);  // Debug
+    //console.log("Token recuperato:", token);  // Debug
     if (!token) {
         window.location.href = "login.html";
         return;
@@ -72,43 +72,44 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("profileEditForm").addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        const name = document.getElementById("name").value; 
+        event.preventDefault(); // Evita il refresh della pagina
+    
+        const name = document.getElementById("name").value.trim();
         const favoriteHero = document.getElementById("favoriteHero").value;
         const birthDate = document.getElementById("birthDate").value;
         const phone = document.getElementById("phone").value;
-        console.log("Dati inviati al server:", { name, favoriteHero, birthDate, phone });
-
-        let errorMessages = []; // Array per raccogliere tutti gli errori
-
-        // ✅ Controllo Nome
-        if (name.length < 3) {
-            errorMessages.push("⚠️ Il nome deve avere almeno 3 caratteri.");
-        }
-        if (!/^[a-zA-Z0-9]+$/.test(name)) {
-            errorMessages.push("❌ Il nome può contenere solo lettere e numeri.");
+    
+        let errorMessages = []; 
+    
+        if (usernameFeedback.classList.contains("text-danger")) {  
+            errorMessages.push("❌ Utente non valido.");
         }
 
-        // ✅ Controllo Data di Nascita
-        //const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
         if (!validateBirthDate(birthDate)) {
+            errorMessages.push("⚠️ La data di nascita non è valida.");
+        }
+    
+        // ✅ Controllo Data di Nascita (frontend)
+        const today = new Date().toISOString().split("T")[0];
+        if (birthDate && birthDate > today) {
             errorMessages.push("⚠️ La data di nascita non può essere nel futuro.");
         }
-
-        // ✅ Controllo Numero di Telefono
+    
+        // ✅ Controllo Numero di Telefono (frontend)
         if (!validatePhone(phone)) {
-            errorMessages.push("⚠️ Il numero di telefono deve avere 10 cifre.");
+            errorMessages.push("⚠️ Il numero di telefono deve avere esattamente 10 cifre.");
         }
-
-        // ❌ Se ci sono errori, li mostriamo e **blocchiamo la richiesta**
+    
+        // ❌ Se ci sono errori frontend, li mostriamo e **blocchiamo la richiesta**
         if (errorMessages.length > 0) {
-            showNotification(errorMessages.join("<br>"), "danger"); // Mostra tutti gli errori insieme
+            errorMessages.forEach(error => showNotification(error, "error"));
             return;
         }
-
+    
+        // ✅ Ora possiamo inviare la richiesta PUT al server
         try {
-            //console.log("Sto inviando la richiesta PUT con userId:", userId);
+            //console.log("📤 DEBUG - Sto inviando questa richiesta PUT:", { name, favoriteHero, birthDate, phone });
+    
             const response = await fetch(`http://localhost:5000/api/user/users/${userId}`, {
                 method: "PUT",
                 headers: {
@@ -117,29 +118,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({ name, favoriteHero, birthDate, phone })
             });
-
+    
             //console.log("📤 DEBUG - Risposta HTTP:", response.status);
-
-
+            const data = await response.json();
+    
+            // ❌ Se il server ha restituito un errore, aggiungiamolo alla lista
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error("⛔ DEBUG - Errore nell'aggiornamento del profilo:", errorData)
-            } else {
-                // ✅ Se la richiesta ha avuto successo
-                showNotification("✅ Profilo aggiornato con successo!", "success");
-                
-                // Attendi 1.5 secondi prima di ricaricare la pagina
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
+                console.error("⛔ DEBUG - Errore nell'aggiornamento del profilo:", data);
+    
+                if (data.error.includes("Nome utente")) {
+                    errorMessages.push("❌ Nome già in uso! Scegli un altro nome.");
+                }
+                if (data.error.includes("data di nascita")) {
+                    errorMessages.push("⚠️ La data di nascita deve essere oggi!");
+                }
+                if (data.error.includes("telefono non valido")) {
+                    errorMessages.push("⚠️ Il numero di telefono non è valido.");
+                }
+    
+                // Mostriamo tutti gli errori ricevuti dal backend
+                if (errorMessages.length > 0) {
+                    showNotification(errorMessages.join("<br>"), "danger");
+                } else {
+                    showNotification("❌ Errore sconosciuto. Controlla i dati.", "danger");
+                }
+                return;
             }
-                
+    
+            // ✅ Successo → Mostriamo la notifica e aspettiamo 1.5s prima di ricaricare la pagina
+            showNotification("✅ Profilo aggiornato con successo!", "success");
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+    
         } catch (error) {
             console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
-            showNotification("Errore nella comunicazione con il server.");
+            showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
         }
     });
 });
+
+
 
 function getUserIdFromToken(token) {
     try {

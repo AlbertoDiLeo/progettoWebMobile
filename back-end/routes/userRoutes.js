@@ -10,8 +10,8 @@ const mongoose = require("mongoose");
 // Rotta per ottenere il profilo
 /*router.get("/profile", authenticateToken, async (req, res) => {
     try {
-        console.log("🔹 Richiesta ricevuta per /api/user/profile"); // Debug
-        console.log("🔹 ID Utente:", req.user.userId);
+        //console.log("🔹 Richiesta ricevuta per /api/user/profile"); // Debug
+        //console.log("🔹 ID Utente:", req.user.userId);
         // Usa l'ID utente dal token per trovare i dati nel database
         const user = await User.findById(req.user.id).select("-password");
         if (!user) {
@@ -27,8 +27,8 @@ const mongoose = require("mongoose");
 
 router.get("/profile", authenticateToken, async (req, res) => {
     try {
-        console.log("🔹 Richiesta ricevuta per /api/user/profile");
-        console.log("🔹 ID Utente dal token:", req.user.userId);
+        //console.log("🔹 Richiesta ricevuta per /api/user/profile");
+        //console.log("🔹 ID Utente dal token:", req.user.userId);
 
         // Assicuriamoci che sia un ObjectId valido per MongoDB
         if (!mongoose.Types.ObjectId.isValid(req.user.userId)) {

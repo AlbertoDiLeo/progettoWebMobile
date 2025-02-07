@@ -13,15 +13,15 @@ exports.updateUserProfile = async (req, res) => {
         const userId = req.params.id;
 
         if (!req.user || req.user.userId !== userId) {  // 🔥 Problema di autorizzazione
-            console.log("⛔ DEBUG - Autorizzazione fallita: userId non corrisponde");
+            //console.log("⛔ DEBUG - Autorizzazione fallita: userId non corrisponde");
             return res.status(403).json({ error: "Non autorizzato" });
         }
 
         if (name && name.trim() !== "") {
-            console.log("🔍 DEBUG - Controllo disponibilità nome utente:", name);
+            //console.log("🔍 DEBUG - Controllo disponibilità nome utente:", name);
             const existingUser = await User.findOne({ name });
             if (existingUser && existingUser._id.toString() !== userId) {
-                console.log("⛔ DEBUG - Nome utente già in uso:", name);
+               // console.log("⛔ DEBUG - Nome utente già in uso:", name);
                 return res.status(400).json({ error: "Nome utente già in uso. Scegline un altro." });
             }
         }
@@ -40,7 +40,7 @@ exports.updateUserProfile = async (req, res) => {
         );
 
         if (!updatedUser) {
-            console.log("⛔ DEBUG - Utente non trovato nel database");
+            //console.log("⛔ DEBUG - Utente non trovato nel database");
             return res.status(404).json({ error: "Utente non trovato" });
         }
 
