@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 User = require("../models/user");
 
 
@@ -30,7 +31,7 @@ exports.updateUserProfile = async (req, res) => {
          // Controllo sulla data di nascita: deve essere la data di oggi
          const today = new Date().toISOString().split("T")[0]; // Ottieni la data di oggi nel formato YYYY-MM-DD
          if (birthDate && birthDate > today) {
-            return res.status(400).json({ error: "La data di nascita non è valida! Deve essere oggi." });
+            return res.status(400).json({ error: "La data di nascita non è valida!" });
          }
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -48,5 +49,40 @@ exports.updateUserProfile = async (req, res) => {
     } catch (error) {
         console.error("Errore durante l'aggiornamento del profilo:", error);
         res.status(500).json({ error: `Errore del server: ${error.message}` });
+    }
+};
+
+
+
+exports.changePassword = async (req, res) => {
+    try {
+        const userId = req.user.userId; 
+
+        const { oldPassword, newPassword } = req.body;
+
+        //console.log("🔍 DEBUG - Cambio password per userId:", userId);
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Utente non trovato." });
+        }
+
+        // ✅ Verifica se la vecchia password è corretta
+        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: "❌ Vecchia password errata." });
+        }
+
+        // ✅ Hash della nuova password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        //console.log("✅ DEBUG - Password cambiata con successo");
+        res.json({ message: "Password aggiornata con successo!" });
+
+    } catch (error) {
+        console.error("⛔ DEBUG - Errore durante il cambio password:", error);
+        res.status(500).json({ error: "Errore del server." });
     }
 };

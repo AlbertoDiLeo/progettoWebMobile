@@ -52,14 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const userId = getUserIdFromToken(token);
     if (!userId) {
         console.error("Errore: userId è undefined. Controlla il token.");
-        //return;
+        return;
     }
     fetchUserProfile(userId);
 
+    const profileView = document.getElementById("profileView");
     const editButton = document.getElementById("editProfileButton");
     const editForm = document.getElementById("profileEditForm");
-    const profileView = document.getElementById("profileView");
-    const cancelEditButton = document.getElementById("cancelEditButton");
 
     editButton.addEventListener("click", function () {
         profileView.classList.add("d-none");
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessages.push("❌ Utente non valido.");
         }
 
-        if (!validateBirthDate(birthDate)) {
+        if (!validateBirthDate(birthDate)) { //serve?
             errorMessages.push("⚠️ La data di nascita non è valida.");
         }
     
@@ -125,23 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // ❌ Se il server ha restituito un errore, aggiungiamolo alla lista
             if (!response.ok) {
                 console.error("⛔ DEBUG - Errore nell'aggiornamento del profilo:", data);
-    
-                if (data.error.includes("Nome utente")) {
-                    errorMessages.push("❌ Nome già in uso! Scegli un altro nome.");
-                }
-                if (data.error.includes("data di nascita")) {
-                    errorMessages.push("⚠️ La data di nascita deve essere oggi!");
-                }
-                if (data.error.includes("telefono non valido")) {
-                    errorMessages.push("⚠️ Il numero di telefono non è valido.");
-                }
-    
-                // Mostriamo tutti gli errori ricevuti dal backend
-                if (errorMessages.length > 0) {
-                    showNotification(errorMessages.join("<br>"), "danger");
-                } else {
-                    showNotification("❌ Errore sconosciuto. Controlla i dati.", "danger");
-                }
                 return;
             }
     
@@ -156,6 +138,95 @@ document.addEventListener("DOMContentLoaded", function () {
             showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
         }
     });
+
+    const passwordChangeForm = document.getElementById("passwordChangeForm");
+    const changePasswordButton = document.getElementById("changePasswordButton");
+    const cancelPasswordChangeButton = document.getElementById("cancelPasswordChangeButton");
+
+
+     // Mostra il form per la modifica della password
+    changePasswordButton.addEventListener("click", function () {
+        profileView.classList.add("d-none");
+        passwordChangeForm.classList.remove("d-none");
+    });
+
+    // Annulla la modifica della password
+    cancelPasswordChangeButton.addEventListener("click", function () {
+        passwordChangeForm.classList.add("d-none");
+        profileView.classList.remove("d-none");
+    });
+
+    // Gestione del submit per la modifica della password
+    document.getElementById("passwordChangeForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Blocca il comportamento predefinito
+
+        // Prendi i valori dagli input
+        const oldPassword = document.getElementById("oldPassword").value.trim();
+        const newPassword = document.getElementById("newPassword").value.trim();
+        const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
+
+        let errorMessages = []; // Array per raccogliere errori
+
+        // ✅ Invio della richiesta al server
+        try {
+            //console.log("📤 DEBUG - Invio richiesta cambio password");
+
+            const response = await fetch(`http://localhost:5000/api/user/change-password`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ oldPassword, newPassword })
+            });
+
+            const data = await response.json();
+
+            
+            if (!response.ok) {
+                if (response.status === 400) {
+                    errorMessages.push(data.error); // ✅ Aggiunge il messaggio dal server all'array degli errori
+                } else {
+                    console.error("Errore nell'aggiornamento del profilo:", data);
+                    return;
+                }
+            }
+
+            if (!oldPassword.trim()) { //serve?
+                errorMessages.push("⚠️ Inserisci la vecchia password.");
+            }
+
+            if (oldPassword === newPassword) {
+                errorMessages.push("❌ La nuova password non può essere uguale a quella attuale.");
+            }
+    
+            if (newPassword !== confirmNewPassword) {
+                errorMessages.push("❌ Le nuove password non coincidono.");
+            }
+
+           
+
+            // ❌ Se ci sono errori, li mostriamo e blocchiamo la richiesta
+            if (errorMessages.length > 0) {
+                errorMessages.forEach(error => showNotification(error, "error"));
+                return;
+            }
+
+            // ✅ Password cambiata con successo
+            showNotification("✅ Password aggiornata con successo!", "success");
+
+            setTimeout(() => {
+                localStorage.removeItem("token"); // Disconnette l'utente
+                window.location.href = "login.html"; // Reindirizza alla login
+            }, 2000);
+
+        } catch (error) {
+            console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
+            showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
+        }
+    });
+
+
 });
 
 
@@ -218,12 +289,10 @@ async function checkUsernameAvailability(name) {
         updateUsernameFeedback("", ""); // Reset messaggio se l'input è vuoto
         return;
     }
-    
     if (name.length < 3) {
         updateUsernameFeedback("⚠️ Il nome deve essere di almeno 3 caratteri.", "warning");
         return;
     }
-    
     if (!/^[a-zA-Z0-9]+$/.test(name)) {
         updateUsernameFeedback("❌ Il nome può contenere solo lettere e numeri.", "danger");
         return;
@@ -265,6 +334,65 @@ function updateUsernameFeedback(message, type) {
         feedbackElement.classList.add("text-warning"); // Giallo
     }
 }
+
+
+
+/*function checkPasswordStrength(password) {
+    const feedbackElement = document.getElementById("passwordFeedback");
+
+    if (!feedbackElement) return; // Se non esiste l'elemento, esci
+
+    if (password.length < 3) {
+        feedbackElement.textContent = ""; // Nessun feedback prima di 3 caratteri
+        return;
+    }
+
+    let strength = 0;
+    let suggestion = "";
+
+    // Controlli sulla sicurezza della password (progressivi)
+    if (/[A-Z]/.test(password)) {
+        strength += 1;
+    } else {
+        suggestion = "Password non sicura. Aggiungi almeno una lettera maiuscola.";
+    }
+
+    if (/\d/.test(password)) {
+        strength += 1;
+    } else if (strength === 1) { // Mostra il suggerimento solo se la maiuscola è già presente
+        suggestion = "Password non sicura. Aggiungi almeno un numero.";
+    }
+
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        strength += 1;
+    } else if (strength === 2) { // Mostra il suggerimento solo se i numeri sono già presenti
+        suggestion = "Password non sicura. Aggiungi almeno un carattere speciale.";
+    }
+
+    if (password.length >= 8) {
+        strength += 1;
+    } else if (strength === 3) { // Mostra il suggerimento solo alla fine
+        suggestion = "Password non sicura. Usa almeno 8 caratteri.";
+    }
+
+    // Cambiamo il messaggio in base alla sicurezza della password
+    feedbackElement.className = "form-text mt-1"; // Reset classi
+    if (strength === 4) {
+        feedbackElement.textContent = "✅ Password Sicura!";
+        feedbackElement.classList.add("text-success");
+    } else {
+        feedbackElement.textContent = suggestion || "⚠️ Password poco sicura.";
+        feedbackElement.classList.add("text-warning");
+    }
+}*/
+
+
+
+
+
+
+
+
 
 
 

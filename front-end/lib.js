@@ -83,3 +83,73 @@ function showNotification(message, type = 'success') {
 
 
 
+
+function checkPasswordStrength(password) {
+    const feedbackElement = document.getElementById("passwordFeedback");
+
+    if (!feedbackElement) return; // Se l'elemento non esiste, esci
+
+    if (password.length < 3) {
+        feedbackElement.textContent = ""; // Nessun feedback prima di 3 caratteri
+        return;
+    }
+
+    let strength = 0;
+    let suggestion = "";
+
+    // Controlli progressivi
+    if (/[A-Z]/.test(password)) {
+        strength += 1;
+    } else {
+        suggestion = "Password debole. Aggiungi almeno una lettera maiuscola.";
+    }
+
+    if (/\d/.test(password)) {
+        strength += 1;
+    } else if (strength === 1) {
+        suggestion = "Password debole. Aggiungi almeno un numero.";
+    }
+
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        strength += 1;
+    } else if (strength === 2) {
+        suggestion = "Password moderata. Aggiungi almeno un carattere speciale (!@#$%^&*).";
+    }
+
+    if (password.length >= 8) {
+        strength += 1;
+    } else if (strength === 3) {
+        suggestion = "Password moderata. Usa almeno 8 caratteri.";
+    }
+
+    // Cambiamo il messaggio in base alla sicurezza della password
+    feedbackElement.className = "form-text mt-1"; // Reset classi
+
+    if (strength === 4) {
+        feedbackElement.textContent = "✅ Password Sicura!";
+        feedbackElement.classList.add("text-success"); 
+    } else if (strength >= 2) {
+        feedbackElement.textContent = suggestion;
+        feedbackElement.classList.add("text-warning"); 
+    } else {
+        feedbackElement.textContent = suggestion;
+        feedbackElement.classList.add("text-danger"); 
+    }
+}
+
+
+
+function togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash"); // Cambia l'icona
+    } else {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye"); // Ripristina l'icona originale
+    }
+}

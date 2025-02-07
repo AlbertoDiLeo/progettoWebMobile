@@ -3,6 +3,7 @@ const router = express.Router();
 const authenticateToken = require("../middlewares/authMiddleware");
 const User = require("../models/user");
 const { updateUserProfile } = require("../controllers/userController");
+const { changePassword } = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const mongoose = require("mongoose");
 
@@ -78,7 +79,7 @@ router.get("/check-username/:name", async (req, res) => {
     }
 });
 
-
+router.put("/change-password", authenticateToken, changePassword);
 
 
 module.exports = router;
