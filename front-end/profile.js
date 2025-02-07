@@ -82,12 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!validateBirthDate(birthDate)) {
-            alert("Inserisci una data valida.");
+            showNotification("Inserisci una data valida.");
             return;
         }
 
         if (!validatePhone(phone)) {
-            alert("Inserisci un numero di telefono valido (10-15 cifre).");
+            showNotification("Inserisci un numero di telefono valido (10-15 cifre).");
             return;
         }
 
@@ -106,16 +106,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (response.ok) {
-                alert("Profilo aggiornato con successo!");
+                showNotification("Profilo aggiornato con successo!");
                 location.reload();
             } else {
                 const errorData = await response.json();
-            console.error("⛔ DEBUG - Errore nell'aggiornamento del profilo:", errorData);
-                alert("Errore nell'aggiornamento del profilo.");
+                console.error("⛔ DEBUG - Errore nell'aggiornamento del profilo:", errorData);
+                showNotification("Errore nell'aggiornamento del profilo.", "error");
             }
         } catch (error) {
             console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
-            alert("Errore nella comunicazione con il server.");
+            showNotification("Errore nella comunicazione con il server.");
         }
     });
 });
