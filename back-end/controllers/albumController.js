@@ -58,7 +58,7 @@ exports.buyPack = async (req, res) => {
         const allHeroes = response.data.results;
         const newFigurine = [];
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) { //usare funzione prof
             const randomHero = allHeroes[Math.floor(Math.random() * allHeroes.length)];
             newFigurine.push({
                 idMarvel: randomHero.id,

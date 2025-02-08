@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             confirmPackBtn.classList.remove("d-none");
 
         } catch (error) {
-            console.error("❌ Errore:", error);
+            console.error("Errore:", error);
         }
     });
 

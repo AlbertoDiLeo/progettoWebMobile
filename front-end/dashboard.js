@@ -1,6 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
-//function initializeDashboard() {
     const token = localStorage.getItem('token');
     console.log("token:", token);
 
@@ -49,12 +48,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const user = await response.json();
-        console.log("✅ Crediti ricevuti:", user.credits);
 
         // Aggiorniamo il valore dei crediti nella dashboard
-        document.getElementById("crediti").textContent = user.credits;
+        const creditiElement = document.getElementById("crediti");
+        if (creditiElement) {
+            creditiElement.textContent = user.credits;
+        } else {
+            console.error("Elemento con id 'crediti' non trovato!");
+        }
+        
     } catch (error) {
-        console.error("❌ Errore nel recupero dei crediti:", error);
+        console.error("Errore nel recupero dei crediti:", error);
         document.getElementById("crediti").textContent = "Errore";
     }
 });
@@ -68,6 +72,7 @@ document.getElementById("buy-credits-btn").addEventListener("click", async () =>
     }
 
     try {
+
         const response = await fetch("http://localhost:5000/api/user/buy-credits", {
             method: "POST",
             headers: {
@@ -81,14 +86,21 @@ document.getElementById("buy-credits-btn").addEventListener("click", async () =>
             throw new Error("Errore nell'acquisto dei crediti");
         }
 
-        const data = await response.json();
-        console.log("✅ Nuovo saldo crediti:", data.newCredits);
+        const data = await response.json();        
 
-        // Aggiorniamo il valore dei crediti nella dashboard
-        document.getElementById("crediti").textContent = data.newCredits;
+        const creditiElement = document.getElementById("crediti");
+        if (creditiElement) {
+            creditiElement.textContent = data.newCredits;
+            setTimeout(() => { // è la soluzione migliore?
+                location.reload();
+            }, 50);
+        } else {
+            console.error("Elemento 'crediti' non trovato!");
+        }
+
     } catch (error) {
-        console.error("❌ Errore nell'acquisto dei crediti:", error);
-        alert("Errore durante l'acquisto dei crediti.");
+        console.error("Errore nell'acquisto dei crediti:", error);
+        showNotification("Errore durante l'acquisto dei crediti.", "danger");
     }
 });
 

@@ -1,4 +1,4 @@
-document.getElementById("buy-pack-btn").addEventListener("click", async () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
     if (!token) {
         window.location.href = "login.html";
@@ -6,6 +6,8 @@ document.getElementById("buy-pack-btn").addEventListener("click", async () => {
     }
 
     try {
+        console.log("🔹 Acquisto pacchetto all'apertura della pagina...");
+
         const response = await fetch("http://localhost:5000/api/album/buy-pack", {
             method: "POST",
             headers: {
@@ -43,6 +45,6 @@ document.getElementById("buy-pack-btn").addEventListener("click", async () => {
         confirmPackBtn.classList.remove("d-none");
 
     } catch (error) {
-        console.error("❌ Errore:", error);
+        console.error("Errore:", error);
     }
 });
