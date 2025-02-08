@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     favoriteHero: { type: String, required: true },
     birthDate: { type: Date, default: null }, // Campo opzionale
     phone: { type: String, match: /^[0-9]{10,15}$/, default: null }, // Campo opzionale
-    //createdAt: { type: Date, default: Date.now }, // Imposta la data di registrazione automaticamente
 });
 
 module.exports = mongoose.model('User', userSchema);
