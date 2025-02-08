@@ -78,6 +78,27 @@
             <button type="submit" class="btn btn-success">Cambia Password</button>
             <button type="button" id="cancelPasswordChangeButton" class="btn btn-secondary">Annulla</button>
         </form>
+
+        <!-- Modale di conferma eliminazione account -->
+        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteAccountModalLabel">Elimina Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                <p>Sei sicuro di voler eliminare il tuo account? Questa azione è <strong>irreversibile</strong>.</p>
+                <p>Tutti i tuoi dati saranno persi.</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteAccount">Elimina</button>
+                </div>
+            </div>
+            </div>
+        </div>
+  
     </div>
     <script src="profile.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>

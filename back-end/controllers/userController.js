@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 User = require("../models/user");
+const mongoose = require("mongoose");
 
 
 exports.updateUserProfile = async (req, res) => {
@@ -90,7 +91,11 @@ exports.changePassword = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try {
-        const userId = req.user.userId; // Ottenere l'ID dal token
+        const userId = req.params.id; // Prendi l'ID dall'URL
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "ID utente non valido." });
+        }
 
         const user = await User.findById(userId);
         if (!user) {
@@ -99,11 +104,11 @@ exports.deleteAccount = async (req, res) => {
 
         await User.findByIdAndDelete(userId);
 
-        //console.log("Account eliminato con successo");
-        res.json({ message: "Account eliminato con successo!" });
+        res.json({ message: "✅ Account eliminato con successo!" });
 
     } catch (error) {
-        console.error("Errore durante l'eliminazione dell'account:", error);
+        console.error("⛔ Errore durante l'eliminazione dell'account:", error);
         res.status(500).json({ error: "Errore del server." });
     }
 };
+

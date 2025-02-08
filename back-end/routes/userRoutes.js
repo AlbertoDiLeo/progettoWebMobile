@@ -82,7 +82,10 @@ router.get("/check-username/:name", async (req, res) => {
 
 router.put("/change-password", authenticateToken, changePassword);
 
-router.delete("/delete-account", authenticateToken, deleteAccount);
+//router.delete("/delete-account", authenticateToken, deleteAccount);
+router.delete("/delete/:id", authenticateToken, deleteAccount);
+
+
 
 
 

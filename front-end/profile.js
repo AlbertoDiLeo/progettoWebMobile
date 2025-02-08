@@ -226,48 +226,63 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Seleziona il bottone per aprire il modal
-document.getElementById("deleteAccountButton").addEventListener("click", function () {
-    const deleteModal = new bootstrap.Modal(document.getElementById("deleteAccountModal"));
-    deleteModal.show();
-});
-
-// Gestione della conferma eliminazione account
-document.getElementById("confirmDeleteAccountButton").addEventListener("click", async function () {
-    try {
-        const response = await fetch(`http://localhost:5000/api/user/delete-account`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("⛔ DEBUG - Errore eliminazione account:", data);
-            showNotification(data.error || "Errore durante l'eliminazione dell'account.", "danger");
+    document.getElementById("deleteAccountButton").addEventListener("click", function () {
+        // Mostra il modale di conferma
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteAccountModal"));
+        deleteModal.show();
+    });
+    
+    // Quando l'utente conferma l'eliminazione
+    document.getElementById("confirmDeleteAccount").addEventListener("click", async function () {
+        console.log("🔍 DEBUG - userId prima della richiesta DELETE:", userId);
+        //const token = localStorage.getItem("token");
+        //const userId = getUserIdFromToken(token);
+        console.log("🔍 DEBUG - userId dopo la richiesta DELETE:", userId);
+        console.log("🔍 DEBUG - token:", token);
+    
+        /*if (!userId) {
+            showNotification("❌ Errore: impossibile determinare l'utente.", "danger");
             return;
+        }*/
+    
+        try {
+            const response = await fetch(`http://localhost:5000/api/user/delete/${userId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                console.error("⛔ DEBUG - Errore dal server:", data);
+                showNotification(data.error || "Errore sconosciuto.", "danger");
+                return;
+            }
+    
+            // ✅ Account eliminato con successo
+            showNotification("✅ Account eliminato con successo. Verrai reindirizzato alla home.", "success");
+    
+            setTimeout(() => {
+                localStorage.removeItem("token"); // Disconnette l'utente
+                window.location.href = "index.html"; // Reindirizza alla home
+            }, 2000);
+    
+        } catch (error) {
+            console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
+            showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
         }
-
-        // ✅ Account eliminato con successo
-        showNotification("✅ Account eliminato con successo!", "success");
-
-        setTimeout(() => {
-            localStorage.removeItem("token"); // Rimuove il token
-            window.location.href = "register.html"; // Reindirizza alla registrazione
-        }, 2000);
-    } catch (error) {
-        console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
-        showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
-    }
-});
-
-
+    });
 
 
 });
+
+
+
+
+
+
 
 
 
