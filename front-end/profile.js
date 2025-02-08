@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         favoriteHeroDisplay.textContent = user.favoriteHero || "Non specificato";
     } catch (err) {
         console.error("Errore nel recupero del profilo:", err.message); // Log dell'errore
-        showNotification("Errore nel caricamento del profilo.");
+        showNotification("Errore nel caricamento del profilo.", "error"); 
     }
 });
 
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         } catch (error) {
             console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
-            showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
+            showNotification("⚠️ Errore nella comunicazione con il server.", "error");
         }
     });
 
@@ -222,12 +222,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
             console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
-            showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
+            showNotification("⚠️ Errore nella comunicazione con il server.", "error");
         }
     });
 
+    // Seleziona il bottone per aprire il modal
+document.getElementById("deleteAccountButton").addEventListener("click", function () {
+    const deleteModal = new bootstrap.Modal(document.getElementById("deleteAccountModal"));
+    deleteModal.show();
+});
+
+// Gestione della conferma eliminazione account
+document.getElementById("confirmDeleteAccountButton").addEventListener("click", async function () {
+    try {
+        const response = await fetch(`http://localhost:5000/api/user/delete-account`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("⛔ DEBUG - Errore eliminazione account:", data);
+            showNotification(data.error || "Errore durante l'eliminazione dell'account.", "danger");
+            return;
+        }
+
+        // ✅ Account eliminato con successo
+        showNotification("✅ Account eliminato con successo!", "success");
+
+        setTimeout(() => {
+            localStorage.removeItem("token"); // Rimuove il token
+            window.location.href = "register.html"; // Reindirizza alla registrazione
+        }, 2000);
+    } catch (error) {
+        console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
+        showNotification("⚠️ Errore nella comunicazione con il server.", "danger");
+    }
+});
+
+
+
 
 });
+
+
 
 
 

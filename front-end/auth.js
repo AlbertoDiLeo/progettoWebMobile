@@ -89,7 +89,7 @@ if (loginForm) {
             const data = await response.json();
 
             if (response.ok) {
-                showNotification('Login completato con successo!');
+                showNotification('Login completato con successo!', 'success');
                 // Salva il token JWT nel localStorage
                 //console.log('Token ricevuto dal server:', data.token);  // Debug
                 localStorage.setItem('token', data.token);
@@ -122,7 +122,7 @@ if (confirmLogoutButton) {
         removeToken('token');
 
         // Opzionale: Mostra un messaggio di logout
-        showNotification('Logout effettuato con successo!');
+        showNotification('Logout effettuato con successo!', 'success');
 
         // Reindirizza l'utente alla pagina di login
         window.location.href = 'login.html';

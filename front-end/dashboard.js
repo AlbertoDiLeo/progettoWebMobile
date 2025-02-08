@@ -7,7 +7,7 @@ function initializeDashboard() {
     //console.log('Token recuperato nella dashboard:', token);
 
     if (!token) {
-        showNotification('Accesso non autorizzato. Effettua il login.', 'danger');
+        showNotification('Accesso non autorizzato. Effettua il login.', 'error');
         window.location.href = 'login.html';
         return;
     }
@@ -24,7 +24,7 @@ function initializeDashboard() {
         }
     } catch (error) {
         console.error('Errore nella decodifica del token:', error);
-        showNotification('Errore di autenticazione. Effettua nuovamente il login.', 'danger');
+        showNotification('Errore di autenticazione. Effettua nuovamente il login.', 'error');
         removeToken('token');
         window.location.href = 'login.html';
     }

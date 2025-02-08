@@ -86,3 +86,24 @@ exports.changePassword = async (req, res) => {
         res.status(500).json({ error: "Errore del server." });
     }
 };
+
+
+exports.deleteAccount = async (req, res) => {
+    try {
+        const userId = req.user.userId; // Ottenere l'ID dal token
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Utente non trovato." });
+        }
+
+        await User.findByIdAndDelete(userId);
+
+        //console.log("Account eliminato con successo");
+        res.json({ message: "Account eliminato con successo!" });
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione dell'account:", error);
+        res.status(500).json({ error: "Errore del server." });
+    }
+};
