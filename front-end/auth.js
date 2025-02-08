@@ -16,7 +16,7 @@ if (registerForm) {
         const confirmPassword = document.getElementById('confirmPassword').value;
         const favoriteHero = document.getElementById('favoriteHero').value;
 
-        let errors = []; // ✅ Dichiara un array per raccogliere gli errori
+        let errors = []; 
 
         try {
             const response = await fetch('http://localhost:5000/api/auth/register', {
@@ -114,20 +114,6 @@ if (loginForm) {
     });
 }
 
-/*const confirmLogoutButton = document.getElementById('confirmLogout');
-
-if (confirmLogoutButton) {
-    confirmLogoutButton.addEventListener('click', () => {
-        // Rimuove il token JWT dal localStorage
-        removeToken('token');
-
-        // Opzionale: Mostra un messaggio di logout
-        showNotification('Logout effettuato con successo!', 'success');
-
-        // Reindirizza l'utente alla pagina di login
-        window.location.href = 'login.html';
-    });
-}*/
 
 
 //module.exports = router;

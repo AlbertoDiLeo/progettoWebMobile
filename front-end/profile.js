@@ -1,9 +1,5 @@
 
 
-
-
-
-
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
     if (!token) {

@@ -5,13 +5,7 @@ const mongoose = require("mongoose");
 
 exports.updateUserProfile = async (req, res) => {
     try {
-
-        //console.log("🔍 DEBUG - Dati ricevuti per aggiornamento:", JSON.stringify(req.body, null, 2));
-        //console.log("🔍 DEBUG - Parametro userId ricevuto:", req.params.id);
-        //console.log("🔍 DEBUG - Utente autenticato dal token:", req.user);
-
         const { name, favoriteHero, birthDate, phone } = req.body;
-        //console.log("Dati ricevuti per aggiornamento:", req.body);
         const userId = req.params.id;
 
         if (!req.user || req.user.userId !== userId) {  // 🔥 Problema di autorizzazione
