@@ -1,4 +1,4 @@
-//console.log('File auth.js caricato correttamente');
+console.log('File auth.js caricato correttamente ciao');
 
 //import {setLocalStorage, removeToken, showNotification } from './lib.js';
 
