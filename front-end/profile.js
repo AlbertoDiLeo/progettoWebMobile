@@ -142,8 +142,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
     
             showNotification("Profilo aggiornato con successo!", "success");
+
+            if (data.newToken) {
+                localStorage.setItem("token", data.newToken);
+            }
+    
             setTimeout(() => {
                 location.reload();
+                //window.location.href = "dashboard.html";
             }, 1500);
     
         } catch (error) {

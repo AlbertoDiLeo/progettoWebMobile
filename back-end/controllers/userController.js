@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 User = require("../models/user");
 const mongoose = require("mongoose");
 
@@ -8,22 +9,17 @@ exports.updateUserProfile = async (req, res) => {
         const { name, favoriteHero, birthDate, phone } = req.body;
         const userId = req.params.id;
 
-        if (!req.user || req.user.userId !== userId) {  // 🔥 Problema di autorizzazione
-            //console.log("⛔ DEBUG - Autorizzazione fallita: userId non corrisponde");
+        if (req.user.userId !== userId) {  
             return res.status(403).json({ error: "Non autorizzato" });
         }
 
         if (name && name.trim() !== "") {
-            //console.log("🔍 DEBUG - Controllo disponibilità nome utente:", name);
             const existingUser = await User.findOne({ name });
             if (existingUser && existingUser._id.toString() !== userId) {
-               // console.log("⛔ DEBUG - Nome utente già in uso:", name);
                 return res.status(400).json({ error: "Nome utente già in uso. Scegline un altro." });
             }
         }
         
-
-         // Controllo sulla data di nascita: deve essere la data di oggi
          const today = new Date().toISOString().split("T")[0]; // Ottieni la data di oggi nel formato YYYY-MM-DD
          if (birthDate && birthDate > today) {
             return res.status(400).json({ error: "La data di nascita non è valida!" });
@@ -36,11 +32,25 @@ exports.updateUserProfile = async (req, res) => {
         );
 
         if (!updatedUser) {
-            //console.log("⛔ DEBUG - Utente non trovato nel database");
             return res.status(404).json({ error: "Utente non trovato" });
         }
 
-        res.json(updatedUser);
+        // ✅ Genera un nuovo token con i dati aggiornati
+        const newToken = jwt.sign(
+            { userId: updatedUser._id, 
+                name: updatedUser.name, 
+                favoriteHero: updatedUser.favoriteHero,
+                birthDate: updatedUser.birthDate, 
+                phone: updatedUser.phone
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }
+        );
+
+        // ✅ Ritorna il nuovo token insieme ai dati aggiornati
+        res.json({ message: "Profilo aggiornato con successo!", newToken, updatedUser });
+
+
     } catch (error) {
         console.error("Errore durante l'aggiornamento del profilo:", error);
         res.status(500).json({ error: `Errore del server: ${error.message}` });
