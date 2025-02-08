@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-User = require("../models/user");
+const User = require("../models/user");
 const mongoose = require("mongoose");
 
 
@@ -108,3 +108,27 @@ exports.deleteAccount = async (req, res) => {
     }
 };
 
+
+
+exports.buyCredits = async (req, res) => {
+    try {
+        const { amount } = req.body;  // Numero di crediti da acquistare
+        const userId = req.user.userId; // o id
+
+        if (amount <= 0) {
+            return res.status(400).json({ message: "Devi acquistare almeno 1 credito." });
+        }
+
+        // Aggiorniamo il saldo crediti dell'utente
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $inc: { credits: amount } },  // Aggiungiamo i crediti
+            { new: true }
+        );
+
+        res.json({ message: "Crediti acquistati con successo!", credits: user.credits });
+    } catch (error) {
+        console.error("Errore nell'acquisto dei crediti:", error);
+        res.status(500).json({ message: "Errore nell'acquisto dei crediti." });
+    }
+};

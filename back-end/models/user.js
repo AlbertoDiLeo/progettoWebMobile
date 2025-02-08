@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     favoriteHero: { type: String, required: true },
     birthDate: { type: Date, default: null }, // Campo opzionale
     phone: { type: String, match: /^[0-9]{10,15}$/, default: null }, // Campo opzionale
+    credits: { type: Number, default: 0, required: true },
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -28,6 +28,72 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = getToken();
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/api/user/profile", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Errore nel recupero del profilo");
+        }
+
+        const user = await response.json();
+        console.log("✅ Crediti ricevuti:", user.credits);
+
+        // Aggiorniamo il valore dei crediti nella dashboard
+        document.getElementById("crediti").textContent = user.credits;
+    } catch (error) {
+        console.error("❌ Errore nel recupero dei crediti:", error);
+        document.getElementById("crediti").textContent = "Errore";
+    }
+});
+
+
+document.getElementById("buy-credits-btn").addEventListener("click", async () => {
+    const token = getToken();
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/api/user/buy-credits", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ amount: 1 }) // Aggiunge 1 credito   
+        });
+
+        if (!response.ok) {
+            throw new Error("Errore nell'acquisto dei crediti");
+        }
+
+        const data = await response.json();
+        console.log("✅ Nuovo saldo crediti:", data.newCredits);
+
+        // Aggiorniamo il valore dei crediti nella dashboard
+        document.getElementById("crediti").textContent = data.newCredits;
+    } catch (error) {
+        console.error("❌ Errore nell'acquisto dei crediti:", error);
+        alert("Errore durante l'acquisto dei crediti.");
+    }
+});
+
+
+
 
 
 

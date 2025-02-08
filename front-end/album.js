@@ -1,6 +1,72 @@
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const token = getToken();
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const buyPackBtn = document.getElementById("buy-pack-btn");
+    const packPreview = document.getElementById("pack-preview");
+    const confirmPackBtn = document.getElementById("confirm-pack-btn");
+
+    let newFigurine = [];
+
+    buyPackBtn.addEventListener("click", async () => {
+        try {
+            console.log("🔹 Acquisto pacchetto...");
+
+            const response = await fetch("http://localhost:5000/api/album/buy-pack", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Errore nell'acquisto del pacchetto");
+            }
+
+            const data = await response.json();
+            newFigurine = data.newFigurine; // Salviamo le figurine trovate
+
+            console.log("✅ Figurine trovate:", newFigurine);
+
+            // Mostriamo le figurine trovate
+            packPreview.innerHTML = "";
+            newFigurine.forEach(figurina => {
+                const card = document.createElement("div");
+                card.className = "col";
+                card.innerHTML = `
+                    <div class="card">
+                        <img src="${figurina.image}" class="card-img-top" alt="${figurina.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${figurina.name}</h5>
+                        </div>
+                    </div>
+                `;
+                packPreview.appendChild(card);
+            });
+
+            packPreview.classList.remove("d-none");
+            confirmPackBtn.classList.remove("d-none");
+
+        } catch (error) {
+            console.error("❌ Errore:", error);
+        }
+    });
+
+    confirmPackBtn.addEventListener("click", async () => {
+        console.log("🔹 Aggiungiamo le figurine all'album...");
+        // Qui aggiungeremo la funzione per salvare le figurine nel database
+    });
+});
+
+
+
+/*document.addEventListener("DOMContentLoaded", async () => {
 
     const token = getToken();
     if (!token) {
@@ -54,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         emptyMessage.textContent = "Errore nel caricamento dell'album.";
         emptyMessage.classList.remove("d-none");
     }
-});
+});*/
 
 
 
-document.addEventListener("DOMContentLoaded", async () => {
+/*document.addEventListener("DOMContentLoaded", async () => {
     console.log("🔹 Testiamo il recupero di supereroi da Marvel API...");
 
     try {
@@ -111,5 +177,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         console.error("❌ Errore nel recupero dei supereroi:", error);
     }
-});
+});*/
 

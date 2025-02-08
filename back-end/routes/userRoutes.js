@@ -6,6 +6,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const { updateUserProfile } = require("../controllers/userController");
 const { changePassword } = require("../controllers/userController");
 const { deleteAccount } = require("../controllers/userController");
+const { buyCredits } = require('../controllers/userController');
 const mongoose = require("mongoose");
 
 
@@ -63,7 +64,7 @@ router.put("/change-password", authenticateToken, changePassword);
 
 router.delete("/delete/:id", authenticateToken, deleteAccount);
 
-
+router.post('/buy-credits', authMiddleware, buyCredits);
 
 
 
