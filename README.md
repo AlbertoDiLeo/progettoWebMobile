@@ -18,7 +18,7 @@ progetto-afse/
 │   ├── exchange.html                # Scambio figurine
 │   ├── credits.html                 # Gestione e acquisto crediti
 │   └── statistics.html              # Statistiche dell'album
-|   └── logout.html                  # Pagina di logout (non elimina l'account)
+|  
 ├── back-end/
 │   ├── controllers/
 │   │   ├── authController.js        # Logica per registrazione e login
