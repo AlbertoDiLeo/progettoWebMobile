@@ -234,11 +234,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Quando l'utente conferma l'eliminazione
     document.getElementById("confirmDeleteAccount").addEventListener("click", async function () {
-        console.log("🔍 DEBUG - userId prima della richiesta DELETE:", userId);
+        //console.log("🔍 DEBUG - userId prima della richiesta DELETE:", userId);
         //const token = localStorage.getItem("token");
         //const userId = getUserIdFromToken(token);
-        console.log("🔍 DEBUG - userId dopo la richiesta DELETE:", userId);
-        console.log("🔍 DEBUG - token:", token);
+        //console.log("🔍 DEBUG - userId dopo la richiesta DELETE:", userId);
+        //console.log("🔍 DEBUG - token:", token);
     
         /*if (!userId) {
             showNotification("❌ Errore: impossibile determinare l'utente.", "danger");
@@ -260,6 +260,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 showNotification(data.error || "Errore sconosciuto.", "danger");
                 return;
             }
+
+            // **Chiude il modale immediatamente dopo la conferma**
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteAccountModal"));
+            if (deleteModal) deleteModal.hide();
     
             // ✅ Account eliminato con successo
             showNotification("✅ Account eliminato con successo. Verrai reindirizzato alla home.", "success");
@@ -267,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
                 localStorage.removeItem("token"); // Disconnette l'utente
                 window.location.href = "index.html"; // Reindirizza alla home
-            }, 2000);
+            }, 1000);
     
         } catch (error) {
             console.error("⛔ DEBUG - Errore nella comunicazione con il server:", error);
