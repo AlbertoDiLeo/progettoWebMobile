@@ -2,8 +2,9 @@
 
 //import {setLocalStorage, removeToken, showNotification } from './lib.js';
 
+//da sistemare
 
-const registerForm = document.getElementById('registerForm'); //register.html
+const registerForm = document.getElementById('registerForm'); 
 
 if (registerForm) {
     registerForm.addEventListener('submit', async (event) => {
@@ -44,7 +45,7 @@ if (registerForm) {
         }
 
         if (usernameFeedback.classList.contains("text-danger") || usernameFeedback.classList.contains("text-warning")) {  
-            errors.push("❌ Utente non valido.");
+            errors.push("Utente non valido.");
         }
 
         // Verifica che le password corrispondano

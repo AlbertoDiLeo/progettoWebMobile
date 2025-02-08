@@ -35,7 +35,6 @@ exports.updateUserProfile = async (req, res) => {
             return res.status(404).json({ error: "Utente non trovato" });
         }
 
-        // ✅ Genera un nuovo token con i dati aggiornati
         const newToken = jwt.sign(
             { userId: updatedUser._id, 
                 name: updatedUser.name, 
@@ -47,7 +46,6 @@ exports.updateUserProfile = async (req, res) => {
             { expiresIn: "24h" }
         );
 
-        // ✅ Ritorna il nuovo token insieme ai dati aggiornati
         res.json({ message: "Profilo aggiornato con successo!", newToken, updatedUser });
 
 
@@ -62,32 +60,26 @@ exports.updateUserProfile = async (req, res) => {
 exports.changePassword = async (req, res) => {
     try {
         const userId = req.user.userId; 
-
         const { oldPassword, newPassword } = req.body;
-
-        //console.log("🔍 DEBUG - Cambio password per userId:", userId);
 
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "Utente non trovato." });
         }
 
-        // ✅ Verifica se la vecchia password è corretta
         const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
         if (!isPasswordValid) {
-            return res.status(400).json({ error: "❌ Vecchia password errata." });
+            return res.status(400).json({ error: "Vecchia password errata." });
         }
 
-        // ✅ Hash della nuova password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
 
-        //console.log("✅ DEBUG - Password cambiata con successo");
         res.json({ message: "Password aggiornata con successo!" });
 
     } catch (error) {
-        console.error("⛔ DEBUG - Errore durante il cambio password:", error);
+        console.error("Errore durante il cambio password:", error);
         res.status(500).json({ error: "Errore del server." });
     }
 };
@@ -108,10 +100,10 @@ exports.deleteAccount = async (req, res) => {
 
         await User.findByIdAndDelete(userId);
 
-        res.json({ message: "✅ Account eliminato con successo!" });
+        res.json({ message: "Account eliminato con successo!" });
 
     } catch (error) {
-        console.error("⛔ Errore durante l'eliminazione dell'account:", error);
+        console.error("Errore durante l'eliminazione dell'account:", error);
         res.status(500).json({ error: "Errore del server." });
     }
 };

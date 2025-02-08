@@ -20,7 +20,7 @@ const userRoutes = require("./routes/userRoutes");
 app.use("/api/user", userRoutes);
 
 const albumRoutes = require('./routes/albumRoutes');
-app.use('/album', albumRoutes);
+app.use('/api/album', albumRoutes);
 
 
 
@@ -29,9 +29,14 @@ app.use((req, res, next) => {
     next();
 });
 
+app._router.stack.forEach(r => {
+    if (r.route && r.route.path) {
+        console.log("Rotta attiva:", r.route.path);
+    }
+});
 
 
-/*app._router.stack.forEach((middleware) => {
+app._router.stack.forEach((middleware) => {
     if (middleware.route) {
         console.log(middleware.route.path);
     } else if (middleware.name === "router") {
@@ -41,7 +46,7 @@ app.use((req, res, next) => {
             }
         });
     }
-});*/
+});
 
 
 

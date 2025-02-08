@@ -1,9 +1,8 @@
-//import { getToken, removeToken, showNotification } from './lib.js'; // Se usi moduli
-//import jwt_decode from 'jwt-decode';
-document.addEventListener('DOMContentLoaded', initializeDashboard);
 
-function initializeDashboard() {
+document.addEventListener('DOMContentLoaded', async () => {
+//function initializeDashboard() {
     const token = localStorage.getItem('token');
+    console.log("token:", token);
 
     if (!token) {
         showNotification('Accesso non autorizzato. Effettua il login.', 'danger');
@@ -26,7 +25,7 @@ function initializeDashboard() {
         removeToken('token');
         window.location.href = 'login.html';
     }
-}
+});
 
 
 

@@ -24,7 +24,7 @@ router.get("/profile", authenticateToken, async (req, res) => {
 
         res.json(user);
     } catch (err) {
-        console.error("❌ Errore del server:", err);
+        console.error("Errore del server:", err);
         res.status(500).json({ message: "Errore del server" });
     }
 });
