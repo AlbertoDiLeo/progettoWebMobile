@@ -19,29 +19,17 @@ app.use('/api/auth', authRoutes);
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/user", userRoutes);
 
+const albumRoutes = require('./routes/albumRoutes');
+app.use('/album', albumRoutes);
+
+
 
 app.use((req, res, next) => {
     console.log(`Richiesta ricevuta: ${req.method} ${req.url}`);
     next();
 });
 
-/*app.get('/routes', (req, res) => {
-    const routes = [];
 
-    app._router.stack.forEach((middleware) => {
-        if (middleware.route) {
-            routes.push(middleware.route.path);
-        } else if (middleware.name === 'router') {
-            middleware.handle.stack.forEach((nested) => {
-                if (nested.route) {
-                    routes.push(nested.route.path);
-                }
-            });
-        }
-    });
-
-    res.json({ routes });
-});*/
 
 /*app._router.stack.forEach((middleware) => {
     if (middleware.route) {
