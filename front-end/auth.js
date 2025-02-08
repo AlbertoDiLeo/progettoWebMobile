@@ -114,7 +114,7 @@ if (loginForm) {
     });
 }
 
-const confirmLogoutButton = document.getElementById('confirmLogout');
+/*const confirmLogoutButton = document.getElementById('confirmLogout');
 
 if (confirmLogoutButton) {
     confirmLogoutButton.addEventListener('click', () => {
@@ -127,7 +127,7 @@ if (confirmLogoutButton) {
         // Reindirizza l'utente alla pagina di login
         window.location.href = 'login.html';
     });
-}
+}*/
 
 
 //module.exports = router;

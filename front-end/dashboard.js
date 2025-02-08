@@ -31,5 +31,21 @@ function initializeDashboard() {
 }
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("confirmLogout");
+
+    if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+            // Rimuove il token di autenticazione
+            localStorage.removeItem("token");
+
+            // Reindirizza alla pagina di login dopo il logout
+            window.location.href = "login.html";
+        });
+    }
+});
+
+
+
 
 
