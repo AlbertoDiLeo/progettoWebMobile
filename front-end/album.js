@@ -22,7 +22,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
+
+        console.log("Risposta ricevuta:", response); // Debug
+
         if (!response.ok) {
+            const error = await response.json();
+            console.error("Errore API:", error.message); // Log dell'errore API
             throw new Error("Errore nel caricamento dell'album");
         }
 

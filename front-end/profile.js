@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Recupera i dati attuali dell'utente
             const response = await fetch(`http://localhost:5000/api/user/users/${userId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
-            });
+            }); //da rivedere
     
             if (!response.ok) throw new Error("Errore nel recupero del profilo.");
     

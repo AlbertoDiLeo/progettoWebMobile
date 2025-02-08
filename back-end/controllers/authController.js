@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const Album = require("../models/album");
 
 
 exports.register = async (req, res) => {
@@ -32,6 +33,19 @@ exports.register = async (req, res) => {
             });
     
             await newUser.save();
+
+            // Dopo la creazione dell'utente, creiamo anche il suo album vuoto
+            try {
+                const newAlbum = new Album({
+                    userId: newUser._id,
+                    figurine: []
+                });
+                await newAlbum.save();
+                console.log("Album creato per l'utente:", newUser._id);
+                console.log("Album:", newAlbum);
+            } catch (error) {
+                console.error("Errore nella creazione dell'album:", error);
+            }
     
             res.status(201).json({ message: 'Registrazione completata' });
         } catch (err) {
@@ -58,7 +72,7 @@ exports.login = async (req, res) => {
         // Genera il token JWT includendo i campi necessari
         const token = jwt.sign(
             {
-                userId: user._id,  // Modificato per coerenza con la funzione getUserIdFromToken()
+                userId: user._id,  
                 name: user.name,
                 email: user.email,
                 favoriteHero: user.favoriteHero,

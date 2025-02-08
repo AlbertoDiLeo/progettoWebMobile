@@ -30,7 +30,7 @@ if (registerForm) {
 
             const data = await response.json();
 
-           if (!response.ok) {
+           if (!response.ok) { //da rivedere
                 if (Array.isArray(data.messages)) {
                     errors = errors.concat(data.messages); // ✅ Aggiunge errori dal backend
                 } else {
@@ -59,6 +59,7 @@ if (registerForm) {
         }
 
         showNotification("Registrazione avvenuta con successo!", "success");
+
         setTimeout(() => {
             window.location.href = 'login.html'; // Reindirizza dopo 1 secondo
         }, 1000);
@@ -89,7 +90,7 @@ if (loginForm) {
 
             const data = await response.json();
 
-            if (response.ok) {
+            if (response.ok) { //da rivedere
                 showNotification('Login completato con successo!', 'success');
                 // Salva il token JWT nel localStorage
                 //console.log('Token ricevuto dal server:', data.token);  // Debug
@@ -101,16 +102,16 @@ if (loginForm) {
             } else {
                  // Gestisce errori specifici
                 if (response.status === 404) {
-                    showNotification('Email non registrata.', 'error');
+                    showNotification('Email non registrata.', 'danger');
                 } else if (response.status === 401) {
-                    showNotification('Password errata.', 'error');
+                    showNotification('Password errata.', 'danger');
                 } else {
-                    showNotification(`Errore: ${data.message}`, 'error');
+                    showNotification(`Errore: ${data.message}`, 'danger');
                 }
             }
         } catch (error) {
             console.error('Errore nel login:', error);
-            showNotification('Si è verificato un errore. Riprova più tardi.', 'error');
+            showNotification('Si è verificato un errore. Riprova più tardi.', 'danger');
         }
     });
 }

@@ -29,13 +29,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app._router.stack.forEach(r => {
-    if (r.route && r.route.path) {
-        console.log("Rotta attiva:", r.route.path);
-    }
-});
-
-
 app._router.stack.forEach((middleware) => {
     if (middleware.route) {
         console.log(middleware.route.path);
