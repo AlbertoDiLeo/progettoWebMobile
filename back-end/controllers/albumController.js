@@ -22,13 +22,8 @@ exports.createAlbum = async (req, res) => {
 exports.getAlbum = async (req, res) => {
     try {
         const userId = req.user.userId;
-        console.log("User ID ricevuto dalla richiesta:", userId); // Debug
 
         const album = await Album.findOne({ userId });
-        //const album = await Album.findOne({ userId: new mongoose.Types.ObjectId(userId) });
-        console.log("userId:", userId);
-
-        console.log("Album:", album);
 
         if (!album) {
             return res.status(404).json({ message: "Album non trovato" });
