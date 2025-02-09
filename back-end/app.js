@@ -26,11 +26,12 @@ const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
 
 /*const resetFigurine = async () => {
+    console.log("Reset della collection 'figurine'");
     await Figurine.deleteMany({});
-    await populateFigurine();
-};
+    //await populateFigurine();
+};*/
 resetFigurine();
-populateFigurine();*/
+//populateFigurine();
 
 
 

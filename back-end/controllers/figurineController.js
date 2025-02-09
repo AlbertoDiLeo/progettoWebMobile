@@ -52,23 +52,30 @@ const { getRandomInt } = require("../marvel");
     }
 };*/
 
-async function populateFigurineCollection() {
+exports.populateFigurine = async () => {
     try {
         const count = await Figurine.countDocuments();
-        /*if (count > 0) {
+        if (count > 0) {
             console.log("La collection 'figurine' è già popolata.");
             return;
-        }*/
+        }
+
+        const totalResponse = await getFromMarvel("public/characters", "limit=1");
+        const TOTAL_HEROES = totalResponse.data.total;
 
         //console.log("Recupero 100 eroi casuali dalla Marvel...");
-        let selectedHeroes = new Set();
-        while (selectedHeroes.size < 100) {
+
+        let selectedHeroIds = new Set();
+        let allPossibleFigurines = [];
+
+        while (selectedHeroIds.size < 100) {
             const randomOffset = getRandomInt(0, TOTAL_HEROES - 1);
             const response = await getFromMarvel("public/characters", `limit=1&offset=${randomOffset}`);
             const hero = response.data.results[0];
 
-            if (hero) {
-                selectedHeroes.add({
+            if (hero && !selectedHeroIds.has(hero.id)) {
+                selectedHeroIds.add(hero.id);
+                allPossibleFigurines.push({
                     idMarvel: hero.id.toString(),
                     name: hero.name,
                     image: `${hero.thumbnail.path}.${hero.thumbnail.extension}`
@@ -76,8 +83,9 @@ async function populateFigurineCollection() {
             }
         }
 
-        await Figurine.insertMany(Array.from(selectedHeroes));
-        //console.log("100 figurine salvate con successo in MongoDB.");
+        //console.log("📌 Salvataggio delle figurine nel database...", allPossibleFigurines);
+        await Figurine.insertMany(Array.from(allPossibleFigurines));
+        //console.log("100 figurine salvate con successo in MongoDB.", allPossibleFigurines);
     } catch (error) {
         console.error("Errore nel popolamento delle figurine:", error);
     }

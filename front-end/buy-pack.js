@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (data.credits !== undefined && data.credits !== null) {
         localStorage.setItem("credits", data.credits);
-        console.log("✅ Crediti aggiornati e salvati:", data.credits);
+        //console.log("Crediti aggiornati e salvati:", data.credits);
         } else {
-            console.error("❌ Errore: il server non ha restituito i crediti aggiornati!", data);
+            console.error("Errore: il server non ha restituito i crediti aggiornati!", data);
         }
 
 
