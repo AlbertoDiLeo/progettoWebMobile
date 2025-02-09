@@ -108,3 +108,17 @@ footer {
     border-radius: 5px;
 }
 
+
+
+/* Unica animazione per la rimozione delle figurine */
+.removing {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+/* Animazione per far svanire la figurina */
+@keyframes fadeOut {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); }
+}
+
+

@@ -233,7 +233,7 @@ exports.getAlbum = async (req, res) => {
 
 
 
-exports.buyPack = async (req, res) => {
+/*exports.buyPack = async (req, res) => {
     try {
         const userId = req.user.userId;
         console.log(`🔹 Acquisto pacchetto per userId: ${userId}`);
@@ -268,7 +268,39 @@ exports.buyPack = async (req, res) => {
         console.error("❌ Errore nell'acquisto del pacchetto:", error);
         res.status(500).json({ message: "Errore nell'acquisto del pacchetto", error });
     }
+};*/
+
+
+exports.buyPack = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        console.log(`🔹 Acquisto pacchetto per userId: ${userId}`);
+
+        // Troviamo le figurine disponibili nel database
+        const allPossibleFigurines = await FigurineCollection.find({});
+        if (allPossibleFigurines.length === 0) {
+            console.log("❌ Nessuna figurina disponibile per il pacchetto!");
+            return res.status(500).json({ message: "Nessuna figurina disponibile" });
+        }
+
+        // 🔹 Estrazione casuale di 5 figurine
+        let figurineTrovate = [];
+        for (let i = 0; i < 5; i++) {
+            const randomIndex = getRandomInt(0, allPossibleFigurines.length - 1);
+            figurineTrovate.push(allPossibleFigurines[randomIndex]);
+        }
+
+        console.log("📜 Figurine trovate prima di inviare al frontend:", figurineTrovate);
+
+        // 🔹 Invio delle figurine trovate al frontend, **ma non vengono ancora salvate nell'album**
+        res.json({ figurine: figurineTrovate });
+
+    } catch (error) {
+        console.error("❌ Errore nell'acquisto del pacchetto:", error);
+        res.status(500).json({ message: "Errore nell'acquisto del pacchetto", error });
+    }
 };
+
 
 
 
