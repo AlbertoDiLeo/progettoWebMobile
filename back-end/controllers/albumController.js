@@ -1,11 +1,12 @@
 const Album = require('../models/album');
 const User = require('../models/user');
-const mongoose = require('mongoose');
+const { getFromMarvel } = require("../marvel");
+const { getRandomInt } = require("../marvel");
 
 
 exports.createAlbum = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         let album = await Album.findOne({ userId });
 
         if (album) {
@@ -40,12 +41,11 @@ exports.getAlbum = async (req, res) => {
 
 exports.buyPack = async (req, res) => {
     try {
-        const userId = req.user.id;
-        console.log("🔹 Acquisto pacchetto per userId:", userId);
+        const userId = req.user.userId;
 
         // Controlliamo se l'utente ha abbastanza crediti
         const user = await User.findById(userId);
-        if (user.credits < 1) {
+        if (!user || user.credits < 1) {
             return res.status(400).json({ message: "Crediti insufficienti" });
         }
 
@@ -53,13 +53,32 @@ exports.buyPack = async (req, res) => {
         user.credits -= 1;
         await user.save();
 
-        // Generare 5 figurine casuali
-        const response = await getFromMarvel("public/characters", "limit=100");
+        // 🔹 Definiamo il limite massimo di supereroi nel nostro album
+        const ALBUM_HERO_LIMIT = 100;  // Impostiamo un limite di 100 supereroi totali
+        const offset = getRandomInt(0, 1500 - ALBUM_HERO_LIMIT);  // Scegliamo casualmente da dove partire
+        //const offset = getRandomInt(0, 1000); // Riduciamo l'offset per sicurezza
+
+        // Recuperiamo i supereroi limitati usando l'offset casuale
+        const response = await getFromMarvel("public/characters", `limit=${ALBUM_HERO_LIMIT}&offset=${offset}`);
         const allHeroes = response.data.results;
+
+        // prova
+       // const response = await getFromMarvel("public/characters", `limit=${ALBUM_HERO_LIMIT}&offset=${offset}`);
+        console.log("🔹 Risposta ricevuta da Marvel API:", response);  // Debug
+
+        // Controlliamo se la risposta contiene i dati corretti
+        /*if (!response || !response.data || !response.data.results) {
+            console.error("❌ Errore: la risposta Marvel non contiene dati validi.");
+            return res.status(500).json({ message: "Errore nel recupero delle figurine da Marvel" });
+        }*/
+
+        //const allHeroes = response.data.results;
+
         const newFigurine = [];
 
-        for (let i = 0; i < 5; i++) { //usare funzione prof
-            const randomHero = allHeroes[Math.floor(Math.random() * allHeroes.length)];
+        // Generiamo 5 figurine casuali dal nostro set limitato
+        for (let i = 0; i < 5; i++) {
+            const randomHero = allHeroes[getRandomInt(0, allHeroes.length - 1)];
             newFigurine.push({
                 idMarvel: randomHero.id,
                 name: randomHero.name,
@@ -69,11 +88,11 @@ exports.buyPack = async (req, res) => {
 
         console.log("✅ Figurine trovate:", newFigurine);
 
-        // Ritorniamo le figurine trovate, ma non le salviamo ancora
+        // Ritorniamo le figurine trovate, ma non le salviamo ancora nell'album
         res.json({ newFigurine });
 
     } catch (error) {
-        console.error("❌ Errore nell'acquisto del pacchetto:", error);
+        console.error("Errore nell'acquisto del pacchetto:", error);
         res.status(500).json({ message: "Errore nell'acquisto del pacchetto", error });
     }
 };
