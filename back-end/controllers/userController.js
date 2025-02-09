@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Album = require("../models/album");
 const mongoose = require("mongoose");
 
 
@@ -87,7 +88,7 @@ exports.changePassword = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => { //come mai funziona?
     try {
-        const userId = req.params.id; // non dovrebbe essere userId?
+        const userId = req.user.userId; // non dovrebbe essere userId?
 
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ error: "ID utente non valido." });
@@ -98,6 +99,7 @@ exports.deleteAccount = async (req, res) => { //come mai funziona?
             return res.status(404).json({ error: "Utente non trovato." });
         }
 
+        await Album.findOneAndDelete({ userId }); 
         await User.findByIdAndDelete(userId);
 
         res.json({ message: "Account eliminato con successo!" });

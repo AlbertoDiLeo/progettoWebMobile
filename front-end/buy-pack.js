@@ -23,7 +23,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         const data = await response.json();
-        //console.log("Risposta ricevuta dal server:", data);
+
+        //console.log(`Pacchetto acquistato! Crediti rimanenti: ${data.credits}`, "success");
+
+
+        if (data.credits !== undefined && data.credits !== null) {
+        localStorage.setItem("credits", data.credits);
+        console.log("✅ Crediti aggiornati e salvati:", data.credits);
+        } else {
+            console.error("❌ Errore: il server non ha restituito i crediti aggiornati!", data);
+        }
+
 
         if (!response.ok || !data.figurine) {
             throw new Error(data.message || "Errore nell'acquisto del pacchetto");
@@ -74,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 //console.log("Aggiunta figurina all'album:", figurinaDaAggiungere);
 
-                cardElement.classList.add("removing");
+                cardElement.classList.add("adding");
                 // Attendi la fine dell'animazione prima di rimuoverlo dal DOM
                 setTimeout(async () => {
                     await fetch("http://localhost:5000/api/album/add-to-album", {
@@ -98,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const cardElement = document.getElementById(`figurina-${index}`);
                 //console.log("Figurina scartata:", figurineScelte[index]);
                 // Effetto di scarto
-                cardElement.classList.add("removing");
+                cardElement.classList.add("discarding");
                 // Attendi la fine dell'animazione prima di rimuoverlo dal DOM
                 setTimeout(() => {
                     figurineScelte.splice(index, 1);

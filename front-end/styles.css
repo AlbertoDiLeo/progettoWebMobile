@@ -110,15 +110,30 @@ footer {
 
 
 
-/* Unica animazione per la rimozione delle figurine */
-.removing {
-    animation: fadeOut 0.5s ease-out forwards;
+/* Effetto quando una figurina viene aggiunta all'album */
+.adding {
+    animation: fadeOutUp 0.5s ease-out forwards;
 }
 
-/* Animazione per far svanire la figurina */
-@keyframes fadeOut {
-    0% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0.8); }
+/* Effetto quando una figurina viene scartata */
+.discarding {
+    animation: shatter 0.5s ease-out forwards;
 }
+
+/* Animazione per far svanire verso l'alto */
+@keyframes fadeOutUp {
+    0% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-10px); }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+/* Animazione per simulare la distruzione della figurina */
+@keyframes shatter {
+    0% { opacity: 1; transform: scale(1) rotate(0deg); }
+    25% { opacity: 0.8; transform: scale(0.9) rotate(5deg); }
+    50% { opacity: 0.6; transform: scale(0.8) rotate(-5deg); }
+    100% { opacity: 0; transform: scale(0) rotate(20deg); }
+}
+
 
 

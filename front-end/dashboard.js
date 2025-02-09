@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    console.log("🔹 Crediti salvati in localStorage:", localStorage.getItem("credits"));
+
     try {
         const response = await fetch("http://localhost:5000/api/user/profile", {
             method: "GET",
@@ -52,9 +54,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Aggiorniamo il valore dei crediti nella dashboard
         const creditiElement = document.getElementById("crediti");
         if (creditiElement) {
-            creditiElement.textContent = user.credits;
+            const savedCredits = localStorage.getItem("credits");
+            if (savedCredits !== null) {
+                creditiElement.textContent = savedCredits;
+            } else {
+                creditiElement.textContent = user.credits;
+            }
         } else {
             console.error("Elemento con id 'crediti' non trovato!");
+        }
+        localStorage.removeItem("credits");
+
+
+        const buyPackButton = document.getElementById("buy-pack-btn");
+
+        if (user.credits < 1) {
+            buyPackButton.classList.add("disabled");
+            buyPackButton.addEventListener("click", (event) => {
+                event.preventDefault();
+                showNotification("Crediti insufficienti! Acquista più crediti per comprare un pacchetto.", "danger");
+            });
         }
         
     } catch (error) {

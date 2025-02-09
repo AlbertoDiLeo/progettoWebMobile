@@ -40,7 +40,7 @@ exports.getAlbum = async (req, res) => {
 
         // Recuperiamo tutte le figurine disponibili
         const allPossibleFigurines = await FigurineCollection.find({});
-        //console.log("✅ Figurine totali disponibili:", allPossibleFigurines.length);
+        //console.log("Figurine totali disponibili:", allPossibleFigurines.length);
 
         if (allPossibleFigurines.length === 0) {
             return res.status(500).json({ message: "Errore: nessuna figurina disponibile nella collezione globale" });
@@ -53,7 +53,7 @@ exports.getAlbum = async (req, res) => {
             return acc;
         }, {});
 
-        // 🔹 Formattiamo i dati per il frontend
+        // Formattiamo i dati per il frontend
         const albumData = allPossibleFigurines.map(hero => ({
             idMarvel: hero.idMarvel,
             name: hero.name,
@@ -69,7 +69,7 @@ exports.getAlbum = async (req, res) => {
         res.json({ figurine: albumData });
 
     } catch (error) {
-        console.error("❌ ERRORE GRAVE NEL RECUPERO DELL'ALBUM:", error);
+        console.error("ERRORE GRAVE NEL RECUPERO DELL'ALBUM:", error);
         res.status(500).json({ message: "Errore nel recupero dell'album", error });
     }
 };
@@ -80,6 +80,26 @@ exports.buyPack = async (req, res) => {
         const userId = req.user.userId;
         //console.log(`Acquisto pacchetto per userId: ${userId}`);
 
+        let album = await Album.findOne({ userId });
+        if (!album) {
+            //console.log("Album non trovato per questo utente.");
+            return res.status(404).json({ message: "Album non trovato" });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            //console.log("Utente non trovato.");
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+
+        if (user.credits < 1) {
+            //console.log("Crediti insufficienti per acquistare un pacchetto.");
+            return res.status(400).json({ message: "Crediti insufficienti" });
+        }
+
+        user.credits -= 1;
+        await user.save();
+
         // Troviamo le figurine disponibili nel database
         const allPossibleFigurines = await FigurineCollection.find({});
         if (allPossibleFigurines.length === 0) {
@@ -87,17 +107,28 @@ exports.buyPack = async (req, res) => {
             return res.status(500).json({ message: "Nessuna figurina disponibile" });
         }
 
-        // 🔹 Estrazione casuale di 5 figurine
-        let figurineTrovate = [];
+        // Estrazione casuale di 5 figurine
+        /*let figurineTrovate = [];
         for (let i = 0; i < 5; i++) {
             const randomIndex = getRandomInt(0, allPossibleFigurines.length - 1);
             figurineTrovate.push(allPossibleFigurines[randomIndex]);
+        }*/
+       
+        let figurineTrovate = new Set();
+        while (figurineTrovate.size < 5) {
+            const randomIndex = getRandomInt(0, allPossibleFigurines.length - 1);
+            figurineTrovate.add(allPossibleFigurines[randomIndex]);
         }
+        figurineTrovate = Array.from(figurineTrovate); // Convertiamo il Set in Array
+       
+
+        
 
         console.log("📜 Figurine trovate prima di inviare al frontend:", figurineTrovate);
 
         // Invio delle figurine trovate al frontend, **ma non vengono ancora salvate nell'album**
-        res.json({ figurine: figurineTrovate });
+        res.json({ figurine: figurineTrovate, credits: user.credits });
+        console.log("✅ Crediti inviati al frontend:", user.credits);
 
     } catch (error) {
         console.error("Errore nell'acquisto del pacchetto:", error);
