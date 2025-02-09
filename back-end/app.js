@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
 const { populateFigurineCollection } = require("./controllers/figurineController");
+const FigurineCollection = require("./models/figurineCollection");
+
 
 const app = express();
 
@@ -23,6 +25,11 @@ app.use("/api/user", userRoutes);
 const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
 
+/*const resetFigurineCollection = async () => {
+    await FigurineCollection.deleteMany({});
+    await populateFigurineCollection();
+};
+resetFigurineCollection();*/
 populateFigurineCollection();
 
 
@@ -32,7 +39,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app._router.stack.forEach((middleware) => {
+/*app._router.stack.forEach((middleware) => {
     if (middleware.route) {
         console.log(middleware.route.path);
     } else if (middleware.name === "router") {
@@ -42,7 +49,7 @@ app._router.stack.forEach((middleware) => {
             }
         });
     }
-});
+});*/
 
 
 

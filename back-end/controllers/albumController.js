@@ -172,7 +172,7 @@ exports.getAlbum = async (req, res) => {
 
 
 
-exports.buyPack = async (req, res) => {
+/*exports.buyPack = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -200,10 +200,10 @@ exports.buyPack = async (req, res) => {
         console.log("🔹 Risposta ricevuta da Marvel API:", response);  // Debug
 
         // Controlliamo se la risposta contiene i dati corretti
-        /*if (!response || !response.data || !response.data.results) {
-            console.error("❌ Errore: la risposta Marvel non contiene dati validi.");
-            return res.status(500).json({ message: "Errore nel recupero delle figurine da Marvel" });
-        }*/
+        //if (!response || !response.data || !response.data.results) {
+            //console.error("❌ Errore: la risposta Marvel non contiene dati validi.");
+            //return res.status(500).json({ message: "Errore nel recupero delle figurine da Marvel" });
+        //}
 
         //const allHeroes = response.data.results;
 
@@ -228,7 +228,49 @@ exports.buyPack = async (req, res) => {
         console.error("Errore nell'acquisto del pacchetto:", error);
         res.status(500).json({ message: "Errore nell'acquisto del pacchetto", error });
     }
+};*/
+
+
+
+
+exports.buyPack = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        console.log(`🔹 Acquisto pacchetto per userId: ${userId}`);
+
+        let album = await Album.findOne({ userId });
+        if (!album) {
+            console.log("❌ Album non trovato per questo utente.");
+            return res.status(404).json({ message: "Album non trovato" });
+        }
+
+        // 🔹 Recuperiamo tutte le figurine disponibili
+        const allPossibleFigurines = await FigurineCollection.find({});
+        if (allPossibleFigurines.length === 0) {
+            console.log("❌ Nessuna figurina disponibile per il pacchetto!");
+            return res.status(500).json({ message: "Nessuna figurina disponibile per il pacchetto" });
+        }
+        console.log(`✅ Figurine totali disponibili per il pacchetto: ${allPossibleFigurines.length}`);
+
+        // 🔹 Estraiamo 5 figurine casuali
+        let figurineTrovate = [];
+        for (let i = 0; i < 5; i++) {
+            const randomIndex = getRandomInt(0, allPossibleFigurines.length - 1);
+            figurineTrovate.push(allPossibleFigurines[randomIndex]);
+        }
+
+        console.log("📜 Figurine trovate prima di inviare al frontend:", figurineTrovate);
+
+        // 🔹 Verifica che stiamo inviando un array valido
+        res.json({ figurine: figurineTrovate });
+
+    } catch (error) {
+        console.error("❌ Errore nell'acquisto del pacchetto:", error);
+        res.status(500).json({ message: "Errore nell'acquisto del pacchetto", error });
+    }
 };
+
+
 
 
 
