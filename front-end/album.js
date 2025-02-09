@@ -31,11 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             card.innerHTML = `
                 <div class="card shadow-sm ${hero.found ? "" : "opacity-50"}">
-                    
                     <img src="${hero.image}" class="card-img-top ${hero.found ? '' : 'blurred'}" alt="${hero.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${hero.name}</h5>
-                        ${hero.found ? `<span class="badge bg-secondary">x${hero.count}</span>` : ""}
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">${hero.name}</h5>
+                            ${hero.found && hero.count > 1 ? `<span class="badge bg-danger">x${hero.count}</span>` : ""}
+                        </div>
+                        ${hero.found ? `<button class="btn btn-info view-details" data-id="${hero.idMarvel}">🔍 Vedi dettagli</button>` : ""}
                     </div>
                 </div>
             `;

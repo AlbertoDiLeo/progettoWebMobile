@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    console.log("🔹 Crediti salvati in localStorage:", localStorage.getItem("credits"));
+    //console.log("Crediti salvati in localStorage:", localStorage.getItem("credits"));
 
     try {
         const response = await fetch("http://localhost:5000/api/user/profile", {

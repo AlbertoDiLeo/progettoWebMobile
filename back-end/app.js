@@ -2,8 +2,8 @@ require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
-const { populateFigurineCollection } = require("./controllers/figurineController");
-//const FigurineCollection = require("./models/figurineCollection");
+const { populateFigurine } = require("./controllers/figurineController");
+//const Figurine = require("./models/figurine");
 
 
 const app = express();
@@ -25,12 +25,12 @@ app.use("/api/user", userRoutes);
 const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
 
-/*const resetFigurineCollection = async () => {
-    await FigurineCollection.deleteMany({});
-    await populateFigurineCollection();
+/*const resetFigurine = async () => {
+    await Figurine.deleteMany({});
+    await populateFigurine();
 };
-resetFigurineCollection();*/
-populateFigurineCollection();
+resetFigurine();
+populateFigurine();*/
 
 
 
@@ -61,8 +61,12 @@ mongoose.connect(process.env.MONGO_URI)
 const PORT = process.env.PORT || 5000;
 
 // Avvia il server
-app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
+//app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
 
+app.listen(PORT, async () => {
+    console.log(`🚀 Server in ascolto sulla porta ${PORT}`);
+    await populateFigurine(); // Popola la collection con i 100 eroi casuali
+});
 
 
 /*

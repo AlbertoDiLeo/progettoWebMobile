@@ -33,7 +33,7 @@ progetto-afse/
 │   ├── models/
 │   │   ├── user.js                  # Modello utente per MongoDB
 │   │   ├── album.js                 # Modello album per MongoDB
-|   |   └── figurineCollection.js    # Modello per le figurine
+|   |   └── figurine.js              # Modello per le figurine
 │   ├── routes/
 │   │   ├── authRoutes.js            # Rotte per autenticazione (login, registrazione)
 │   │   ├── userRoutes.js            # Rotte per operazioni generali sugli utenti
