@@ -2,6 +2,7 @@ require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
+const { populateFigurineCollection } = require("./controllers/figurineController");
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use("/api/user", userRoutes);
 
 const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
+
+populateFigurineCollection();
 
 
 

@@ -10,7 +10,8 @@ const albumSchema = new mongoose.Schema({
         series: [String], // Serie in cui compare
         events: [String], // Eventi in cui compare
         comics: [String], // Fumetti in cui compare
-    }]
+    }],
+    count: { type: Number, default: 1 }  // Numero di copie possedute
 });
 
 module.exports = mongoose.model('Album', albumSchema);
