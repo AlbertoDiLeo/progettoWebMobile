@@ -6,7 +6,9 @@ progetto-afse/
 |   |   ├── auth.js                  # Script per login, registrazione logout e controlli
 │   │   ├── lib.js                   # Script JavaScript lato client
 |   |   ├── dashboard.js             # Script per dashboard
-|   |   └── profile.js               # Script per il profilo
+|   |   ├── profile.js               # Script per il profilo
+|   |   ├── album.js                 # Script per l'album
+|   |   └── buy-pack.js              # Script per il pacchetto acquistato
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
 │   ├── index.html                   # Pagina principale del sito
@@ -16,19 +18,22 @@ progetto-afse/
 │   ├── profile.html                 # Gestione del profilo utente
 │   ├── album.html                   # Visualizzazione e gestione dell'album
 │   ├── exchange.html                # Scambio figurine
-│   ├── credits.html                 # Gestione e acquisto crediti
-│   └── statistics.html              # Statistiche dell'album
+│   ├── statistics.html              # Statistiche dell'album
+|   ├── buy-pack.html                # Acquisto pacchetto
+|   └── statistics.html              # Statistiche album
 |  
 ├── back-end/
 │   ├── controllers/
 │   │   ├── authController.js        # Logica per registrazione e login
 │   │   ├── userController.js        # Logica per operazioni sugli utenti
-│   │   └── albumController.js       # Logica per gestione dell'album e figurine
+│   │   ├── albumController.js       # Logica per gestione dell'album e figurine
+|   |   └── figurineController.js    # Logica per la gestione delle figurine
 |   ├── middleware/
 │   │   └── authMiddleware.js        # Middleware per l'autenticazione
 │   ├── models/
 │   │   ├── user.js                  # Modello utente per MongoDB
-│   │   └── album.js                 # Modello album per MongoDB
+│   │   ├── album.js                 # Modello album per MongoDB
+|   |   └── figurineCollection.js    # Modello per le figurine
 │   ├── routes/
 │   │   ├── authRoutes.js            # Rotte per autenticazione (login, registrazione)
 │   │   ├── userRoutes.js            # Rotte per operazioni generali sugli utenti
@@ -36,6 +41,7 @@ progetto-afse/
 │   ├── config/
 │   │   └── db.js                    # Configurazione connessione a MongoDB
 │   ├── app.js                       # Configurazione principale di Node.js
+|   ├── marvel.js                    # API Marvel
 │   ├── package.json                 # Dipendenze del progetto
 │   ├── .env                         # Variabili di ambiente (es. credenziali MongoDB)
 │   └── swagger.json                 # Documentazione delle API con Swagger
