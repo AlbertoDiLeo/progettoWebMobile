@@ -1,5 +1,5 @@
 //const fetch = require("node-fetch");
-const crypto = require("crypto");
+//const crypto = require("crypto");
 require("dotenv").config();
 
 async function getFromMarvel(url, query=""){

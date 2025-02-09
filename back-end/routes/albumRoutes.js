@@ -1,6 +1,6 @@
 const express = require('express');
 const authenticateToken = require('../middlewares/authMiddleware');
-const authMiddleware = require('../middlewares/authMiddleware');  // Middleware di autenticazione
+const authMiddleware = require('../middlewares/authMiddleware');  
 const { createAlbum, getAlbum } = require('../controllers/albumController');
 const { buyPack } = require('../controllers/albumController');
 const { addToAlbum } = require('../controllers/albumController');

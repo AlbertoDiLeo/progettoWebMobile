@@ -85,9 +85,9 @@ exports.changePassword = async (req, res) => {
 };
 
 
-exports.deleteAccount = async (req, res) => {
+exports.deleteAccount = async (req, res) => { //come mai funziona?
     try {
-        const userId = req.params.id; // Prendi l'ID dall'URL
+        const userId = req.params.id; // non dovrebbe essere userId?
 
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ error: "ID utente non valido." });
@@ -113,7 +113,7 @@ exports.deleteAccount = async (req, res) => {
 exports.buyCredits = async (req, res) => {
     try {
         const { amount } = req.body;  // Numero di crediti da acquistare
-        const userId = req.user.userId; // o id
+        const userId = req.user.userId; 
 
         if (amount <= 0) {
             return res.status(400).json({ message: "Devi acquistare almeno 1 credito." });

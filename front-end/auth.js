@@ -1,6 +1,4 @@
-//console.log('File auth.js caricato correttamente ciao');
 
-//import {setLocalStorage, removeToken, showNotification } from './lib.js';
 
 //da sistemare
 
@@ -17,7 +15,7 @@ if (registerForm) {
         const confirmPassword = document.getElementById('confirmPassword').value;
         const favoriteHero = document.getElementById('favoriteHero').value;
 
-        let errors = []; 
+        let errors = []; // non necessario
 
         try {
             const response = await fetch('http://localhost:5000/api/auth/register', {
@@ -32,7 +30,7 @@ if (registerForm) {
 
            if (!response.ok) { //da rivedere
                 if (Array.isArray(data.messages)) {
-                    errors = errors.concat(data.messages); // ✅ Aggiunge errori dal backend
+                    errors = errors.concat(data.messages); // Aggiunge errori dal backend
                 } else {
                     errors.push(data.message);
                 }

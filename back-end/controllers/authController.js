@@ -41,8 +41,8 @@ exports.register = async (req, res) => {
                     figurine: []
                 });
                 await newAlbum.save();
-                console.log("Album creato per l'utente:", newUser._id);
-                console.log("Album:", newAlbum);
+                //console.log("Album creato per l'utente:", newUser._id);
+                //console.log("Album:", newAlbum);
             } catch (error) {
                 console.error("Errore nella creazione dell'album:", error);
             }

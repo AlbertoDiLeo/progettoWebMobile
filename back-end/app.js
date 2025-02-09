@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
 const { populateFigurineCollection } = require("./controllers/figurineController");
-const FigurineCollection = require("./models/figurineCollection");
+//const FigurineCollection = require("./models/figurineCollection");
 
 
 const app = express();
