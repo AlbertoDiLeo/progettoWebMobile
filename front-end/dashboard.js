@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const user = await response.json();
+        //user.credits = user.credits || 0;
 
         // Aggiorniamo il valore dei crediti nella dashboard
         const creditiElement = document.getElementById("crediti");
