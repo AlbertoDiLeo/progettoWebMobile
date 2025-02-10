@@ -94,6 +94,13 @@
 
     <div class="container mt-5">
 
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <button id="prev-page" class="btn btn-outline-primary me-2">◀️ Precedente</button>
+            <span id="page-indicator" class="mx-3">Pagina 1 di X</span>
+            <button id="next-page" class="btn btn-outline-primary ms-2">Successivo ▶️</button>
+        </div>
+        
+
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid justify-content-end">
                 <form class="d-flex" role="search" onsubmit="return false;">
@@ -105,13 +112,13 @@
             </div>
         </nav>
         
-
-       
+        <div class="container mt-4 text-center">
+            <h1 class="text-marvel fw-bold">Il Mio Album Marvel </h1>
+            <p class="text-marvel-subtitle">
+                Colleziona le figurine dei tuoi supereroi preferiti! Completa l'album e scopri tutti i dettagli delle tue carte.
+            </p>
+        </div>
         
-        
-        <h1 class="text-center text-primary">Il mio Album</h1>
-        <p class="text-center">Qui puoi vedere tutte le figurine raccolte.</p>
-
         <div id="album-container" class="row row-cols-1 row-cols-md-4 g-4">
             <div id="card-template" class="col d-none">
                 <div class="card h-100 shadow-sm">

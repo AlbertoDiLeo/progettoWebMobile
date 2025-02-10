@@ -160,30 +160,6 @@ footer {
 }
 
 
-/* album */
-#album-container .card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#album-container .card-img-top {
-    height: 250px; /* Imposta un'altezza fissa per le immagini */
-    object-fit: cover; /* Taglia l'immagine per adattarla alla card */
-}
-
-#album-container .card-footer {
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-#album-container .btn-info {
-    width: 100%;
-}
-
-
 
 
 
@@ -248,7 +224,96 @@ footer {
     padding: 6px 10px;
 }
 
+
+/* album */
+
+/*#album-container .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}*/
+
+/*#album-container .card-img-top {
+    height: 250px; /* Imposta un'altezza fissa per le immagini */
+    /* object-fit: cover;  Taglia l'immagine per adattarla alla card 
+}*/
+
+/*#album-container .card-footer {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+#album-container .btn-info {
+    width: 100%;
+}*/
+
 /* Effetto ingrandimento e ombra al passaggio del mouse per figurina in album */
+/*.figurina-trovata {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: none;
+    border-radius: 15px;
+}
+
+.figurina-trovata:hover {
+    transform: translateY(-15px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+}*/
+
+
+/* album*/
+/* Palette colori Marvel */
+:root {
+    --marvel-red: #ED1D24;
+    --marvel-blue: #0057B8;
+    --marvel-dark: #1C1C1C;
+    --marvel-light: #F8F8F8;
+}
+
+/* Stile per il titolo */
+.text-marvel {
+    font-size: 2.2rem;
+    color: var(--marvel-red);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+.text-marvel-subtitle {
+    font-size: 1.2rem;
+    color: var(--marvel-dark);
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+
+
+/* Barra di ricerca */
+#search-bar {
+    max-width: 250px;
+    border-radius: 15px;
+    border: 2px solid var(--marvel-red);
+}
+
+/* Pulsanti di paginazione */
+#prev-page, #next-page {
+    font-weight: bold;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+#prev-page:hover, #next-page:hover {
+    background-color: var(--marvel-blue);
+    color: white;
+}
+
+/* Stile delle card */
+.card {
+    background-color: var(--marvel-light);
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
 .figurina-trovata {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     border: none;
@@ -260,6 +325,25 @@ footer {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Badge dei doppioni */
+.badge {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+/* Pulsanti "Dettagli" */
+.btn-info {
+    background-color: var(--marvel-blue);
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+    background-color: var(--marvel-red);
+    color: white;
+}
 
 
 
