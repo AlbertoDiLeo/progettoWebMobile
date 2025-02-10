@@ -29,8 +29,8 @@ app.use('/api/album', albumRoutes);
     console.log("Reset della collection 'figurine'");
     await Figurine.deleteMany({});
     //await populateFigurine();
-};*/
-resetFigurine();
+};
+resetFigurine();*/
 //populateFigurine();
 
 
