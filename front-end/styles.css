@@ -346,4 +346,71 @@ footer {
 }
 
 
+/* Stile per l'ordinamento */
+.sort-dropdown {
+    width: 200px;
+    border-radius: 10px;
+    border: 2px solid red;
+    background-color: white;
+    font-weight: bold;
+    color: black;
+    transition: all 0.3s ease;
+}
+
+/* Stile per la barra di ricerca (senza sfondo nero) */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: white; 
+    padding: 5px 10px;
+    border-radius: 10px;
+    /*border: 2px solid red;*/
+}
+
+.search-bar {
+    border: none;
+    background: none;
+    color: black;
+    width: 200px;
+    outline: none;
+}
+
+.search-bar::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    color: red;
+}
+
+/* Stile per i pulsanti di paginazione */
+#prev-page, #next-page {
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid red;
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease;
+}
+
+#prev-page:hover, #next-page:hover {
+    background-color: red;
+    color: white;
+}
+
+/* Stile per il numero di pagina */
+#page-indicator {
+    font-weight: bold;
+    color: black;
+}
+
+
 
