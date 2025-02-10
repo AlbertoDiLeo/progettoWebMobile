@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const img = cardClone.querySelector("#card-image");
             const title = cardClone.querySelector("#card-title");
             const detailsButton = cardClone.querySelector("#card-details");
+            const badge = cardClone.querySelector("#card-badge");
 
             img.src = hero.image;
             img.alt = hero.name;
@@ -103,6 +104,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 detailsButton.addEventListener("click", () => {
                     window.location.href = `hero-details.html?id=${hero.idMarvel}`;
                 });
+                if (hero.count > 1) {
+                    badge.textContent = `x${hero.count}`;
+                    badge.classList.remove("d-none");
+                }
             } else {
                 cardClone.classList.add("opacity-50");
             }
