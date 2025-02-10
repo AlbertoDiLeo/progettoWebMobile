@@ -45,10 +45,10 @@ exports.populateFigurine = async () => {
 exports.getHeroDetails = async (req, res) => {
     try {
         const heroId = req.params.id;
-        console.log(`Recupero dettagli per eroe ID: ${heroId}`);
+        //console.log(`Recupero dettagli per eroe ID: ${heroId}`);
 
         const response = await getFromMarvel(`public/characters/${heroId}`);
-        console.log("Risposta API Marvel:", response);
+        //console.log("Risposta API Marvel:", response);
 
 
         if (!response || !response.data || !response.data.results.length) {

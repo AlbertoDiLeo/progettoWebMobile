@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const albumData = await albumResponse.json();
-        console.log("Numero di figurine nell'album:", albumData.figurine.length);
+        //console.log("Numero di figurine nell'album:", albumData.figurine.length);
 
         albumContainer.innerHTML = "";
 

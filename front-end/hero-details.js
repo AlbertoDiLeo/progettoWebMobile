@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/api/hero/${heroId}`);
+        const response = await fetch(`http://localhost:5000/api/marvel/hero/${heroId}`);
         if (!response.ok) throw new Error("Errore nel recupero dei dettagli");
 
         const hero = await response.json();
