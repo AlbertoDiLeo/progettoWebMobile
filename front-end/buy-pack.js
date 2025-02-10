@@ -126,7 +126,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 🔹 Evento per acquistare un nuovo pacchetto
     buyAnotherPackButton.addEventListener("click", async () => {
-        if (user.credits < 1) return;
+        if (user.credits < 1) {
+            showNotification("Crediti esauriti!", "danger");
+            return;
+        }
 
         try {
             const buyResponse = await fetch("http://localhost:5000/api/album/buy-pack", {
