@@ -150,7 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             tutteLeFigurine = tutteLeFigurine.concat(newFigurineScelte);
 
             aggiornaVisualizzazione(newFigurineScelte);
-            localStorage.setItem("credits", data.credits);
             user.credits = data.credits;
 
             if (user.credits < 1) {

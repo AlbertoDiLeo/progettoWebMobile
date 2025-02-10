@@ -50,22 +50,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const user = await response.json();
-        //user.credits = user.credits || 0;
 
         // Aggiorniamo il valore dei crediti nella dashboard
         const creditiElement = document.getElementById("crediti");
         if (creditiElement) {
-            const savedCredits = localStorage.getItem("credits");
-            if (savedCredits !== null) {
-                creditiElement.textContent = savedCredits;
-            } else {
-                creditiElement.textContent = user.credits;
-            }
+            creditiElement.textContent = user.credits;
         } else {
             console.error("Elemento con id 'crediti' non trovato!");
         }
-        localStorage.removeItem("credits");
-
 
         const buyPackButton = document.getElementById("buy-pack-btn");
 
