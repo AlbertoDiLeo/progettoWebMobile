@@ -75,7 +75,7 @@ exports.getHeroDetails = async (req, res) => {
 };
 
 
-exports.getHeroComics = async (req, res) => {
+/*exports.getHeroComics = async (req, res) => {
     try {
         const heroId = req.params.id;
         console.log(`Recupero fumetti per eroe ID: ${heroId}`);
@@ -99,4 +99,4 @@ exports.getHeroComics = async (req, res) => {
         console.error("Errore nel recupero dei fumetti:", error);
         res.status(500).json({ message: "Errore nel recupero dei fumetti", error });
     }
-};
+};*/
