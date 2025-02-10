@@ -158,3 +158,48 @@ footer {
     opacity: 0.7; /* Riduce leggermente l'opacità */
     transition: opacity 0.3s ease-in-out; /* Aggiunge una transizione fluida */
 }
+
+
+
+
+/* dettagli eroe */
+#hero-details .hero-card {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+#hero-details .scrollable-section {
+    max-height: 250px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#hero-details .scrollable-section::-webkit-scrollbar {
+    display: none;
+}
+
+#hero-details .back-button {
+    margin-top: 20px;
+    margin-left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#hero-details .back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#hero-details {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+

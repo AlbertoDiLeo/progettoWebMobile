@@ -73,3 +73,30 @@ exports.getHeroDetails = async (req, res) => {
         res.status(500).json({ message: "Errore nel recupero dei dettagli dell'eroe", error });
     }
 };
+
+
+exports.getHeroComics = async (req, res) => {
+    try {
+        const heroId = req.params.id;
+        console.log(`Recupero fumetti per eroe ID: ${heroId}`);
+
+        const response = await getFromMarvel(`public/characters/${heroId}/comics`);
+        
+        if (!response || !response.data || !response.data.results.length) {
+            return res.status(404).json({ message: "Nessun fumetto trovato" });
+        }
+
+        const comics = response.data.results.map(comic => ({
+            title: comic.title,
+            thumbnail: {
+                path: comic.thumbnail.path,
+                extension: comic.thumbnail.extension
+            }
+        }));
+
+        res.json(comics);
+    } catch (error) {
+        console.error("Errore nel recupero dei fumetti:", error);
+        res.status(500).json({ message: "Errore nel recupero dei fumetti", error });
+    }
+};

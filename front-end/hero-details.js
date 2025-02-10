@@ -25,7 +25,8 @@ function mostraDettagli(hero) {
     document.getElementById("hero-name").textContent = hero.name;
     document.getElementById("hero-image").src = hero.image;
     document.getElementById("hero-description").textContent = hero.description || "Nessuna descrizione disponibile.";
-
+    //document.body.style.backgroundImage = `url(${hero.image})`;
+    document.body.style.backgroundImage = `url('images/background.jpg')`;
     riempiLista("hero-series", hero.series);
     riempiLista("hero-events", hero.events);
     riempiLista("hero-comics", hero.comics);
@@ -36,15 +37,15 @@ function riempiLista(idLista, elementi) {
     lista.innerHTML = "";
 
     if (elementi.length === 0) {
-        lista.innerHTML = "<li class='list-group-item'>Nessun dato disponibile</li>";
+        lista.innerHTML = "<p class='text-center'>Nessun dato disponibile</p>";
         return;
     }
 
     elementi.forEach(elemento => {
-        const li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = elemento;
-        lista.appendChild(li);
+        const div = document.createElement("div");
+        div.className = "p-2 bg-dark text-white rounded my-2 text-center";
+        div.textContent = elemento;
+        lista.appendChild(div);
     });
 }
 
