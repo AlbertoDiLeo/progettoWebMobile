@@ -2,7 +2,7 @@ require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
-const { populateFigurine } = require("./controllers/figurineController");
+const { populateFigurine } = require("./controllers/marvelController");
 //const Figurine = require("./models/figurine");
 
 
@@ -24,6 +24,9 @@ app.use("/api/user", userRoutes);
 
 const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
+
+const marvelRoutes = require('./routes/marvelRoutes');
+app.use('/api/marvel', marvelRoutes);
 
 /*const resetFigurine = async () => {
     console.log("Reset della collection 'figurine'");

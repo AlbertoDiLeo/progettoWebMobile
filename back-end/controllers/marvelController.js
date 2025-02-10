@@ -2,56 +2,6 @@ const Figurine = require("../models/figurine");
 const { getFromMarvel } = require("../marvel");
 const { getRandomInt } = require("../marvel");
 
-
-/*exports.populateFigurine = async () => {
-    try {
-        const count = await Figurine.countDocuments();
-        if (count > 0) {
-            console.log("La collezione di figurine esiste già.");
-            return;
-        }
-
-        const totalResponse = await getFromMarvel("public/characters", "limit=1");
-
-        if (!totalResponse || !totalResponse.data || !totalResponse.data.total) {
-            console.error("Errore nel recupero del numero totale di eroi.");
-            return;
-        }
-
-        const TOTAL_HEROES = totalResponse.data.total;
-        const ALBUM_HERO_LIMIT = 100;
-
-        //console.log(`🔹 La Marvel ha ${TOTAL_HEROES} eroi disponibili.`);
-        
-        let selectedHeroes = new Set();
-        let allPossibleFigurines = [];
-
-        while (selectedHeroes.size < ALBUM_HERO_LIMIT) {
-            const randomOffset = getRandomInt(0, TOTAL_HEROES - 1);
-            const response = await getFromMarvel("public/characters", `limit=1&offset=${randomOffset}`);
-            
-            if (response && response.data && response.data.results.length > 0) {
-                const hero = response.data.results[0];
-
-                // Se l'eroe non è già stato selezionato, lo aggiungiamo
-                if (!selectedHeroes.has(hero.id)) {
-                    selectedHeroes.add(hero.id);
-                    allPossibleFigurines.push({
-                        idMarvel: hero.id.toString(),
-                        name: hero.name,
-                        image: `${hero.thumbnail.path}.${hero.thumbnail.extension}`
-                    });
-                }
-            }
-        }
-
-        await Figurine.insertMany(allPossibleFigurines);
-        //console.log(`${allPossibleFigurines.length} figurine uniche inserite nella collezione globale!`);
-    } catch (error) {
-        console.error("Errore nel popolamento delle figurine:", error);
-    }
-};*/
-
 exports.populateFigurine = async () => {
     try {
         const count = await Figurine.countDocuments();
@@ -95,9 +45,11 @@ exports.populateFigurine = async () => {
 exports.getHeroDetails = async (req, res) => {
     try {
         const heroId = req.params.id;
-        //console.log(`Recupero dettagli per eroe ID: ${heroId}`);
+        console.log(`Recupero dettagli per eroe ID: ${heroId}`);
 
         const response = await getFromMarvel(`public/characters/${heroId}`);
+        console.log("Risposta API Marvel:", response);
+
 
         if (!response || !response.data || !response.data.results.length) {
             return res.status(404).json({ message: "Eroe non trovato nella Marvel API" });

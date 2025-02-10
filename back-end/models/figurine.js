@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); //forse non serve
 
 const figurineSchema = new mongoose.Schema({
     idMarvel: { type: String, required: true, unique: true }, // ID della figurina su Marvel
