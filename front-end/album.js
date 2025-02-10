@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const card = document.createElement("div");
             card.className = "col";
 
-            card.innerHTML = `
+            /*card.innerHTML = `
                 <div class="card shadow-sm ${hero.found ? "" : "opacity-50"}">
                     <img src="${hero.image}" class="card-img-top ${hero.found ? '' : 'blurred'}" alt="${hero.name}">
                     <div class="card-body d-flex justify-content-between align-items-center">
@@ -41,7 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${hero.found ? `<button class="btn btn-info view-details" data-id="${hero.idMarvel}">🔍 Vedi dettagli</button>` : ""}
                     </div>
                 </div>
-            `;
+            `;*/
+
+            
 
             albumContainer.appendChild(card);
         });

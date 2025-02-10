@@ -8,7 +8,8 @@ progetto-afse/
 |   |   ├── dashboard.js             # Script per dashboard
 |   |   ├── profile.js               # Script per il profilo
 |   |   ├── album.js                 # Script per l'album
-|   |   └── buy-pack.js              # Script per il pacchetto acquistato
+|   |   ├── buy-pack.js              # Script per il pacchetto acquistato
+|   |   └── hero-details.js
 │   ├── img/
 │   │   └── (immagini statiche, icone, ecc.)
 │   ├── index.html                   # Pagina principale del sito
@@ -20,7 +21,8 @@ progetto-afse/
 │   ├── exchange.html                # Scambio figurine
 │   ├── statistics.html              # Statistiche dell'album
 |   ├── buy-pack.html                # Acquisto pacchetto
-|   └── statistics.html              # Statistiche album
+|   ├── statistics.html              # Statistiche album
+|   └── hero-details.html
 |  
 ├── back-end/
 │   ├── controllers/
