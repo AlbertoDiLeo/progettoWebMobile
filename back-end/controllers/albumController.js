@@ -52,7 +52,7 @@ exports.getAlbum = async (req, res) => {
             acc[f.idMarvel] = f.count;
             return acc;
         }, {});
-        console.log("Figurine possedute dall'utente:", figurinePossedute);
+        //console.log("Figurine possedute dall'utente:", figurinePossedute);
 
         // Formattiamo i dati per il frontend
         const albumData = allPossibleFigurines.map(hero => ({
