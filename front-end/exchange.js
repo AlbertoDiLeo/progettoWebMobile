@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
             // Popoliamo i menu a tendina con gli **id**, ma mostriamo il nome
             offeredFigurinaSelect.innerHTML = doppioni.length > 0 
-            ? doppioni.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name} (x${figurina.count})</option>`).join("")
+            ? doppioni.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name} x${figurina.count}</option>`).join("")
             : `<option disabled>Nessuna figurina doppia</option>`;
 
             requestedFigurinaSelect.innerHTML = mancanti.length > 0
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
        // **Validazione: assicurarsi che entrambi i campi siano selezionati**
         if (!offeredFigurinaId || !requestedFigurinaId) {
-            showNotification("Seleziona sia una figurina da offrire che una da richiedere!", "danger");
+            showNotification("Seleziona sia una figurina da offrire che una da richiedere!", "danger"); //non serve
             return;
         }
 
@@ -80,11 +80,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (!response.ok) throw new Error("Errore nella proposta di scambio");
 
-            showNotification("Scambio proposto con successo!", "success");
+            showNotification("Scambio proposto con successo!", "success"); //non va
             loadExchanges();
         } catch (error) {
             console.error(error);
         }
+
+        setTimeout(() => { // è la soluzione migliore?
+            location.reload();
+        }, 50);
     });
 
     // **Caricare gli scambi disponibili**
@@ -96,25 +100,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+    
             if (!response.ok) throw new Error("Errore nel recupero degli scambi");
             const exchanges = await response.json();
-
-            exchangeList.innerHTML = exchanges.map(exchange => `
-                <div class="col-md-4">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
-                            <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
-                            <button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta Scambio</button>
+    
+            // Decodifichiamo il token per ottenere l'ID dell'utente attuale
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            const userId = decodedToken.userId;
+    
+            exchangeList.innerHTML = exchanges.map(exchange => {
+                const isMyExchange = exchange.offeredBy === userId;
+    
+                return `
+                    <div class="col-md-4">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                                <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
+                                ${!isMyExchange ? `<button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta Scambio</button>` : ""}
+                                ${isMyExchange ? `<button class="btn btn-danger" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>` : ""}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join("");
+                `;
+            }).join("");
         } catch (error) {
             console.error(error);
         }
     }
+    
 
     // **Accettare uno scambio**
     window.acceptExchange = async (exchangeId) => {
@@ -128,14 +142,53 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (!response.ok) throw new Error("Errore nell'accettare lo scambio");
 
-            alert("Scambio accettato!");
+            showNotification("Scambio accettato!");
+            loadExchanges();
+
+        } catch (error) {
+            console.error(error);
+            showNotification("Errore nell'accettare lo scambio!", "danger");
+        }
+
+    };
+
+    // **Ritirare uno scambio**
+    window.withdrawExchange = async (exchangeId) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        } 
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Errore nel ritiro dello scambio");
+
+            showNotification("Scambio ritirato con successo!", "success");
             loadExchanges();
         } catch (error) {
             console.error(error);
+            showNotification("Errore nel ritiro dello scambio!", "danger");
         }
+
+        setTimeout(() => { // è la soluzione migliore?
+            location.reload();
+        }, 50);
     };
 
     // Caricamento iniziale
     loadUserFigurine();
     loadExchanges();
 });
+
+
+
+
+
+

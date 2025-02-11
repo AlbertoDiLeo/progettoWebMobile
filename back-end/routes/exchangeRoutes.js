@@ -2,7 +2,7 @@
 const express = require('express');
 //const { authenticateToken } = require('../middlewares/authMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
-const { getExchanges, createExchange, acceptExchange } = require('../controllers/exchangeController');
+const { getExchanges, createExchange, acceptExchange, withdrawExchange } = require('../controllers/exchangeController');
 
 const router = express.Router();
 
@@ -14,5 +14,9 @@ router.post('/', authMiddleware, createExchange);
 
 // Accettare uno scambio esistente
 router.put('/:id/accept', authMiddleware, acceptExchange);
+
+// Ritirare uno scambio esistente
+router.delete('/:id', authMiddleware, withdrawExchange);
+
 
 module.exports = router;

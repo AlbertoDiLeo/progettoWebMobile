@@ -1,6 +1,7 @@
 const Exchange = require('../models/exchange');
 const User = require('../models/user');
 const Figurina = require('../models/figurina');
+const Album = require('../models/album');
 
 
 exports.getExchanges = async (req, res) => {
@@ -15,14 +16,9 @@ exports.getExchanges = async (req, res) => {
 
 exports.createExchange = async (req, res) => { 
     try {
-        //console.log("Richiesta ricevuta per creare uno scambio:", req.body);
         const { offeredFigurinaId, requestedFigurinaId } = req.body;
 
-        /*if (!offeredFigurina || !requestedFigurina) {
-            return res.status(400).json({ error: "Mancano dati per la proposta di scambio" });
-        }*/
-
-        // **Troviamo il vero `ObjectId` in MongoDB usando `idMarvel`**
+        // **Troviamo `ObjectId` in MongoDB usando `idMarvel`**
         const offeredFigurina = await Figurina.findOne({ idMarvel: offeredFigurinaId });
         const requestedFigurina = await Figurina.findOne({ idMarvel: requestedFigurinaId });
 
@@ -30,7 +26,30 @@ exports.createExchange = async (req, res) => {
             return res.status(404).json({ error: "Una delle figurine non esiste nel database" });
         }
 
-        //console.log("🔹 Creazione scambio tra figurine:", offeredFigurina._id, requestedFigurina._id);
+        const userAlbum = await Album.findOne({ userId: req.user.userId });
+        const userFigurina = userAlbum.figurine.find(f => f.idMarvel === offeredFigurinaId);
+
+        if (!userFigurina || userFigurina.count <= 1) {
+            return res.status(400).json({ error: "Non puoi offrire questa figurina perché non è un doppione" });
+        }
+
+        // Contiamo quanti scambi attualmente coinvolgono questa figurina
+        /*const existingExchanges = await Exchange.countDocuments({
+            offeredBy: req.user.userId,
+            offeredFigurina: offeredFigurina._id
+        });
+
+        if (existingExchanges >= userFigurina.count - 1) {
+            return res.status(400).json({ error: "Hai già raggiunto il limite di scambi per questa figurina!" });
+        }*/
+
+        //console.log('count:', userFigurina.nome, userFigurina.count);
+
+        await Album.updateOne(
+            { userId: req.user.userId, "figurine.idMarvel": offeredFigurinaId },
+            { $inc: { "figurine.$.count": -1 } }
+        );
+
 
         // Creiamo il nuovo scambio
         const newExchange = new Exchange({
@@ -39,8 +58,6 @@ exports.createExchange = async (req, res) => {
             requestedFigurina: requestedFigurina._id,  
             status: 'pending'
         });
-
-        //console.log("🔹 Scambio creato:", newExchange);
 
         // Salviamo lo scambio nel database
         await newExchange.save();
@@ -95,5 +112,62 @@ exports.acceptExchange = async (req, res) => {
     } catch (error) {
         console.error('Errore nell’accettare lo scambio:', error);
         res.status(500).json({ error: 'Errore durante l’accettazione dello scambio' });
+    }
+};
+
+
+
+exports.withdrawExchange = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+        //console.log('exchangeId:', exchangeId);
+
+        // Troviamo lo scambio
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange) return res.status(404).json({ error: "Scambio non trovato" });
+
+        // Verifichiamo che lo scambio appartenga all'utente
+        if (exchange.offeredBy.toString() !== req.user.userId) {
+            return res.status(403).json({ error: "Non puoi ritirare uno scambio che non hai creato" });
+        }
+
+        // **Troviamo l'album dell'utente**
+        const userAlbum = await Album.findOne({ userId: req.user.userId });
+        if (!userAlbum) {
+            return res.status(404).json({ error: "Album non trovato" });
+        }
+        //console.log('userAlbum:', userAlbum);
+
+        const offeredFigurina = await Figurina.findById(exchange.offeredFigurina);
+        //console.log('offeredFigurina:', offeredFigurina);
+
+        await Album.updateOne(
+            { userId: req.user.userId, "figurine.idMarvel": offeredFigurina.idMarvel },
+            { $inc: { "figurine.$.count": +1 } }
+        );
+        //console.log('count:', userAlbum.figurine.find(f => f.idMarvel === offeredFigurina).count);
+
+        // **Incrementiamo il conteggio della figurina direttamente nell'array con `$inc`**
+        /*const updateResult = await Album.updateOne(
+            { userId: req.user.userId, "figurine.idMarvel": exchange.offeredFigurina.idMarvel },
+            { $inc: { "figurine.$.count": 1 } }
+        );*/
+
+        // Se la figurina non esiste, la aggiungiamo all'album con count = 1
+        /*if (updateResult.modifiedCount === 0) {
+            await Album.updateOne(
+                { userId: req.user.userId },
+                { $push: { figurine: { idMarvel: exchange.offeredFigurina.idMarvel, count: 1 } } }
+            );
+        }*/
+
+
+        // Eliminare lo scambio dal database
+        await Exchange.findByIdAndDelete(exchangeId);
+
+        res.json({ message: "Scambio ritirato con successo" });
+    } catch (error) {
+        console.error("Errore nel ritiro dello scambio:", error);
+        res.status(500).json({ error: "Errore nel ritiro dello scambio" });
     }
 };
