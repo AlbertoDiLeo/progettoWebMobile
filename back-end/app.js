@@ -3,8 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
 const { populateFigurine } = require("./controllers/marvelController");
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require("./routes/userRoutes");
+const albumRoutes = require('./routes/albumRoutes');
+const marvelRoutes = require('./routes/marvelRoutes');
+const exchangeRoutes = require('./routes/exchangeRoutes');
 //const Figurina = require("./models/figurina");
-
 
 const app = express();
 
@@ -15,18 +19,16 @@ app.use(cors());
 app.use(express.json());
 
 // Importa e usa le rotte
-const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
 // Importa e usa le rotte per user
-const userRoutes = require("./routes/userRoutes");
 app.use("/api/user", userRoutes);
 
-const albumRoutes = require('./routes/albumRoutes');
 app.use('/api/album', albumRoutes);
 
-const marvelRoutes = require('./routes/marvelRoutes');
 app.use('/api/marvel', marvelRoutes);
+
+app.use('/api/exchange', exchangeRoutes);
 
 /*const resetFigurine = async () => {
     await Figurina.deleteMany({});

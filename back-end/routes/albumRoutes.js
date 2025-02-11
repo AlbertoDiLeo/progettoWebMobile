@@ -4,9 +4,9 @@ const { createAlbum, getAlbum, buyPack, addToAlbum } = require('../controllers/a
 
 const router = express.Router();
 
-router.post('/', authenticateToken, createAlbum);
+router.post('/', authenticateToken, createAlbum); //sistemare rotta
 
-router.get('/', authenticateToken, getAlbum);
+router.get('/', authenticateToken, getAlbum); //sistemare rotta
 
 router.post('/buy-pack', authenticateToken, buyPack);
 
