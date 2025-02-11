@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
 const { populateFigurine } = require("./controllers/marvelController");
-//const Figurine = require("./models/figurine");
+//const Figurina = require("./models/figurina");
 
 
 const app = express();
@@ -29,12 +29,11 @@ const marvelRoutes = require('./routes/marvelRoutes');
 app.use('/api/marvel', marvelRoutes);
 
 /*const resetFigurine = async () => {
+    await Figurina.deleteMany({});
     console.log("Reset della collection 'figurine'");
-    await Figurine.deleteMany({});
     //await populateFigurine();
 };
 resetFigurine();*/
-//populateFigurine();
 
 
 
