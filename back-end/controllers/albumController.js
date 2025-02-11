@@ -1,7 +1,7 @@
 const Album = require('../models/album');
 const User = require('../models/user');
 const { getRandomInt } = require("../marvel");
-const Figurine = require("../models/figurine");
+const Figurina = require("../models/figurina");
 
 
 exports.createAlbum = async (req, res) => {
@@ -39,7 +39,7 @@ exports.getAlbum = async (req, res) => {
         }
 
         // Recuperiamo tutte le figurine disponibili
-        const allPossibleFigurines = await Figurine.find({});
+        const allPossibleFigurines = await Figurina.find({});
         //console.log("Figurine totali disponibili:", allPossibleFigurines.length);
 
         if (allPossibleFigurines.length === 0) {
@@ -98,7 +98,7 @@ exports.buyPack = async (req, res) => {
         await user.save();
 
         // Troviamo le figurine disponibili nel database
-        const allPossibleFigurines = await Figurine.find({});
+        const allPossibleFigurines = await Figurina.find({});
         if (allPossibleFigurines.length === 0) {
             //console.log("Nessuna figurina disponibile per il pacchetto!");
             return res.status(500).json({ message: "Nessuna figurina disponibile" });

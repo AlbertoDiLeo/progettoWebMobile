@@ -1,10 +1,10 @@
-const Figurine = require("../models/figurine");
+const Figurina = require("../models/figurina");
 const { getFromMarvel } = require("../marvel");
 const { getRandomInt } = require("../marvel");
 
 exports.populateFigurine = async () => {
     try {
-        const count = await Figurine.countDocuments();
+        const count = await Figurina.countDocuments();
         if (count > 0) {
             console.log("La collection 'figurine' è già popolata.");
             return;
@@ -34,7 +34,7 @@ exports.populateFigurine = async () => {
         }
 
         //console.log("📌 Salvataggio delle figurine nel database...", allPossibleFigurines);
-        await Figurine.insertMany(Array.from(allPossibleFigurines));
+        await Figurina.insertMany(Array.from(allPossibleFigurines));
         //console.log("100 figurine salvate con successo in MongoDB.", allPossibleFigurines);
     } catch (error) {
         console.error("Errore nel popolamento delle figurine:", error);
