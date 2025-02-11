@@ -2,15 +2,25 @@ const Exchange = require('../models/exchange');
 const User = require('../models/user');
 
 
-exports.createExchange = async (req, res) => { // Mancavano req e res
+exports.getExchanges = async (req, res) => {
     try {
-        const { offeredSticker, requestedSticker } = req.body;
+        const exchanges = await Exchange.find().populate('offeredFigurina requestedFigurina');
+        res.json(exchanges);
+    } catch (error) {
+        res.status(500).json({ error: 'Errore nel recupero degli scambi' });
+    }
+};
+
+
+exports.createExchange = async (req, res) => { 
+    try {
+        const { offeredFigurina, requestedFigurina } = req.body;
 
         // Creiamo il nuovo scambio
         const newExchange = new Exchange({
             offeredBy: req.user.id, // ID dell'utente autenticato
-            offeredSticker,
-            requestedSticker,
+            offeredFigurina,
+            requestedFigurina,
             status: 'pending'
         });
 
@@ -38,7 +48,7 @@ exports.acceptExchange = async (req, res) => {
 
         // Controlliamo che l'utente abbia la figurina richiesta dallo scambio
         const user = await User.findById(userId);
-        if (!user.album.includes(exchange.requestedSticker)) {
+        if (!user.album.includes(exchange.requestedFigurina)) {
             return res.status(400).json({ error: 'Non possiedi la figurina richiesta per completare lo scambio' });
         }
 
@@ -49,11 +59,11 @@ exports.acceptExchange = async (req, res) => {
         }
 
         // Scambiamo le figurine tra gli utenti
-        offeredUser.album = offeredUser.album.filter(figurina => figurina.toString() !== exchange.offeredSticker.toString());
-        offeredUser.album.push(exchange.requestedSticker);
+        offeredUser.album = offeredUser.album.filter(figurina => figurina.toString() !== exchange.offeredFigurina.toString());
+        offeredUser.album.push(exchange.requestedFigurina);
 
-        user.album = user.album.filter(figurina => figurina.toString() !== exchange.requestedSticker.toString());
-        user.album.push(exchange.offeredSticker);
+        user.album = user.album.filter(figurina => figurina.toString() !== exchange.requestedFigurina.toString());
+        user.album.push(exchange.offeredFigurina);
 
         // Salviamo gli utenti aggiornati nel database
         await offeredUser.save();

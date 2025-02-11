@@ -60,7 +60,7 @@ exports.getAlbum = async (req, res) => {
             idMarvel: hero.idMarvel,
             name: hero.name,
             image: hero.image,
-            found: figurinePossedute.has(hero.idMarvel), //serve?
+            found: figurinePossedute.has(hero.idMarvel), 
             count: figurineCounts[hero.idMarvel] || 0
         }));
 

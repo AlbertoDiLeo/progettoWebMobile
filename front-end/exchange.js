@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const exchangeForm = document.getElementById("exchangeForm");
-    const offeredStickerSelect = document.getElementById("offeredSticker");
-    const requestedStickerSelect = document.getElementById("requestedSticker");
+    const offeredFigurinaSelect = document.getElementById("offeredFigurina");
+    const requestedFigurinaSelect = document.getElementById("requestedFigurina");
     const exchangeList = document.getElementById("exchangeList");
 
     // **Caricare le figurine dell'utente per il form**
-    async function loadUserStickers() {
+    async function loadUserFigurine() {
         try {
             const response = await fetch("http://localhost:5000/api/album", {
                 method: "GET",
@@ -24,12 +24,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!response.ok) throw new Error("Errore nel recupero dell'album");
             const userAlbum = await response.json();
 
-            offeredStickerSelect.innerHTML = userAlbum.stickers
-                .map(sticker => `<option value="${sticker._id}">${sticker.name}</option>`)
+            // Verifica che userAlbum esista e abbia un array figurine
+            if (!userAlbum || !userAlbum.figurine || !Array.isArray(userAlbum.figurine)) {
+                console.error("Nessuna figurina trovata o formato non valido!");
+                return;
+            }
+            
+            offeredFigurinaSelect.innerHTML = userAlbum.figurine
+                .map(figurina => `<option value="${figurina._id}">${figurina.name}</option>`)
                 .join("");
 
-            requestedStickerSelect.innerHTML = userAlbum.stickers
-                .map(sticker => `<option value="${sticker._id}">${sticker.name}</option>`)
+            requestedFigurinaSelect.innerHTML = userAlbum.figurine
+                .map(figurina => `<option value="${figurina._id}">${figurina.name}</option>`)
                 .join("");
         } catch (error) {
             console.error(error);
@@ -40,8 +46,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     exchangeForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const offeredSticker = offeredStickerSelect.value;
-        const requestedSticker = requestedStickerSelect.value;
+        const offeredFigurina = offeredFigurinaSelect.value;
+        const requestedFigurina = requestedFigurinaSelect.value;
 
         try {
             const response = await fetch("http://localhost:5000/api/exchange", {
@@ -50,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ offeredSticker, requestedSticker })
+                body: JSON.stringify({ offeredFigurina, requestedFigurina })
             });
 
             if (!response.ok) throw new Error("Errore nella proposta di scambio");
@@ -79,8 +85,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="col-md-4">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <p><strong>Offerto:</strong> ${exchange.offeredSticker.name}</p>
-                            <p><strong>Richiesto:</strong> ${exchange.requestedSticker.name}</p>
+                            <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                            <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
                             <button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta Scambio</button>
                         </div>
                     </div>
@@ -111,6 +117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     // Caricamento iniziale
-    loadUserStickers();
+    loadUserFigurine();
     loadExchanges();
 });
