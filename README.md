@@ -29,7 +29,7 @@ progetto-afse/
 │   │   ├── authController.js        # Logica per registrazione e login
 │   │   ├── userController.js        # Logica per operazioni sugli utenti
 │   │   ├── albumController.js       # Logica per gestione dell'album e figurine
-|   |   └── figurineController.js    # Logica per la gestione delle figurine
+|   |   └── marvelController.js      # Logica per la gestione delle figurine di marvel
 |   ├── middleware/
 │   │   └── authMiddleware.js        # Middleware per l'autenticazione
 │   ├── models/
@@ -39,7 +39,8 @@ progetto-afse/
 │   ├── routes/
 │   │   ├── authRoutes.js            # Rotte per autenticazione (login, registrazione)
 │   │   ├── userRoutes.js            # Rotte per operazioni generali sugli utenti
-│   │   └── albumRoutes.js           # Rotte per gestione album e figurine
+│   │   ├── albumRoutes.js           # Rotte per gestione album e figurine
+|   |   └── marvelRoutes.js
 │   ├── config/
 │   │   └── db.js                    # Configurazione connessione a MongoDB
 │   ├── app.js                       # Configurazione principale di Node.js
