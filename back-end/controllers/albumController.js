@@ -1,7 +1,8 @@
 const Album = require('../models/album');
 const User = require('../models/user');
-const { getRandomInt } = require("../marvel");
 const Figurina = require("../models/figurina");
+const { getRandomInt } = require("../marvel");
+
 
 
 exports.createAlbum = async (req, res) => {
