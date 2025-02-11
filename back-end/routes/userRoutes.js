@@ -1,17 +1,16 @@
 const express = require("express");
+const router = express.Router();
 const User = require("../models/user");
-const { authenticateToken } = require("../middlewares/authMiddleware");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const authenticateToken = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
 const { updateUserProfile } = require("../controllers/userController");
 const { changePassword } = require("../controllers/userController");
 const { deleteAccount } = require("../controllers/userController");
 const { buyCredits } = require('../controllers/userController');
 const mongoose = require("mongoose");
 
-const router = express.Router();
 
-
-router.get("/profile", authMiddleware, async (req, res) => {
+router.get("/profile", authenticateToken, async (req, res) => {
     try {
         // Assicuriamoci che sia un ObjectId valido per MongoDB
         if (!mongoose.Types.ObjectId.isValid(req.user.userId)) {
@@ -31,9 +30,9 @@ router.get("/profile", authMiddleware, async (req, res) => {
     }
 });
 
-router.put("/users/:id", authenticateToken, updateUserProfile); //sistemare percorso
+router.put("/users/:id", authMiddleware, updateUserProfile);
 
-router.get("/users/:id", authenticateToken, async (req, res) => { //sistemare percorso
+router.get("/users/:id", authenticateToken, async (req, res) => {
     try {
         const user = await User.findById(req.params.id).select("-password");
         if (!user) {
@@ -65,7 +64,7 @@ router.put("/change-password", authenticateToken, changePassword);
 
 router.delete("/delete/:id", authenticateToken, deleteAccount);
 
-router.post('/buy-credits', authenticateToken, buyCredits);
+router.post('/buy-credits', authMiddleware, buyCredits);
 
 
 
