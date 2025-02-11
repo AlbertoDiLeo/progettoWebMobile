@@ -1,14 +1,17 @@
 const express = require('express');
-const { authenticateToken } = require('../middlewares/authMiddleware');
-const { createAlbum, getAlbum, buyPack, addToAlbum } = require('../controllers/albumController');
+const authenticateToken = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');  
+const { createAlbum, getAlbum } = require('../controllers/albumController');
+const { buyPack } = require('../controllers/albumController');
+const { addToAlbum } = require('../controllers/albumController');
 
 const router = express.Router();
 
-router.post('/', authenticateToken, createAlbum); //sistemare rotta
+router.post('/', authenticateToken, createAlbum);
 
-router.get('/', authenticateToken, getAlbum); //sistemare rotta
+router.get('/', authMiddleware, getAlbum);
 
-router.post('/buy-pack', authenticateToken, buyPack);
+router.post('/buy-pack', authMiddleware, buyPack);
 
 router.post('/add-to-album', authenticateToken, addToAlbum);
 
