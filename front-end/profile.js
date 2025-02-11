@@ -278,6 +278,12 @@ document.getElementById("confirmDeleteAccount").addEventListener("click", async 
 
         const data = await response.json();
 
+        if (response.status === 403) {
+            // **L'utente ha scambi pendenti, impediamo l'eliminazione**
+            alert("Impossibile eliminare l'account: hai scambi pendenti.", "danger"|| data.error);
+            return;
+        }
+
         if (!response.ok) {
             console.error("Errore dal server:", data);
             showNotification(data.error || "Errore sconosciuto.", "danger");

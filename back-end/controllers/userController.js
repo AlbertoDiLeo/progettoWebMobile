@@ -86,17 +86,22 @@ exports.changePassword = async (req, res) => {
 };
 
 
-exports.deleteAccount = async (req, res) => { //come mai funziona?
+exports.deleteAccount = async (req, res) => { 
     try {
-        const userId = req.user.userId; // non dovrebbe essere userId?
+        const userId = req.user.userId; 
 
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
-            return res.status(400).json({ error: "ID utente non valido." });
-        }
+        const user = await User.findById({ userId: userId });
 
-        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "Utente non trovato." });
+        }
+
+        // **Controlliamo se ci sono scambi pendenti**
+        const activeExchanges = await Exchange.countDocuments({ offeredBy: user._id, status: "pending" });
+        console.log("Scambi attivi:", activeExchanges);
+
+        if (activeExchanges > 0) {
+            return res.status(403).json({ error: "Impossibile eliminare l'account: hai scambi pendenti." });
         }
 
         await Album.findOneAndDelete({ userId }); 
