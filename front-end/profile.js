@@ -279,8 +279,10 @@ document.getElementById("confirmDeleteAccount").addEventListener("click", async 
         const data = await response.json();
 
         if (response.status === 403) {
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteAccountModal"));
+            if (deleteModal) deleteModal.hide();
             // **L'utente ha scambi pendenti, impediamo l'eliminazione**
-            alert("Impossibile eliminare l'account: hai scambi pendenti.", "danger"|| data.error);
+            showNotification("Impossibile eliminare l'account: hai scambi pendenti.", "danger"|| data.error);
             return;
         }
 

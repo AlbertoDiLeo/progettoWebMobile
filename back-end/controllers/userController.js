@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Album = require("../models/album");
+const Exchange = require("../models/exchange");
 const mongoose = require("mongoose");
 
 
@@ -85,25 +86,22 @@ exports.changePassword = async (req, res) => {
     }
 };
 
-
-exports.deleteAccount = async (req, res) => { 
+exports.deleteAccount = async (req, res) => {
     try {
-        const userId = req.user.userId; 
+        const userId = req.user.userId; // L'ID utente è già nel token, quindi lo usiamo direttamente.
 
-        const user = await User.findById({ userId: userId });
-
-        if (!user) {
-            return res.status(404).json({ error: "Utente non trovato." });
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "ID utente non valido." });
         }
 
-        // **Controlliamo se ci sono scambi pendenti**
-        const activeExchanges = await Exchange.countDocuments({ offeredBy: user._id, status: "pending" });
-        console.log("Scambi attivi:", activeExchanges);
+        // **Controlliamo se l'utente ha scambi pendenti**
+        const activeExchanges = await Exchange.countDocuments({ offeredBy: userId, status: "pending" });
 
         if (activeExchanges > 0) {
             return res.status(403).json({ error: "Impossibile eliminare l'account: hai scambi pendenti." });
         }
 
+        // **Se non ci sono scambi pendenti, eliminiamo l'account**
         await Album.findOneAndDelete({ userId }); 
         await User.findByIdAndDelete(userId);
 
@@ -114,6 +112,7 @@ exports.deleteAccount = async (req, res) => {
         res.status(500).json({ error: "Errore del server." });
     }
 };
+
 
 
 
