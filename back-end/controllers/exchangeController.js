@@ -15,7 +15,7 @@ exports.getExchanges = async (req, res) => {
 
 exports.createExchange = async (req, res) => { 
     try {
-        console.log("Richiesta ricevuta per creare uno scambio:", req.body);
+        //console.log("Richiesta ricevuta per creare uno scambio:", req.body);
         const { offeredFigurinaId, requestedFigurinaId } = req.body;
 
         /*if (!offeredFigurina || !requestedFigurina) {
@@ -40,7 +40,7 @@ exports.createExchange = async (req, res) => {
             status: 'pending'
         });
 
-        console.log("🔹 Scambio creato:", newExchange);
+        //console.log("🔹 Scambio creato:", newExchange);
 
         // Salviamo lo scambio nel database
         await newExchange.save();

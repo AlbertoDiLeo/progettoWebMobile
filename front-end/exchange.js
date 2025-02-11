@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const offeredFigurinaId = offeredFigurinaSelect.value;
         const requestedFigurinaId = requestedFigurinaSelect.value;
 
-        console.log("🔹 Proposta di scambio:", offeredFigurinaId, requestedFigurinaId);
+        //console.log("🔹 Proposta di scambio:", offeredFigurinaId, requestedFigurinaId);
 
        // **Validazione: assicurarsi che entrambi i campi siano selezionati**
         if (!offeredFigurinaId || !requestedFigurinaId) {
