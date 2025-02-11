@@ -20,34 +20,53 @@ document.addEventListener("DOMContentLoaded", async () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+    
             if (!response.ok) throw new Error("Errore nel recupero dell'album");
+    
             const userAlbum = await response.json();
-
-            // Verifica che userAlbum esista e abbia un array figurine
+            //console.log("Dati ricevuti dall'album:", userAlbum); // DEBUG
+    
+            // Controlliamo che l'album sia valido
             if (!userAlbum || !userAlbum.figurine || !Array.isArray(userAlbum.figurine)) {
                 console.error("Nessuna figurina trovata o formato non valido!");
                 return;
             }
+    
+            // **Figurine doppie (da offrire)**
+            const doppioni = userAlbum.figurine.filter(figurina => figurina.count > 1);
             
-            offeredFigurinaSelect.innerHTML = userAlbum.figurine
-                .map(figurina => `<option value="${figurina._id}">${figurina.name}</option>`)
-                .join("");
+            // **Figurine mancanti (da richiedere)**
+            const mancanti = userAlbum.figurine.filter(figurina => !figurina.found);
+    
+            // Popoliamo i menu a tendina con gli **id**, ma mostriamo il nome
+            offeredFigurinaSelect.innerHTML = doppioni.length > 0 
+            ? doppioni.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name} (x${figurina.count})</option>`).join("")
+            : `<option disabled>Nessuna figurina doppia</option>`;
 
-            requestedFigurinaSelect.innerHTML = userAlbum.figurine
-                .map(figurina => `<option value="${figurina._id}">${figurina.name}</option>`)
-                .join("");
+            requestedFigurinaSelect.innerHTML = mancanti.length > 0
+            ? mancanti.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name}</option>`).join("")
+            : `<option disabled>Tutte le figurine trovate</option>`;
+    
         } catch (error) {
-            console.error(error);
+            console.error("Errore in loadUserFigurine:", error);
         }
     }
+    
 
     // **Inviare una proposta di scambio**
     exchangeForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const offeredFigurina = offeredFigurinaSelect.value;
-        const requestedFigurina = requestedFigurinaSelect.value;
+        const offeredFigurinaId = offeredFigurinaSelect.value;
+        const requestedFigurinaId = requestedFigurinaSelect.value;
+
+        console.log("🔹 Proposta di scambio:", offeredFigurinaId, requestedFigurinaId);
+
+       // **Validazione: assicurarsi che entrambi i campi siano selezionati**
+        if (!offeredFigurinaId || !requestedFigurinaId) {
+            showNotification("Seleziona sia una figurina da offrire che una da richiedere!", "danger");
+            return;
+        }
 
         try {
             const response = await fetch("http://localhost:5000/api/exchange", {
@@ -56,12 +75,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ offeredFigurina, requestedFigurina })
+                body: JSON.stringify({ offeredFigurinaId, requestedFigurinaId, })
             });
 
             if (!response.ok) throw new Error("Errore nella proposta di scambio");
 
-            alert("Scambio proposto con successo!");
+            showNotification("Scambio proposto con successo!", "success");
             loadExchanges();
         } catch (error) {
             console.error(error);

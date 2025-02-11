@@ -1,5 +1,6 @@
 const Exchange = require('../models/exchange');
 const User = require('../models/user');
+const Figurina = require('../models/figurina');
 
 
 exports.getExchanges = async (req, res) => {
@@ -14,15 +15,32 @@ exports.getExchanges = async (req, res) => {
 
 exports.createExchange = async (req, res) => { 
     try {
-        const { offeredFigurina, requestedFigurina } = req.body;
+        console.log("Richiesta ricevuta per creare uno scambio:", req.body);
+        const { offeredFigurinaId, requestedFigurinaId } = req.body;
+
+        /*if (!offeredFigurina || !requestedFigurina) {
+            return res.status(400).json({ error: "Mancano dati per la proposta di scambio" });
+        }*/
+
+        // **Troviamo il vero `ObjectId` in MongoDB usando `idMarvel`**
+        const offeredFigurina = await Figurina.findOne({ idMarvel: offeredFigurinaId });
+        const requestedFigurina = await Figurina.findOne({ idMarvel: requestedFigurinaId });
+
+        if (!offeredFigurina || !requestedFigurina) {
+            return res.status(404).json({ error: "Una delle figurine non esiste nel database" });
+        }
+
+        //console.log("🔹 Creazione scambio tra figurine:", offeredFigurina._id, requestedFigurina._id);
 
         // Creiamo il nuovo scambio
         const newExchange = new Exchange({
-            offeredBy: req.user.id, // ID dell'utente autenticato
-            offeredFigurina,
-            requestedFigurina,
+            offeredBy: req.user.userId, 
+            offeredFigurina: offeredFigurina._id,  
+            requestedFigurina: requestedFigurina._id,  
             status: 'pending'
         });
+
+        console.log("🔹 Scambio creato:", newExchange);
 
         // Salviamo lo scambio nel database
         await newExchange.save();
@@ -38,7 +56,7 @@ exports.createExchange = async (req, res) => {
 exports.acceptExchange = async (req, res) => {
     try {
         const exchangeId = req.params.id;
-        const userId = req.user.id; // Utente che sta accettando lo scambio
+        const userId = req.user.userId; // Utente che sta accettando lo scambio
 
         // Trova lo scambio richiesto
         const exchange = await Exchange.findById(exchangeId);
