@@ -181,11 +181,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
             }
 
+            const requestedFigurinaId = exchange.requestedFigurina.idMarvel;
+            const offeredFigurinaId = exchange.offeredFigurina.idMarvel;
+
             // **Controlliamo se l'utente ha la figurina richiesta**
-            const userHasRequestedFigurina = userFigurineIds[exchange.requestedFigurina] > 0;
+            const userHasRequestedFigurina = userFigurineIds[requestedFigurinaId] > 0;
 
             // **Controlliamo se l'utente ha già la figurina offerta**
-            const userHasOfferedFigurina = userFigurineIds[exchange.offeredFigurina] > 0;
+            const userHasOfferedFigurina = userFigurineIds[offeredFigurinaId] > 0;
 
             return `
                 <div class="col-md-4">

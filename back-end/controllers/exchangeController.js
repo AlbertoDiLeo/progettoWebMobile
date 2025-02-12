@@ -1,7 +1,7 @@
-const Exchange = require('../models/exchange');
-const User = require('../models/user');
-const Figurina = require('../models/figurina');
-const Album = require('../models/album');
+const Exchange = require('../models/Exchange');
+const User = require('../models/User');
+const Figurina = require('../models/Figurina');
+const Album = require('../models/Album');
 
 
 exports.getExchanges = async (req, res) => {

@@ -1,6 +1,6 @@
-const Album = require('../models/album');
-const User = require('../models/user');
-const Figurina = require("../models/figurina");
+const Album = require('../models/Album');
+const User = require('../models/User');
+const Figurina = require("../models/Figurina");
 const { getRandomInt } = require("../marvel");
 
 
