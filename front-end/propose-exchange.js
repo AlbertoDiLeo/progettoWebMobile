@@ -56,15 +56,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!offeredFigurinaIds.length || (exchangeTypeSelect.value !== "crediti" && !requestedFigurinaIds.length)) {
             showNotification("Seleziona almeno una figurina da offrire e una da richiedere!", "danger");
+            alert("Seleziona almeno una figurina da offrire e una da richiedere!"); 
             return;
         }
-
-        const exchangeData = {
-            type: exchangeTypeSelect.value,
-            offeredFigurinaIds,
-            requestedFigurinaIds,
-            creditAmount: exchangeTypeSelect.value === "crediti" ? creditAmount : null
-        };
 
         try {
             const response = await fetch("http://localhost:5000/api/exchange", {
@@ -73,7 +67,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(exchangeData)
+                body: JSON.stringify({
+                    offeredFigurineIds: offeredFigurinaIds,
+                    requestedFigurineIds: requestedFigurinaIds,
+                    creditAmount: creditAmount,
+                    type: exchangeTypeSelect.value
+                })
             });
 
             if (!response.ok) throw new Error("Errore nella proposta di scambio");
@@ -87,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadProposedExchanges() {
         try {
-            const response = await fetch("http://localhost:5000/api/exchange/proposed", {
+            const response = await fetch("http://localhost:5000/api/exchange", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`

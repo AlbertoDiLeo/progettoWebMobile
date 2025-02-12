@@ -5,7 +5,11 @@ const User = require("../models/user");
 
 exports.getExchanges = async (req, res) => {
     try {
-        const exchanges = await Exchange.find().populate("offeredBy").populate("offeredFigurineIds").populate("requestedFigurineIds");
+        const exchanges = await Exchange.find()
+        .populate("offeredBy")
+        .populate("offeredFigurineIds")
+        .populate("requestedFigurineIds");
+        //console.log("📢 Scambi inviati al frontend:", exchanges); // DEBUG
         res.json(exchanges);
     } catch (error) {
         console.error("Errore nel recupero degli scambi:", error);
