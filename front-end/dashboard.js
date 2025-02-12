@@ -34,7 +34,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    //console.log("Crediti salvati in localStorage:", localStorage.getItem("credits"));
+    try {
+        const response = await fetch("http://localhost:5000/api/album", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Errore nel recupero dell'album");
+        }
+
+        const albumData = await response.json();
+        const figurine = albumData.figurine;
+
+        // Calcola il numero totale di figurine trovate
+        const foundFigurines = figurine.filter(hero => hero.found).length;
+        // Calcola il numero totale di figurine possibili (ad esempio, 100)
+        const totalFigurines = 100;
+        // Calcola la percentuale di completamento dell'album
+        const completionPercentage = ((foundFigurines / totalFigurines) * 100).toFixed(0);
+        // Aggiorna il testo dell'elemento HTML con la percentuale calcolata
+        document.getElementById("completion-percentage").textContent = `${completionPercentage}%`;
+
+    } catch (error) {
+        console.error("Errore nel calcolo della percentuale di completamento:", error);
+    }
 
     try {
         const response = await fetch("http://localhost:5000/api/user/profile", {

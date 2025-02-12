@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Conta il numero totale di doppioni
         const totalDuplicates = figurine.reduce((acc, hero) => acc + (hero.count - 1 > 0 ? hero.count - 1 : 0), 0);
 
-        // Percentuale di doppioni (ha senso?)
+        // Percentuale di doppioni (ha senso?) forse è meglio doppione *100/totaletrovate+doppione
         const duplicatePercentage = foundFigurines > 0 ? ((totalDuplicates / foundFigurines) * 100).toFixed(2) : 0;
 
         // Recupera il numero totale di pacchetti aperti (ogni pacchetto ha 5 figurine)
