@@ -195,6 +195,35 @@ exports.acceptExchange = async (req, res) => {
 };
 
 
+exports.rejectExchange = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+        const userId = req.user.userId; // L'utente che sta rifiutando lo scambio
+
+        // **Troviamo lo scambio richiesto**
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange) {
+            return res.status(404).json({ error: "Scambio non trovato" });
+        }
+
+        // **Controlliamo che l'utente stia rifiutando uno scambio valido**
+        if (exchange.offeredBy.toString() === userId.toString()) {
+            return res.status(403).json({ error: "Non puoi rifiutare il tuo stesso scambio" });
+        }
+
+        // **Aggiorniamo lo stato dello scambio**
+        exchange.status = "rejected";
+        await exchange.save();
+
+        res.json({ message: "Scambio rifiutato con successo", exchange });
+    } catch (error) {
+        console.error("Errore nel rifiutare lo scambio:", error);
+        res.status(500).json({ error: "Errore durante il rifiuto dello scambio" });
+    }
+};
+
+
+
 
 
 exports.withdrawExchange = async (req, res) => {

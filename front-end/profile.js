@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         favoriteHeroDisplay.textContent = user.favoriteHero || "Non specificato";
     } catch (err) {
         console.error("Errore nel recupero del profilo:", err.message); // Log dell'errore
-        showNotification("Errore nel caricamento del profilo.", "error"); 
+        showNotification("Errore nel caricamento del profilo.", "danger"); 
     }
 });
 
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     
         if (errorMessages.length > 0) {
-            errorMessages.forEach(error => showNotification(error, "error"));
+            errorMessages.forEach(error => showNotification(error, "danger"));
             return;
         }
     
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Errore nella comunicazione con il server:", error);
-            showNotification("Errore nella comunicazione con il server.", "error");
+            showNotification("Errore nella comunicazione con il server.", "danger");
         }
     });
 });

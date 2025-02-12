@@ -124,6 +124,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 sortedFigurine = sortedFigurine.filter(hero => !hero.found)
                     .sort((a, b) => a.name.localeCompare(b.name));
                 break;
+            case "duplicate-alphabetical":
+                sortedFigurine = sortedFigurine.filter(hero => hero.count > 1)
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                break;
             default:
                 break;
         }

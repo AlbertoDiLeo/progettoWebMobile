@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (error) {
         console.error('Errore nella decodifica del token:', error);
-        showNotification('Errore di autenticazione. Effettua nuovamente il login.', 'error');
+        showNotification('Errore di autenticazione. Effettua nuovamente il login.', 'danger');
         removeToken('token');
         window.location.href = 'login.html';
     }

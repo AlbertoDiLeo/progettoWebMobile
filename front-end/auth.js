@@ -38,7 +38,7 @@ if (registerForm) {
             
         } catch (error) {
             console.error('Errore nella registrazione:', error);
-            showNotification('Si è verificato un errore. Riprova più tardi.', "error");
+            showNotification('Si è verificato un errore. Riprova più tardi.', "danger");
             return;
         }
 
@@ -52,7 +52,7 @@ if (registerForm) {
         }
 
         if (errors.length > 0) {
-            errors.forEach(error => showNotification(error, "error"));
+            errors.forEach(error => showNotification(error, "danger"));
             return;
         }
 

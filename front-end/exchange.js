@@ -33,10 +33,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
     
             // **Figurine doppie (da offrire)**
-            const doppioni = userAlbum.figurine.filter(figurina => figurina.count > 1);
+            const doppioni = userAlbum.figurine.filter(figurina => figurina.count > 1)
+                .sort((a, b) => a.name.localeCompare(b.name));
             
             // **Figurine mancanti (da richiedere)**
-            const mancanti = userAlbum.figurine.filter(figurina => !figurina.found);
+            const mancanti = userAlbum.figurine.filter(figurina => !figurina.found)
+                .sort((a, b) => a.name.localeCompare(b.name));
     
             // Popoliamo i menu a tendina con gli **id**, ma mostriamo il nome
             offeredFigurinaSelect.innerHTML = doppioni.length > 0 
@@ -92,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // **Caricare gli scambi disponibili**
-    async function loadExchanges() {
+    /*async function loadExchanges() {
         try {
             const response = await fetch("http://localhost:5000/api/exchange", {
                 method: "GET",
@@ -127,7 +129,93 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             console.error(error);
         }
-    }
+    }*/
+
+    async function loadExchanges() {
+    try {
+        const response = await fetch("http://localhost:5000/api/exchange", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error("Errore nel recupero degli scambi");
+
+        const exchanges = await response.json();
+
+        // **Recuperiamo le figurine dell'utente per fare i controlli frontend**
+        const albumResponse = await fetch("http://localhost:5000/api/album", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!albumResponse.ok) throw new Error("Errore nel recupero dell'album");
+        const userAlbum = await albumResponse.json();
+
+        const userFigurineIds = userAlbum.figurine.reduce((acc, f) => {
+            acc[f.idMarvel] = f.count;
+            return acc;
+        }, {});
+
+         // Decodifichiamo il token per ottenere l'ID dell'utente attuale
+         const decodedToken = JSON.parse(atob(token.split('.')[1]));
+         const userId = decodedToken.userId;
+
+        exchangeList.innerHTML = exchanges.map(exchange => {
+            const userIsOwner = exchange.offeredBy === userId; // Controlliamo se lo scambio è stato creato dall'utente
+
+            if (exchange.status === "rejected") {
+                return `
+                    <div class="col-md-4">
+                        <div class="card mt-3 bg-light">
+                            <div class="card-body">
+                                <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                                <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
+                                <p class="text-danger">Questo scambio è stato rifiutato.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // **Controlliamo se l'utente ha la figurina richiesta**
+            const userHasRequestedFigurina = userFigurineIds[exchange.requestedFigurina] > 0;
+
+            // **Controlliamo se l'utente ha già la figurina offerta**
+            const userHasOfferedFigurina = userFigurineIds[exchange.offeredFigurina] > 0;
+
+            return `
+                <div class="col-md-4">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                            <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
+                            ${userIsOwner ? `
+                                <button class="btn btn-danger" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>
+                            ` : `
+                                <button class="btn btn-success accept-btn"
+                                    onclick="attemptAcceptExchange('${exchange._id}', ${userHasOfferedFigurina})"
+                                    ${!userHasRequestedFigurina ? "disabled" : ""}>
+                                    Accetta Scambio
+                                </button>
+                                <button class="btn btn-secondary reject-btn"
+                                    onclick="rejectExchange('${exchange._id}')"
+                                    ${!userHasRequestedFigurina ? "disabled" : ""}>
+                                    Rifiuta Scambio
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    } catch (error) {
+        console.error(error);
+    }}
+
     
 
     // **Accettare uno scambio**
@@ -142,7 +230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (!response.ok) throw new Error("Errore nell'accettare lo scambio");
 
-            showNotification("Scambio accettato!");
+            showNotification("Scambio accettato!", "success");
             loadExchanges();
 
         } catch (error) {
@@ -151,6 +239,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
     };
+
+    window.rejectExchange = async (exchangeId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/reject`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                showNotification(data.error || "Errore nel rifiutare lo scambio", "danger");
+                return;
+            }
+    
+            showNotification("Scambio rifiutato con successo!", "success");
+    
+            // **Aggiorniamo la lista degli scambi**
+            await loadExchanges();
+    
+        } catch (error) {
+            console.error(error);
+            showNotification("Errore nel rifiutare lo scambio", "danger");
+        }
+    };
+    
 
     // **Ritirare uno scambio**
     window.withdrawExchange = async (exchangeId) => {
@@ -186,7 +302,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadUserFigurine();
     loadExchanges();
 });
-
 
 
 
