@@ -57,8 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 🔹 Evento per aggiungere una figurina all'album
         packContainer.addEventListener("click", async (event) => {
             if (event.target.classList.contains("add-to-album")) {
-                const index = event.target.getAttribute("data-index");
-                const figurinaDaAggiungere = figurineScelte[index];
+                //const index = event.target.getAttribute("data-index");
+                const index = parseInt(event.target.getAttribute("data-index"), 10);
+                //const figurinaDaAggiungere = figurineScelte[index];
+                const figurinaDaAggiungere = tutteLeFigurine[index];
                 const cardElement = document.getElementById(`figurina-${index}`);
 
                 cardElement.classList.add("adding"); // Effetto animazione
