@@ -70,7 +70,7 @@ exports.createExchange = async (req, res) => {
 };
 
 
-exports.acceptExchange = async (req, res) => {
+/*exports.acceptExchange = async (req, res) => {
     try {
         const exchangeId = req.params.id;
         const userId = req.user.userId; // Utente che sta accettando lo scambio
@@ -113,7 +113,87 @@ exports.acceptExchange = async (req, res) => {
         console.error('Errore nell’accettare lo scambio:', error);
         res.status(500).json({ error: 'Errore durante l’accettazione dello scambio' });
     }
+};*/
+
+
+//offeredUser
+//accepterUser
+
+
+exports.acceptExchange = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+        const accepterId = req.user.userId; // L'utente che sta accettando lo scambio
+
+        // **Troviamo lo scambio richiesto**
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange) {
+            return res.status(404).json({ error: "Scambio non trovato" });
+        }
+
+        const offeredId = exchange.offeredBy; // Utente che ha creato lo scambio
+
+        // **Controlliamo che offeredUser NON sia lo stesso che ha creato lo scambio**
+        if (offeredId.toString() === accepterId.toString()) {
+            return res.status(403).json({ error: "Non puoi accettare uno scambio che hai creato tu stesso" });
+        }
+
+        // **Troviamo i dati degli utenti**
+        const offeredAlbum = await Album.findOne({ userId: offeredId });
+        const accepterAlbum = await Album.findOne({ userId: accepterId });
+
+        if (!offeredAlbum || !accepterAlbum) {
+            return res.status(404).json({ error: "Album non trovato per uno degli utenti" });
+        }
+
+        // **Controlliamo se accepterUser possiede la figurina richiesta da offeredUser**
+        const accepterHasRequestedFigurina = accepterAlbum.figurine.some(f => f.idMarvel === exchange.requestedFigurina.toString() && f.count > 0);
+        if (!accepterHasRequestedFigurina) {
+            return res.status(400).json({ error: "Non puoi accettare lo scambio perché non possiedi la figurina richiesta" });
+        }
+
+        // **Controlliamo se accepterUser ha già la figurina offerta come doppione**
+        const accepterFigurinaOfferta = accepterAlbum.figurine.find(f => f.idMarvel === exchange.offeredFigurina.toString());
+        if (accepterFigurinaOfferta && accepterFigurinaOfferta.count > 0) {
+            return res.status(400).json({ error: "Non puoi accettare lo scambio perché già possiedi la figurina offerta" });
+        }
+
+        // **Eseguiamo lo scambio**
+        // 1️⃣ Rimuoviamo la figurina richiesta da accepterUser
+        await Album.updateOne(
+            { userId: accepterId, "figurine.idMarvel": exchange.requestedFigurina.toString() },
+            { $inc: { "figurine.$.count": -1 } }
+        );
+
+        // 2️⃣ Aggiungiamo la figurina offerta a accepterUser
+        await Album.updateOne(
+            { userId: accepterId },
+            { $push: { figurine: { idMarvel: exchange.offeredFigurina.toString(), count: 1 } } }
+        );
+
+        // 3️⃣ Rimuoviamo la figurina offerta da offeredUser
+        await Album.updateOne(
+            { userId: userId1, "figurine.idMarvel": exchange.offeredFigurina.toString() },
+            { $inc: { "figurine.$.count": -1 } }
+        );
+
+        // 4️⃣ Aggiungiamo la figurina richiesta a offeredUser
+        await Album.updateOne(
+            { userId: userId1 },
+            { $push: { figurine: { idMarvel: exchange.requestedFigurina.toString(), count: 1 } } }
+        );
+
+        // **Aggiorniamo lo stato dello scambio**
+        exchange.status = "accepted";
+        await exchange.save();
+
+        res.json({ message: "Scambio accettato con successo", exchange });
+    } catch (error) {
+        console.error("Errore nell’accettare lo scambio:", error);
+        res.status(500).json({ error: "Errore durante l’accettazione dello scambio" });
+    }
 };
+
 
 
 
