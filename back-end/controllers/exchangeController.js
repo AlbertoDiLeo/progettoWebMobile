@@ -120,7 +120,7 @@ exports.createExchange = async (req, res) => {
 //accepterUser
 
 
-/*exports.acceptExchange = async (req, res) => {
+exports.acceptExchange = async (req, res) => {
     try {
         const exchangeId = req.params.id;
         const accepterId = req.user.userId; // L'utente che sta accettando lo scambio
@@ -192,7 +192,7 @@ exports.createExchange = async (req, res) => {
         console.error("Errore nell’accettare lo scambio:", error);
         res.status(500).json({ error: "Errore durante l’accettazione dello scambio" });
     }
-};*/
+};
 
 
 
