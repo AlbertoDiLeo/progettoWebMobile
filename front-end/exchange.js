@@ -92,6 +92,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     loadExchanges();
 });
-
-
-
