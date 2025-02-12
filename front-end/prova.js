@@ -1,104 +1,280 @@
-
-
-
-
-
-
-/*const { getFromMarvel } = require("../utils/marvel");
-
-exports.createAlbum = async (req, res) => {
-    try {
-        const userId = req.user.id;
-
-        // Controlliamo se l'utente ha già un album
-        let album = await Album.findOne({ userId });
-        if (album) {
-            return res.status(400).json({ message: "Album già esistente" });
-        }
-
-        console.log("🔹 Creazione album per userId:", userId);
-
-        // Recuperiamo la lista di figurine disponibili (limitate per evitare un album infinito)
-        const ALBUM_HERO_LIMIT = 100;  // Decidiamo quante figurine possono esistere nell'album
-        const response = await getFromMarvel("public/characters", `limit=${ALBUM_HERO_LIMIT}&offset=0`);
-        
-        if (!response || !response.data || !response.data.results) {
-            return res.status(500).json({ message: "Errore nel recupero delle figurine iniziali" });
-        }
-
-        const allHeroes = response.data.results.map(hero => ({
-            idMarvel: hero.id,
-            name: hero.name,
-            image: `${hero.thumbnail.path}.${hero.thumbnail.extension}`,
-            count: 0 // Segna che la figurina non è ancora stata trovata
-        }));
-
-        // Creiamo un album con tutte le figurine disponibili, ma con count = 0
-        album = new Album({ userId, figurine: allHeroes });
-        await album.save();
-
-        console.log("✅ Album creato con figurine iniziali sfocate:", album);
-        
-        res.status(201).json({ message: "Album creato con successo", album });
-
-    } catch (error) {
-        console.error("❌ Errore nella creazione dell'album:", error);
-        res.status(500).json({ message: "Errore nella creazione dell'album", error });
-    }
-};
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", async () => {
-    const token = getToken();
+/*document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token");
     if (!token) {
         window.location.href = "login.html";
         return;
     }
 
-    const albumContainer = document.getElementById("album-container");
+    const exchangeForm = document.getElementById("exchangeForm");
+    const offeredFigurinaSelect = document.getElementById("offeredFigurina");
+    const requestedFigurinaSelect = document.getElementById("requestedFigurina");
+    const exchangeList = document.getElementById("exchangeList");
 
+    // **Caricare le figurine dell'utente per il form**
+    async function loadUserFigurine() {
+        try {
+            const response = await fetch("http://localhost:5000/api/album", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+    
+            if (!response.ok) throw new Error("Errore nel recupero dell'album");
+    
+            const userAlbum = await response.json();
+            //console.log("Dati ricevuti dall'album:", userAlbum); // DEBUG
+    
+            // Controlliamo che l'album sia valido
+            if (!userAlbum || !userAlbum.figurine || !Array.isArray(userAlbum.figurine)) {
+                console.error("Nessuna figurina trovata o formato non valido!");
+                return;
+            }
+    
+            // **Figurine doppie (da offrire)**
+            const doppioni = userAlbum.figurine.filter(figurina => figurina.count > 1)
+                .sort((a, b) => a.name.localeCompare(b.name));
+            
+            // **Figurine mancanti (da richiedere)**
+            const mancanti = userAlbum.figurine.filter(figurina => !figurina.found)
+                .sort((a, b) => a.name.localeCompare(b.name));
+    
+            // Popoliamo i menu a tendina con gli **id**, ma mostriamo il nome
+            offeredFigurinaSelect.innerHTML = doppioni.length > 0 
+            ? doppioni.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name} x${figurina.count}</option>`).join("")
+            : `<option disabled>Nessuna figurina doppia</option>`;
+
+            requestedFigurinaSelect.innerHTML = mancanti.length > 0
+            ? mancanti.map(figurina => `<option value="${figurina.idMarvel}" data-name="${figurina.name}">${figurina.name}</option>`).join("")
+            : `<option disabled>Tutte le figurine trovate</option>`;
+    
+        } catch (error) {
+            console.error("Errore in loadUserFigurine:", error);
+        }
+    }
+    
+
+    // **Inviare una proposta di scambio**
+    exchangeForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const offeredFigurinaId = offeredFigurinaSelect.value;
+        const requestedFigurinaId = requestedFigurinaSelect.value;
+
+        //console.log("🔹 Proposta di scambio:", offeredFigurinaId, requestedFigurinaId);
+
+       // **Validazione: assicurarsi che entrambi i campi siano selezionati**
+        if (!offeredFigurinaId || !requestedFigurinaId) {
+            showNotification("Seleziona sia una figurina da offrire che una da richiedere!", "danger"); //non serve
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/exchange", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ offeredFigurinaId, requestedFigurinaId, })
+            });
+
+            if (!response.ok) throw new Error("Errore nella proposta di scambio");
+
+            showNotification("Scambio proposto con successo!", "success"); //non va
+            loadExchanges();
+        } catch (error) {
+            console.error(error);
+        }
+
+        setTimeout(() => { // è la soluzione migliore?
+            location.reload();
+        }, 50);
+    });
+
+    async function loadExchanges() {
     try {
-        // 🔹 Recuperiamo le figurine dell'album
-        const albumResponse = await fetch("http://localhost:5000/api/album", {
+        const response = await fetch("http://localhost:5000/api/exchange", {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             }
         });
 
-        if (!albumResponse.ok) {
-            throw new Error("Errore nel recupero dell'album");
-        }
+        if (!response.ok) throw new Error("Errore nel recupero degli scambi");
 
-        const albumData = await albumResponse.json();
+        const exchanges = await response.json();
 
-        console.log("✅ Album ricevuto:", albumData);
+        // **Recuperiamo le figurine dell'utente per fare i controlli frontend**
+        const albumResponse = await fetch("http://localhost:5000/api/album", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
-        albumData.figurine.forEach(figurina => {
-            const hasFigurina = figurina.count > 0;  // Se count > 0, l'utente ha trovato la figurina
-            const card = document.createElement("div");
-            card.className = "col";
+        if (!albumResponse.ok) throw new Error("Errore nel recupero dell'album");
+        const userAlbum = await albumResponse.json();
 
-            card.innerHTML = `
-                <div class="card shadow-sm ${hasFigurina ? "" : "opacity-50"}">
-                    <img src="${hasFigurina ? figurina.image : 'placeholder.png'}" 
-                         class="card-img-top" alt="${figurina.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${figurina.name}</h5>
-                        ${hasFigurina ? `<span class="badge bg-secondary">x${figurina.count}</span>` : ""}
+        const userFigurineIds = userAlbum.figurine.reduce((acc, f) => {
+            acc[f.idMarvel] = f.count;
+            return acc;
+        }, {});
+
+         // Decodifichiamo il token per ottenere l'ID dell'utente attuale
+         const decodedToken = JSON.parse(atob(token.split('.')[1]));
+         const userId = decodedToken.userId;
+
+        exchangeList.innerHTML = exchanges.map(exchange => {
+            const userIsOwner = exchange.offeredBy === userId; // Controlliamo se lo scambio è stato creato dall'utente
+
+            if (exchange.status === "rejected") {
+                return `
+                    <div class="col-md-4">
+                        <div class="card mt-3 bg-light">
+                            <div class="card-body">
+                                <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                                <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
+                                <p class="text-danger">Questo scambio è stato rifiutato.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const requestedFigurinaId = exchange.requestedFigurina.idMarvel;
+            const offeredFigurinaId = exchange.offeredFigurina.idMarvel;
+
+            // **Controlliamo se l'utente ha la figurina richiesta**
+            const userHasRequestedFigurina = userFigurineIds[requestedFigurinaId] > 0;
+
+            // **Controlliamo se l'utente ha già la figurina offerta**
+            const userHasOfferedFigurina = userFigurineIds[offeredFigurinaId] > 0;
+
+            return `
+                <div class="col-md-4">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
+                            <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
+                            ${userIsOwner ? `
+                                <button class="btn btn-danger" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>
+                            ` : `
+                                <button class="btn btn-success accept-btn"
+                                    onclick="acceptExchange('${exchange._id}', ${userHasOfferedFigurina})"
+                                    ${!userHasRequestedFigurina ? "disabled" : ""}>
+                                    Accetta Scambio
+                                </button>
+                                <button class="btn btn-secondary reject-btn"
+                                    onclick="rejectExchange('${exchange._id}')"
+                                    ${!userHasRequestedFigurina ? "disabled" : ""}>
+                                    Rifiuta Scambio
+                                </button>
+                            `}
+                        </div>
                     </div>
                 </div>
             `;
-
-            albumContainer.appendChild(card);
-        });
-
+        }).join("");
     } catch (error) {
-        console.error("❌ Errore nel recupero dell'album:", error);
-    }
-});
-*/
+        console.error(error);
+    }}
+
+    
+
+    // **Accettare uno scambio**
+    window.acceptExchange = async (exchangeId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/accept`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            //if (!response.ok) throw new Error("Errore nell'accettare lo scambio");
+
+            const data = await response.json(); 
+
+            if (!response.ok) {
+                console.error("❌ Errore dal server:", data);
+                return;
+            }
+
+
+            showNotification("Scambio accettato!", "success");
+            alert("Scambio accettato con successo!");
+            loadExchanges();
+
+        } catch (error) {
+            console.error(error);
+            showNotification("Errore nell'accettare lo scambio!", "danger");
+        }
+
+    };
+
+    window.rejectExchange = async (exchangeId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/reject`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                showNotification(data.error || "Errore nel rifiutare lo scambio", "danger");
+                return;
+            }
+    
+            showNotification("Scambio rifiutato con successo!", "success");
+    
+            // **Aggiorniamo la lista degli scambi**
+            await loadExchanges();
+    
+        } catch (error) {
+            console.error(error);
+            showNotification("Errore nel rifiutare lo scambio", "danger");
+        }
+    };
+    
+
+    // **Ritirare uno scambio**
+    window.withdrawExchange = async (exchangeId) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        } 
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Errore nel ritiro dello scambio");
+
+            showNotification("Scambio ritirato con successo!", "success");
+            loadExchanges();
+        } catch (error) {
+            console.error(error);
+            showNotification("Errore nel ritiro dello scambio!", "danger");
+        }
+
+        setTimeout(() => { // è la soluzione migliore?
+            location.reload();
+        }, 50);
+    };
+
+    // Caricamento iniziale
+    loadUserFigurine();
+    loadExchanges();
+});*/
+
+
