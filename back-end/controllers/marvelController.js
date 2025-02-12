@@ -1,4 +1,4 @@
-const Figurina = require("../models/Figurina");
+const Figurina = require("../models/figurina");
 const { getFromMarvel } = require("../marvel");
 const { getRandomInt } = require("../marvel");
 

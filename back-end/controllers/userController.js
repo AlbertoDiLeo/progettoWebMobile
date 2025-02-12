@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const Album = require("../models/Album");
-const Exchange = require("../models/Exchange");
+const User = require("../models/user");
+const Album = require("../models/album");
+const Exchange = require("../models/exchange");
 const mongoose = require("mongoose");
 
 

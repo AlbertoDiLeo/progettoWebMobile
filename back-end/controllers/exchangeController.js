@@ -1,7 +1,7 @@
-const Exchange = require('../models/Exchange');
-const User = require('../models/User');
-const Figurina = require('../models/Figurina');
-const Album = require('../models/Album');
+const Exchange = require('../models/exchange');
+const User = require('../models/user');
+const Figurina = require('../models/figurina');
+const Album = require('../models/album');
 
 
 exports.getExchanges = async (req, res) => {
@@ -33,18 +33,6 @@ exports.createExchange = async (req, res) => {
             return res.status(400).json({ error: "Non puoi offrire questa figurina perché non è un doppione" });
         }
 
-        // Contiamo quanti scambi attualmente coinvolgono questa figurina
-        /*const existingExchanges = await Exchange.countDocuments({
-            offeredBy: req.user.userId,
-            offeredFigurina: offeredFigurina._id
-        });
-
-        if (existingExchanges >= userFigurina.count - 1) {
-            return res.status(400).json({ error: "Hai già raggiunto il limite di scambi per questa figurina!" });
-        }*/
-
-        //console.log('count:', userFigurina.nome, userFigurina.count);
-
         await Album.updateOne(
             { userId: req.user.userId, "figurine.idMarvel": offeredFigurinaId },
             { $inc: { "figurine.$.count": -1 } }
@@ -68,6 +56,58 @@ exports.createExchange = async (req, res) => {
         res.status(500).json({ error: 'Errore nel proporre lo scambio' });
     }
 };
+
+
+exports.withdrawExchange = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+        //console.log('exchangeId:', exchangeId);
+
+        // Troviamo lo scambio
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange) return res.status(404).json({ error: "Scambio non trovato" });
+
+        // **Troviamo l'album dell'utente**
+        const userAlbum = await Album.findOne({ userId: req.user.userId });
+        if (!userAlbum) {
+            return res.status(404).json({ error: "Album non trovato" });
+        }
+        //console.log('userAlbum:', userAlbum);
+
+        const offeredFigurina = await Figurina.findById(exchange.offeredFigurina);
+        //console.log('offeredFigurina:', offeredFigurina);
+
+        await Album.updateOne(
+            { userId: req.user.userId, "figurine.idMarvel": offeredFigurina.idMarvel },
+            { $inc: { "figurine.$.count": +1 } }
+        );
+        //console.log('count:', userAlbum.figurine.find(f => f.idMarvel === offeredFigurina).count);
+
+        // **Incrementiamo il conteggio della figurina direttamente nell'array con `$inc`**
+        /*const updateResult = await Album.updateOne(
+            { userId: req.user.userId, "figurine.idMarvel": exchange.offeredFigurina.idMarvel },
+            { $inc: { "figurine.$.count": 1 } }
+        );*/
+
+        // Se la figurina non esiste, la aggiungiamo all'album con count = 1
+        /*if (updateResult.modifiedCount === 0) {
+            await Album.updateOne(
+                { userId: req.user.userId },
+                { $push: { figurine: { idMarvel: exchange.offeredFigurina.idMarvel, count: 1 } } }
+            );
+        }*/
+
+
+        // Eliminare lo scambio dal database
+        await Exchange.findByIdAndDelete(exchangeId);
+
+        res.json({ message: "Scambio ritirato con successo" });
+    } catch (error) {
+        console.error("Errore nel ritiro dello scambio:", error);
+        res.status(500).json({ error: "Errore nel ritiro dello scambio" });
+    }
+};
+
 
 
 /*exports.acceptExchange = async (req, res) => {
@@ -124,6 +164,7 @@ exports.acceptExchange = async (req, res) => {
     try {
         const exchangeId = req.params.id;
         const accepterId = req.user.userId; // L'utente che sta accettando lo scambio
+        //console.log('accepterId:', accepterId);
 
         // **Troviamo lo scambio richiesto**
         const exchange = await Exchange.findById(exchangeId);
@@ -131,10 +172,12 @@ exports.acceptExchange = async (req, res) => {
             return res.status(404).json({ error: "Scambio non trovato" });
         }
 
-        const offeredId = exchange.offeredBy; // Utente che ha creato lo scambio
+        const offeredUser = await User.findOne(exchange.offeredBy); // Utente che ha creato lo scambio
+        const offeredId = offeredUser._id.toString();
+        //console.log('offeredId:', offeredUser._id.toString());
 
         // **Controlliamo che offeredUser NON sia lo stesso che ha creato lo scambio**
-        if (offeredId.toString() === accepterId.toString()) {
+        if (offeredId === accepterId) {
             return res.status(403).json({ error: "Non puoi accettare uno scambio che hai creato tu stesso" });
         }
 
@@ -146,14 +189,18 @@ exports.acceptExchange = async (req, res) => {
             return res.status(404).json({ error: "Album non trovato per uno degli utenti" });
         }
 
+        const requestedFigurina = await Figurina.findById(exchange.requestedFigurina);
+
         // **Controlliamo se accepterUser possiede la figurina richiesta da offeredUser**
-        const accepterHasRequestedFigurina = accepterAlbum.figurine.some(f => f.idMarvel === exchange.requestedFigurina.toString() && f.count > 0);
+        const accepterHasRequestedFigurina = accepterAlbum.figurine.some(f => f.idMarvel === requestedFigurina.idMarvel && f.count > 1);
         if (!accepterHasRequestedFigurina) {
             return res.status(400).json({ error: "Non puoi accettare lo scambio perché non possiedi la figurina richiesta" });
         }
 
+        const offeredFigurina = await Figurina.findById(exchange.offeredFigurina);
+
         // **Controlliamo se accepterUser ha già la figurina offerta come doppione**
-        const accepterFigurinaOfferta = accepterAlbum.figurine.find(f => f.idMarvel === exchange.offeredFigurina.toString());
+        const accepterFigurinaOfferta = accepterAlbum.figurine.find(f => f.idMarvel === offeredFigurina.idMarvel);
         if (accepterFigurinaOfferta && accepterFigurinaOfferta.count > 0) {
             return res.status(400).json({ error: "Non puoi accettare lo scambio perché già possiedi la figurina offerta" });
         }
@@ -161,31 +208,33 @@ exports.acceptExchange = async (req, res) => {
         // **Eseguiamo lo scambio**
         // 1️⃣ Rimuoviamo la figurina richiesta da accepterUser
         await Album.updateOne(
-            { userId: accepterId, "figurine.idMarvel": exchange.requestedFigurina.toString() },
+            { userId: accepterId, "figurine.idMarvel": exchange.requestedFigurina.idMarvel },
             { $inc: { "figurine.$.count": -1 } }
         );
 
         // 2️⃣ Aggiungiamo la figurina offerta a accepterUser
         await Album.updateOne(
             { userId: accepterId },
-            { $push: { figurine: { idMarvel: exchange.offeredFigurina.toString(), count: 1 } } }
+            { $push: { figurine: { idMarvel: exchange.offeredFigurina.idMarvel, count: 1 } } }
         );
 
         // 3️⃣ Rimuoviamo la figurina offerta da offeredUser
         await Album.updateOne(
-            { userId: userId1, "figurine.idMarvel": exchange.offeredFigurina.toString() },
+            { userId: offeredId, "figurine.idMarvel": exchange.offeredFigurina.idMarvel },
             { $inc: { "figurine.$.count": -1 } }
         );
 
         // 4️⃣ Aggiungiamo la figurina richiesta a offeredUser
         await Album.updateOne(
-            { userId: userId1 },
-            { $push: { figurine: { idMarvel: exchange.requestedFigurina.toString(), count: 1 } } }
+            { userId: offeredId },
+            { $push: { figurine: { idMarvel: requestedFigurina.idMarvel, count: 1 } } }
         );
-
+        
+        console.log("🟢 Stato attuale dello scambio prima:", exchange.status);
         // **Aggiorniamo lo stato dello scambio**
         exchange.status = "accepted";
         await exchange.save();
+        console.log("🟢 Stato dello scambio dopo il salvataggio:", exchange.status);
 
         res.json({ message: "Scambio accettato con successo", exchange });
     } catch (error) {
@@ -226,57 +275,4 @@ exports.rejectExchange = async (req, res) => {
 
 
 
-exports.withdrawExchange = async (req, res) => {
-    try {
-        const exchangeId = req.params.id;
-        //console.log('exchangeId:', exchangeId);
 
-        // Troviamo lo scambio
-        const exchange = await Exchange.findById(exchangeId);
-        if (!exchange) return res.status(404).json({ error: "Scambio non trovato" });
-
-        // Verifichiamo che lo scambio appartenga all'utente
-        if (exchange.offeredBy.toString() !== req.user.userId) {
-            return res.status(403).json({ error: "Non puoi ritirare uno scambio che non hai creato" });
-        }
-
-        // **Troviamo l'album dell'utente**
-        const userAlbum = await Album.findOne({ userId: req.user.userId });
-        if (!userAlbum) {
-            return res.status(404).json({ error: "Album non trovato" });
-        }
-        //console.log('userAlbum:', userAlbum);
-
-        const offeredFigurina = await Figurina.findById(exchange.offeredFigurina);
-        //console.log('offeredFigurina:', offeredFigurina);
-
-        await Album.updateOne(
-            { userId: req.user.userId, "figurine.idMarvel": offeredFigurina.idMarvel },
-            { $inc: { "figurine.$.count": +1 } }
-        );
-        //console.log('count:', userAlbum.figurine.find(f => f.idMarvel === offeredFigurina).count);
-
-        // **Incrementiamo il conteggio della figurina direttamente nell'array con `$inc`**
-        /*const updateResult = await Album.updateOne(
-            { userId: req.user.userId, "figurine.idMarvel": exchange.offeredFigurina.idMarvel },
-            { $inc: { "figurine.$.count": 1 } }
-        );*/
-
-        // Se la figurina non esiste, la aggiungiamo all'album con count = 1
-        /*if (updateResult.modifiedCount === 0) {
-            await Album.updateOne(
-                { userId: req.user.userId },
-                { $push: { figurine: { idMarvel: exchange.offeredFigurina.idMarvel, count: 1 } } }
-            );
-        }*/
-
-
-        // Eliminare lo scambio dal database
-        await Exchange.findByIdAndDelete(exchangeId);
-
-        res.json({ message: "Scambio ritirato con successo" });
-    } catch (error) {
-        console.error("Errore nel ritiro dello scambio:", error);
-        res.status(500).json({ error: "Errore nel ritiro dello scambio" });
-    }
-};

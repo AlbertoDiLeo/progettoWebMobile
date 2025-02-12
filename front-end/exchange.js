@@ -93,44 +93,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 50);
     });
 
-    // **Caricare gli scambi disponibili**
-    /*async function loadExchanges() {
-        try {
-            const response = await fetch("http://localhost:5000/api/exchange", {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-    
-            if (!response.ok) throw new Error("Errore nel recupero degli scambi");
-            const exchanges = await response.json();
-    
-            // Decodifichiamo il token per ottenere l'ID dell'utente attuale
-            const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            const userId = decodedToken.userId;
-    
-            exchangeList.innerHTML = exchanges.map(exchange => {
-                const isMyExchange = exchange.offeredBy === userId;
-    
-                return `
-                    <div class="col-md-4">
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
-                                <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
-                                ${!isMyExchange ? `<button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta Scambio</button>` : ""}
-                                ${isMyExchange ? `<button class="btn btn-danger" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>` : ""}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join("");
-        } catch (error) {
-            console.error(error);
-        }
-    }*/
-
     async function loadExchanges() {
     try {
         const response = await fetch("http://localhost:5000/api/exchange", {
@@ -200,7 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 <button class="btn btn-danger" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>
                             ` : `
                                 <button class="btn btn-success accept-btn"
-                                    onclick="attemptAcceptExchange('${exchange._id}', ${userHasOfferedFigurina})"
+                                    onclick="acceptExchange('${exchange._id}', ${userHasOfferedFigurina})"
                                     ${!userHasRequestedFigurina ? "disabled" : ""}>
                                     Accetta Scambio
                                 </button>
@@ -231,9 +193,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            if (!response.ok) throw new Error("Errore nell'accettare lo scambio");
+            //if (!response.ok) throw new Error("Errore nell'accettare lo scambio");
+
+            const data = await response.json(); 
+
+            if (!response.ok) {
+                console.error("❌ Errore dal server:", data);
+                return;
+            }
+
 
             showNotification("Scambio accettato!", "success");
+            alert("Scambio accettato con successo!");
             loadExchanges();
 
         } catch (error) {
