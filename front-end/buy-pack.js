@@ -195,6 +195,6 @@ function aggiornaVisualizzazione(figurineScelte) {
     });
 
     if (figurineScelte.length === 0) {
-        packContainer.innerHTML = "<p>Hai finito le figurine nel pacchetto.</p>";
+        packContainer.innerHTML = "<p>Hai finito tutte le figurine nel pacchetto.</p>";
     }
 }

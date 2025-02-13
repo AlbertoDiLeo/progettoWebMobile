@@ -33,6 +33,13 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.card-img-top {
+    height: 250px; /* Imposta l'altezza desiderata */
+    object-fit: cover; /* Adatta l'immagine riempiendo lo spazio mantenendo le proporzioni */
+    width: 100%; /* Assicura che l'immagine occupi tutta la larghezza disponibile */
+    border-radius: 10px; /* Mantiene angoli arrotondati */
+}
+
 
 .card-title {
     font-size: 1.5rem;
@@ -78,26 +85,6 @@ footer {
 
     footer {
         font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .card {
-        padding: 10px;
-    }
-
-    .card-title {
-        font-size: 1rem;
-    }
-
-    .btn {
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-
-    footer {
-        font-size: 0.8rem;
-        padding: 5px 0;
     }
 }
 
