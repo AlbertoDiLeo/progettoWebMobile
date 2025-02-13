@@ -38,24 +38,27 @@
 
     <div class="container mt-5">
         <div id="notification" class="alert d-none" role="alert"></div>
-        <h1 class="text-primary">Profilo Utente</h1>
         
         <!-- Visualizzazione dati -->
-        <div class="card">
+       
         <div id="profileView" class="mt-3">
+            <h1 class="text-danger text-center my-4"><strong>Profilo utente</strong></h1>
             <p><strong>Nome:</strong> <span id="nameDisplay"></span></p>
             <p><strong>Email:</strong> <span id="emailDisplay"></span></p>
             <p><strong>Supereroe Preferito:</strong> <span id="favoriteHeroDisplay"></span></p>
             <p><strong>Data di Nascita:</strong> <span id="birthDateDisplay">Non specificata</span></p>
             <p><strong>Numero di Telefono:</strong> <span id="phoneDisplay">Non specificato</span></p>
             <!-- <p><strong>Registrato il:</strong> <span id="createdAtDisplay"></span></p> -->
+            <div class="button-group my-4">
             <button id="editProfileButton" class="btn btn-primary mt-3">Modifica Profilo</button>
-            <button id="changePasswordButton" class="btn btn-warning mt-3">Modifica Password</button>
-            <button id="deleteAccountButton" class="btn btn-danger mt-3">Elimina Account</button>
+            <button id="changePasswordButton" class="btn btn-primary mt-3">Modifica Password</button>
+            <button id="deleteAccountButton" class="btn btn-primary mt-3">Elimina Account</button>
+            </div>
         </div>
 
         <!-- Modifica dati -->
         <form id="profileEditForm" class="mt-3 d-none">
+            <h1 class="text-danger text-center my-2"><strong>Modifica profilo</strong></h1>
             <div class="mb-3">
                 <label for="name" class="form-label">Nome</label>
                 <input type="text" id="name" name="name" class="form-control" oninput="checkUsernameAvailability(this.value)">
@@ -73,13 +76,17 @@
                 <label for="phone" class="form-label">Numero di Telefono</label>
                 <input type="tel" id="phone" name="phone" class="form-control">
             </div>
-            <button type="submit" class="btn btn-success">Salva Modifiche</button>
-            <button type="button" id="cancelEditButton" class="btn btn-secondary">Annulla</button>
+            <div class="button-group my-6">
+            <button type="submit" class="btn btn-primary ">Salva Modifiche</button>
+            <button type="button" id="cancelEditButton" class="btn btn-secondary ">Annulla</button>
+            </div>
         </form>
 
         <!-- Modifica password -->
         <form id="passwordChangeForm" class="mt-3 d-none">
-            <div class="mb-3" position-relative">
+            <h1 class="text-danger text-center my-3"><strong>Modifica profilo</strong></h1>
+
+            <div class="mb-3 position-relative">
                 <label for="oldPassword" class="form-label">Vecchia Password</label>
                 <div class="input-group">
                     <input type="password" id="oldPassword" name="oldPassword" class="form-control pe-5" required>
@@ -108,11 +115,11 @@
                     </span>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">Cambia Password</button>
+            <div class="button-group my-6">
+            <button type="submit" class="btn btn-primary">Cambia Password</button>
             <button type="button" id="cancelPasswordChangeButton" class="btn btn-secondary">Annulla</button>
-        
+            </div>
         </form>
-        </div>
 
         <!-- Modale di conferma eliminazione account -->
         <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
@@ -123,8 +130,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body">
-                <p>Sei sicuro di voler eliminare il tuo account? Questa azione è <strong>irreversibile</strong>.</p>
-                <p>Tutti i tuoi dati saranno persi.</p>
+                <p>Sei sicuro di voler eliminare il tuo account? </p>
+                <p>Tutti i tuoi dati saranno persi</p>
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
