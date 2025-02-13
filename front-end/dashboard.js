@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch("http://localhost:5000/api/album", {
+        const response = await fetch("http://localhost:3000/api/album", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch("http://localhost:5000/api/user/profile", {
+        const response = await fetch("http://localhost:3000/api/user/profile", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -112,7 +112,7 @@ document.getElementById("buy-credits-btn").addEventListener("click", async () =>
 
     try {
 
-        const response = await fetch("http://localhost:5000/api/user/buy-credits", {
+        const response = await fetch("http://localhost:3000/api/user/buy-credits", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const albumResponse = await fetch("http://localhost:5000/api/album", {
+        const albumResponse = await fetch("http://localhost:3000/api/album", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .filter(f => f.found)
             .map(f => f.idMarvel);
 
-        const response = await fetch("http://localhost:5000/api/album/buy-pack", {
+        const response = await fetch("http://localhost:3000/api/album/buy-pack", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 cardElement.classList.add("adding"); // Effetto animazione
                 setTimeout(async () => {
-                    await fetch("http://localhost:5000/api/album/add-to-album", {
+                    await fetch("http://localhost:3000/api/album/add-to-album", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const buyAnotherPackButton = document.getElementById("buy-another-pack-btn");
 
     // 🔹 Controlliamo i crediti dell'utente
-    const profileResponse = await fetch("http://localhost:5000/api/user/profile", {
+    const profileResponse = await fetch("http://localhost:3000/api/user/profile", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         try {
-            const buyResponse = await fetch("http://localhost:5000/api/album/buy-pack", {
+            const buyResponse = await fetch("http://localhost:3000/api/album/buy-pack", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

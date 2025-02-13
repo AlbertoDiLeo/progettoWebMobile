@@ -13,7 +13,7 @@
     // **Caricare le figurine dell'utente per il form**
     async function loadUserFigurine() {
         try {
-            const response = await fetch("http://localhost:5000/api/album", {
+            const response = await fetch("http://localhost:3000/api/album", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/exchange", {
+            const response = await fetch("http://localhost:3000/api/exchange", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -95,7 +95,7 @@
 
     async function loadExchanges() {
     try {
-        const response = await fetch("http://localhost:5000/api/exchange", {
+        const response = await fetch("http://localhost:3000/api/exchange", {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -107,7 +107,7 @@
         const exchanges = await response.json();
 
         // **Recuperiamo le figurine dell'utente per fare i controlli frontend**
-        const albumResponse = await fetch("http://localhost:5000/api/album", {
+        const albumResponse = await fetch("http://localhost:3000/api/album", {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -186,7 +186,7 @@
     // **Accettare uno scambio**
     window.acceptExchange = async (exchangeId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/accept`, {
+            const response = await fetch(`http://localhost:3000/api/exchange/${exchangeId}/accept`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -216,7 +216,7 @@
 
     window.rejectExchange = async (exchangeId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/reject`, {
+            const response = await fetch(`http://localhost:3000/api/exchange/${exchangeId}/reject`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -251,7 +251,7 @@
         } 
 
         try {
-            const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}`, {
+            const response = await fetch(`http://localhost:3000/api/exchange/${exchangeId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`

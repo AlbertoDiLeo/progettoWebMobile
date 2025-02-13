@@ -51,7 +51,7 @@ function showNotification(message, type = 'success') {
     notification.hideTimeout = setTimeout(() => {
         notification.classList.add('d-none');
         notification.dataset.initialized = ""; // Reset per la prossima volta
-    }, 5000);
+    }, 3000);
 }
 
 
@@ -77,7 +77,7 @@ async function checkUsernameAvailability(name) {
     // Evita chiamate API se l'utente continua a digitare rapidamente (debounce di 500ms)
     debounceTimer = setTimeout(async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/user/check-username/${name}`);
+            const response = await fetch(`http://localhost:3000/api/user/check-username/${name}`);
             const data = await response.json();
 
             if (data.available) {
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem("token");
 
             // Reindirizza alla pagina di login dopo il logout
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         });
     }
 });

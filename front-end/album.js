@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cardTemplate = document.getElementById("card-template");
 
     try {
-        const albumResponse = await fetch("http://localhost:5000/api/album", {
+        const albumResponse = await fetch("http://localhost:3000/api/album", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const itemsPerPage = 20;
 
     try {
-        const albumResponse = await fetch("http://localhost:5000/api/album", {
+        const albumResponse = await fetch("http://localhost:3000/api/album", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

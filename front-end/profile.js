@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const favoriteHeroDisplay = document.getElementById("favoriteHeroDisplay");
 
     try {
-        const response = await fetch("http://localhost:5000/api/user/profile", {
+        const response = await fetch("http://localhost:3000/api/user/profile", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const userId = getUserIdFromToken(token);
             
             // Recupera i dati attuali dell'utente
-            const response = await fetch(`http://localhost:5000/api/user/users/${userId}`, {
+            const response = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             }); //da rivedere
     
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
     
             // Invia solo i dati aggiornati al server
-            const updateResponse = await fetch(`http://localhost:5000/api/user/users/${userId}`, {
+            const updateResponse = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let errorMessages = []; // Array per raccogliere errori
 
         try {
-            const response = await fetch(`http://localhost:5000/api/user/change-password`, {
+            const response = await fetch(`http://localhost:3000/api/user/change-password`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -269,7 +269,7 @@ document.getElementById("confirmDeleteAccount").addEventListener("click", async 
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/api/user/delete/${userId}`, {
+        const response = await fetch(`http://localhost:3000/api/user/delete/${userId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -333,7 +333,7 @@ async function fetchUserProfile(userId) {
     }
     
     try {
-        const response = await fetch(`http://localhost:5000/api/user/users/${userId}`, {
+        const response = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
