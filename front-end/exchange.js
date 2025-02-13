@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+/*document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     if (!token) {
         window.location.href = "login.html";
@@ -25,36 +25,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderExchanges(exchanges) {
         const exchangeList = document.getElementById("exchangeList");
-        const pendingExchanges = document.getElementById("pendingExchanges");
-        const completedExchanges = document.getElementById("completedExchanges");
-
         exchangeList.innerHTML = "";
-        pendingExchanges.innerHTML = "";
-        completedExchanges.innerHTML = "";
-
+    
         exchanges.forEach(exchange => {
-            const exchangeCard = `
-                <div class="col-md-4">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <p><strong>Offerto:</strong> ${exchange.offeredFigurina.name}</p>
-                            <p><strong>Richiesto:</strong> ${exchange.requestedFigurina.name}</p>
-                            ${exchange.status === "pending" ? `
-                                <button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta</button>
-                                <button class="btn btn-danger" onclick="rejectExchange('${exchange._id}')">Rifiuta</button>
-                            ` : `<p class="text-muted">Scambio ${exchange.status}</p>`}
-                        </div>
-                    </div>
+            const offeredFigurinesHTML = exchange.offeredFigurines.map(f => 
+                `<img src="${f.image}" alt="${f.name}" title="${f.name}" class="figurina-img">`
+            ).join(" ");
+    
+            const requestedFigurinesHTML = exchange.requestedFigurines.map(f => 
+                `<img src="${f.image}" alt="${f.name}" title="${f.name}" class="figurina-img">`
+            ).join(" ");
+    
+            exchangeList.innerHTML += `
+                <div class="exchange-card">
+                    <p><strong>Offerto da:</strong> ${exchange.offeredBy.username}</p>
+                    <p><strong>Offerto:</strong> ${offeredFigurinesHTML}</p>
+                    <p><strong>Richiesto:</strong> ${exchange.type === "crediti" ? exchange.creditAmount + " Crediti" : requestedFigurinesHTML}</p>
+                    <button class="btn btn-success" onclick="acceptExchange('${exchange._id}')">Accetta</button>
+                    <button class="btn btn-danger" onclick="rejectExchange('${exchange._id}')">Rifiuta</button>
                 </div>
             `;
-
-            if (exchange.status === "pending") {
-                exchangeList.innerHTML += exchangeCard;
-            } else if (exchange.status === "accepted" || exchange.status === "rejected") {
-                completedExchanges.innerHTML += exchangeCard;
-            }
         });
     }
+    
 
     window.acceptExchange = async (exchangeId) => {
         try {
@@ -91,4 +84,86 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     loadExchanges();
-});
+});*/
+
+//document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    // Recupera gli scambi disponibili per l'utente
+    async function loadExchanges() {
+        const response = await fetch('http://localhost:5000/api/exchange', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const exchanges = await response.json();
+        const exchangeList = document.getElementById('exchangeList');
+        const pendingList = document.getElementById('pendingExchanges');
+        const completedList = document.getElementById('completedExchanges');
+
+        exchangeList.innerHTML = '';
+        pendingList.innerHTML = '';
+        completedList.innerHTML = '';
+
+        exchanges.forEach(exchange => {
+            const card = document.createElement('div');
+            card.classList.add('col-md-4', 'mb-3');
+            card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tipo: ${exchange.type}</h5>
+                        <p class="card-text">Offerte: ${exchange.offeredFigurines.map(f => f.name).join(', ')}</p>
+                        <p class="card-text">Richieste: ${
+                            exchange.type === 'crediti' ? 
+                            `${exchange.creditAmount} crediti` : 
+                            exchange.requestedFigurines.map(f => f.name).join(', ')
+                        }</p>
+                        <p class="card-text">Stato: ${exchange.status}</p>
+                        ${exchange.status === 'pending' && exchange.offeredBy !== userId ? `
+                            <button class="btn btn-success btn-sm" onclick="acceptExchange('${exchange._id}')">Accetta</button>
+                            <button class="btn btn-danger btn-sm" onclick="rejectExchange('${exchange._id}')">Rifiuta</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            if (exchange.status === 'pending') {
+                exchangeList.appendChild(card);
+            } else if (exchange.status === 'accepted') {
+                completedList.appendChild(card);
+            } else {
+                pendingList.appendChild(card);
+            }
+        });
+    }
+
+    // Accetta uno scambio
+    async function acceptExchange(exchangeId) {
+        const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/accept`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+            alert('Scambio accettato con successo!');
+            loadExchanges();
+        } else {
+            alert('Errore durante l\'accettazione dello scambio.');
+        }
+    }
+
+    // Rifiuta uno scambio
+    async function rejectExchange(exchangeId) {
+        const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}/reject`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+            alert('Scambio rifiutato.');
+            loadExchanges();
+        } else {
+            alert('Errore durante il rifiuto dello scambio.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadExchanges);
+
+//});

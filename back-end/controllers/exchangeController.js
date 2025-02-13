@@ -1,15 +1,16 @@
-const Exchange = require("../models/exchange");
+/*const Exchange = require("../models/exchange");
 const Album = require("../models/album");
 const User = require("../models/user");
+const Figurina = require("../models/figurina");
 
 
 exports.getExchanges = async (req, res) => {
     try {
         const exchanges = await Exchange.find()
-        .populate("offeredBy")
-        .populate("offeredFigurineIds")
-        .populate("requestedFigurineIds");
-        //console.log("📢 Scambi inviati al frontend:", exchanges); // DEBUG
+            .populate("offeredBy", "username")
+            .populate("offeredFigurines", "idMarvel name image")
+            .populate("requestedFigurines", "idMarvel name image");
+
         res.json(exchanges);
     } catch (error) {
         console.error("Errore nel recupero degli scambi:", error);
@@ -18,55 +19,41 @@ exports.getExchanges = async (req, res) => {
 };
 
 
+
 exports.createExchange = async (req, res) => {
     try {
         const { offeredFigurineIds, requestedFigurineIds, creditAmount, type } = req.body;
         const userId = req.user.userId;
 
         if (!offeredFigurineIds.length || (type !== "crediti" && !requestedFigurineIds.length)) {
-            return res.status(400).json({ error: "Seleziona almeno una figurina da offrire e una da richiedere." });
+            return res.status(400).json({ error: "Seleziona almeno una figurina da offrire e una da ricevere." });
         }
 
+        // **Convertiamo gli idMarvel in ObjectId**
+        const offeredFigurines = await Figurina.find({ idMarvel: { $in: offeredFigurineIds } });
+        const requestedFigurines = await Figurina.find({ idMarvel: { $in: requestedFigurineIds } });
+
+        if (offeredFigurines.length !== offeredFigurineIds.length || 
+            (type !== "crediti" && requestedFigurines.length !== requestedFigurineIds.length)) {
+            return res.status(400).json({ error: "Alcune figurine non esistono nel database." });
+        }
+
+        // **Rimuoviamo le figurine offerte dall'album**
         const userAlbum = await Album.findOne({ userId });
-
-        if (!userAlbum) {
-            return res.status(404).json({ error: "Album non trovato." });
-        }
-
-        if (type === "doppioni") {
-            // **Controllo che l'utente possa ricevere solo figurine nuove**
-            for (const figurinaId of requestedFigurineIds) {
-                const alreadyOwned = userAlbum.figurine.some(f => f.idMarvel === figurinaId);
-                if (alreadyOwned) {
-                    return res.status(400).json({ error: "Non puoi ricevere una figurina che possiedi già in uno scambio di doppioni." });
-                }
-            }
-        }
-
-        if (type === "multiplo") {
-            // **Controllo che tutte le figurine offerte e richieste siano diverse**
-            const allFigurine = [...offeredFigurineIds, ...requestedFigurineIds];
-            if (new Set(allFigurine).size !== allFigurine.length) {
-                return res.status(400).json({ error: "Le figurine offerte e richieste devono essere tutte diverse tra loro." });
-            }
-        }
-
-        // **Aggiorniamo l'album rimuovendo le figurine offerte**
-        for (const figurinaId of offeredFigurineIds) {
-            const index = userAlbum.figurine.findIndex(f => f.idMarvel === figurinaId);
+        for (const figurina of offeredFigurines) {
+            const index = userAlbum.figurine.findIndex(f => f.idMarvel === figurina.idMarvel);
             if (index === -1 || userAlbum.figurine[index].count <= 1) {
                 return res.status(400).json({ error: "Non puoi offrire questa figurina perché non è un doppione." });
             }
             userAlbum.figurine[index].count -= 1;
         }
-
         await userAlbum.save();
 
         // **Creiamo lo scambio**
         const newExchange = new Exchange({
             offeredBy: userId,
-            offeredFigurineIds,
-            requestedFigurineIds,
+            offeredFigurines: offeredFigurines.map(f => f._id),
+            requestedFigurines: type === "crediti" ? [] : requestedFigurines.map(f => f._id),
             creditAmount: type === "crediti" ? creditAmount : 0,
             type
         });
@@ -83,7 +70,8 @@ exports.createExchange = async (req, res) => {
 
 
 
-exports.acceptExchange = async (req, res) => {
+
+exports.acceptExchange = async (req, res) => { //da rivedere
     try {
         const exchangeId = req.params.id;
         const accepterId = req.user.userId;
@@ -147,7 +135,7 @@ exports.acceptExchange = async (req, res) => {
 };
 
 
-exports.rejectExchange = async (req, res) => {
+exports.rejectExchange = async (req, res) => { //da rivedere
     try {
         const exchangeId = req.params.id;
         const userId = req.user.userId;
@@ -200,7 +188,7 @@ exports.rejectExchange = async (req, res) => {
 
 
 
-exports.withdrawExchange = async (req, res) => {
+exports.withdrawExchange = async (req, res) => { //da rivedere
     try {
         const exchangeId = req.params.id;
         const userId = req.user.userId;
@@ -247,5 +235,206 @@ exports.withdrawExchange = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Errore nel ritiro dello scambio." });
+    }
+};*/
+
+
+
+const Exchange = require('../models/exchange');
+const Album = require('../models/album');
+const User = require('../models/user');
+const Figurina = require('../models/figurina');
+
+// Recupera tutti gli scambi disponibili (solo quelli che l'utente può accettare)
+exports.getExchanges = async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const userAlbum = await Album.findOne({ userId });
+        const userFigurineIds = userAlbum.figurine.map(f => f.idMarvel);
+
+        const exchanges = await Exchange.find()
+            .populate('offeredFigurines')
+            .populate('requestedFigurines');
+
+        // Filtra solo scambi pertinenti all'utente
+        const filteredExchanges = exchanges.filter(exchange => {
+            if (exchange.offeredBy.toString() === userId) {
+                return true; // Gli scambi proposti dall'utente
+            }
+            if (exchange.type === 'crediti') {
+                return exchange.requestedFigurines.length === 0; 
+            }
+            // Per scambi di figurine, verifica se l'utente ha le figurine richieste
+            return exchange.requestedFigurines.every(fig => userFigurineIds.includes(fig.idMarvel));
+        });
+
+        res.status(200).json(filteredExchanges);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Errore durante il recupero degli scambi" });
+    }
+};
+
+// Crea un nuovo scambio
+exports.createExchange = async (req, res) => {
+    const { offeredBy, offeredFigurines, requestedFigurines, creditAmount, type } = req.body;
+
+    try {
+        // Validazione: massimo 3 figurine offerte/richieste
+        if (offeredFigurines.length > 3 || requestedFigurines.length > 3) {
+            return res.status(400).json({ message: "Puoi offrire o richiedere massimo 3 figurine" });
+        }
+
+        const newExchange = new Exchange({
+            offeredBy,
+            offeredFigurines,
+            requestedFigurines,
+            creditAmount,
+            type,
+            status: 'pending'
+        });
+
+        await newExchange.save();
+        res.status(201).json({ message: "Scambio creato con successo", exchange: newExchange });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Errore durante la creazione dello scambio" });
+    }
+};
+
+// Accetta uno scambio
+exports.acceptExchange = async (req, res) => {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    try {
+        const exchange = await Exchange.findById(id)
+            .populate('offeredFigurines')
+            .populate('requestedFigurines');
+
+        if (!exchange || exchange.status !== 'pending') {
+            return res.status(404).json({ message: "Scambio non valido o già concluso" });
+        }
+
+        // Gestisce la transazione per doppioni, multiplo o crediti
+        const userAlbum = await Album.findOne({ userId });
+        const offeredUserAlbum = await Album.findOne({ userId: exchange.offeredBy });
+        const user = await User.findById(userId);
+        const offeredUser = await User.findById(exchange.offeredBy);
+
+        // Controllo per gli scambi con crediti
+        if (exchange.type === 'crediti') {
+            if (user.credits < exchange.creditAmount) {
+                return res.status(400).json({ message: "Crediti insufficienti" });
+            }
+
+            // Trasferimento crediti
+            user.credits -= exchange.creditAmount;
+            offeredUser.credits += exchange.creditAmount;
+
+        } else {
+            // Rimozione delle figurine offerte dal proponente
+            exchange.offeredFigurines.forEach(fig => {
+                const index = offeredUserAlbum.figurine.findIndex(f => f.idMarvel === fig.idMarvel);
+                if (index !== -1) {
+                    if (offeredUserAlbum.figurine[index].count > 1) {
+                        offeredUserAlbum.figurine[index].count -= 1;
+                    } else {
+                        offeredUserAlbum.figurine.splice(index, 1);
+                    }
+                }
+            });
+
+            // Rimozione delle figurine richieste dall'accettante
+            exchange.requestedFigurines.forEach(fig => {
+                const index = userAlbum.figurine.findIndex(f => f.idMarvel === fig.idMarvel);
+                if (index !== -1) {
+                    if (userAlbum.figurine[index].count > 1) {
+                        userAlbum.figurine[index].count -= 1;
+                    } else {
+                        userAlbum.figurine.splice(index, 1);
+                    }
+                }
+            });
+
+            // Aggiunta delle nuove figurine ricevute
+            exchange.offeredFigurines.forEach(fig => {
+                const existingFig = userAlbum.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existingFig) {
+                    existingFig.count += 1;
+                } else {
+                    userAlbum.figurine.push({
+                        idMarvel: fig.idMarvel,
+                        name: fig.name,
+                        image: fig.image,
+                        count: 1
+                    });
+                }
+            });
+
+            exchange.requestedFigurines.forEach(fig => {
+                const existingFig = offeredUserAlbum.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existingFig) {
+                    existingFig.count += 1;
+                } else {
+                    offeredUserAlbum.figurine.push({
+                        idMarvel: fig.idMarvel,
+                        name: fig.name,
+                        image: fig.image,
+                        count: 1
+                    });
+                }
+            });
+        }
+
+        exchange.status = 'accepted';
+        await user.save();
+        await offeredUser.save();
+        await userAlbum.save();
+        await offeredUserAlbum.save();
+        await exchange.save();
+
+        res.status(200).json({ message: "Scambio accettato con successo" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Errore durante l'accettazione dello scambio" });
+    }
+};
+
+// Rifiuta uno scambio
+exports.rejectExchange = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const exchange = await Exchange.findById(id);
+        if (!exchange || exchange.status !== 'pending') {
+            return res.status(404).json({ message: "Scambio non valido o già concluso" });
+        }
+        exchange.status = 'rejected';
+        await exchange.save();
+        res.status(200).json({ message: "Scambio rifiutato" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Errore durante il rifiuto dello scambio" });
+    }
+};
+
+// Ritira uno scambio proposto
+exports.withdrawExchange = async (req, res) => {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    try {
+        const exchange = await Exchange.findById(id);
+        if (!exchange || exchange.offeredBy.toString() !== userId) {
+            return res.status(403).json({ message: "Non sei autorizzato a ritirare questo scambio" });
+        }
+
+        await Exchange.findByIdAndDelete(id);
+        res.status(200).json({ message: "Scambio ritirato con successo" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Errore durante il ritiro dello scambio" });
     }
 };

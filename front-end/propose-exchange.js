@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+/*document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     if (!token) {
         window.location.href = "login.html";
@@ -104,4 +104,129 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     loadUserFigurine();
     loadProposedExchanges();
-});
+});*/
+
+//document.addEventListener("DOMContentLoaded", async () => {
+
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    // Carica le figurine dell'utente per selezionare cosa offrire
+    async function loadUserFigurines() {
+        const response = await fetch(`http://localhost:5000/api/album/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const album = await response.json();
+        
+        const offeredSelect = document.getElementById('offeredFigurine');
+        const requestedSelect = document.getElementById('requestedFigurine');
+        
+        offeredSelect.innerHTML = '';
+        requestedSelect.innerHTML = '';
+        
+        album.figurine.forEach(figurina => {
+            const option = `<option value="${figurina._id}">${figurina.name}</option>`;
+            offeredSelect.innerHTML += option;
+            requestedSelect.innerHTML += option;
+        });
+    }
+
+    // Gestisce il cambio di tipo di scambio (doppioni, multiplo, crediti)
+    document.getElementById('exchangeType').addEventListener('change', (e) => {
+        const type = e.target.value;
+        const creditAmountContainer = document.getElementById('creditAmountContainer');
+        if (type === 'crediti') {
+            creditAmountContainer.style.display = 'block';
+        } else {
+            creditAmountContainer.style.display = 'none';
+        }
+    });
+
+    // Proponi uno scambio
+    document.getElementById('exchangeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const type = document.getElementById('exchangeType').value;
+        const offered = Array.from(document.getElementById('offeredFigurine').selectedOptions).map(opt => opt.value);
+        const requested = Array.from(document.getElementById('requestedFigurine').selectedOptions).map(opt => opt.value);
+        const creditAmount = document.getElementById('creditAmount').value;
+
+        const exchangeData = {
+            offeredBy: userId,
+            type,
+            offeredFigurines: offered,
+            requestedFigurines: type !== 'crediti' ? requested : [],
+            creditAmount: type === 'crediti' ? parseInt(creditAmount) : 0,
+        };
+
+        const response = await fetch('http://localhost:5000/api/exchange', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(exchangeData),
+        });
+
+        if (response.ok) {
+            alert('Scambio proposto con successo!');
+            loadProposedExchanges();
+        } else {
+            alert('Errore durante la proposta di scambio.');
+        }
+    });
+
+    // Carica gli scambi proposti dall'utente
+    async function loadProposedExchanges() {
+        const response = await fetch('http://localhost:5000/api/exchange', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const exchanges = await response.json();
+        const proposedList = document.getElementById('proposedExchanges');
+
+        proposedList.innerHTML = '';
+
+        exchanges
+            .filter(ex => ex.offeredBy === userId)
+            .forEach(exchange => {
+                const card = document.createElement('div');
+                card.classList.add('col-md-4', 'mb-3');
+                card.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Tipo: ${exchange.type}</h5>
+                            <p class="card-text">Offerte: ${exchange.offeredFigurines.map(f => f.name).join(', ')}</p>
+                            <p class="card-text">Richieste: ${
+                                exchange.type === 'crediti' ? 
+                                `${exchange.creditAmount} crediti` : 
+                                exchange.requestedFigurines.map(f => f.name).join(', ')
+                            }</p>
+                            <p class="card-text">Stato: ${exchange.status}</p>
+                            <button class="btn btn-danger btn-sm" onclick="withdrawExchange('${exchange._id}')">Ritira Scambio</button>
+                        </div>
+                    </div>
+                `;
+                proposedList.appendChild(card);
+            });
+    }
+
+    // Ritira uno scambio proposto
+    async function withdrawExchange(exchangeId) {
+        const response = await fetch(`http://localhost:5000/api/exchange/${exchangeId}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+            alert('Scambio ritirato con successo.');
+            loadProposedExchanges();
+        } else {
+            alert('Errore durante il ritiro dello scambio.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadUserFigurines();
+        loadProposedExchanges();
+    });
+
+//});
+
