@@ -1,0 +1,192 @@
+body {
+    background: url('images/dashboard.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: 'Marvel', sans-serif;
+}
+/* Marvel Theme Navbar */
+.navbar {
+    background-color: rgba(20, 20, 20, 0.6); /* Nero semi-trasparente */
+    backdrop-filter: blur(8px); /* Sfocatura leggera */
+    border-bottom: 2px solid #e23636; /* Rosso Marvel */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8);
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Logo Album Supereroi */
+.navbar-brand {
+    font-family: 'Bebas Neue', 'Arial Black', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #e23636 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.08);
+    color: #ff4d4d !important;
+}
+
+/* Link Navbar */
+.navbar-nav .nav-link {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #e23636;
+    transform: translateY(-2px);
+    text-shadow: 0px 0px 8px rgba(226, 54, 54, 0.8);
+}
+
+/* Pulsante Toggle (mobile) */
+.navbar-toggler {
+    border-color: rgba(226, 54, 54, 0.8);
+}
+
+.navbar-toggler-icon {
+    background-color: #e23636;
+    border-radius: 3px;
+}
+
+/* Modal Logout */
+#logoutModal .modal-content {
+    background-color: #1a1a2e;
+    color: white;
+    border: 2px solid #e23636;
+    box-shadow: 0px 0px 20px rgba(226, 54, 54, 0.7);
+}
+
+#logoutModal .btn-danger {
+    background-color: #e23636;
+    border-color: #e23636;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#logoutModal .btn-danger:hover {
+    background-color: #b22a2a;
+}
+
+/* Effetto Glow (opzionale) */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px #e23636;
+    }
+    50% {
+        box-shadow: 0 0 20px #e23636, 0 0 30px #e23636;
+    }
+    100% {
+        box-shadow: 0 0 5px #e23636;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 10px;
+        font-size: 16px;
+    }
+}
+/* Stile semplice per il messaggio di benvenuto */
+#welcomeMessage {
+    font-family: 'Arial', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    margin-top: 20px;
+    
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: rgba(20, 20, 20, 0.5); /* Leggero sfondo scuro trasparente */
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease-in-out;
+    border: 2px solid red;
+}
+h5 {
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    letter-spacing: 1px;
+    margin-bottom: 5%;
+}
+
+/* Effetto semplice al passaggio del mouse */
+#welcomeMessage:hover {
+    transform: scale(1.02);
+    background-color: rgba(20, 20, 20, 0.7);
+}
+
+
+.card {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid red;
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.hero-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.btn-primary {
+    background-color: #ED1D24;
+    border: none;
+    font-size: 1rem;
+    padding: 10px;
+}
+.btn-primary:hover {
+    background-color: #0057B8;
+}
+.footer {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 15px;
+    margin-top: 20px;
+}
+footer {
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 5px;
+    font-size: 0.75rem;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#notification {
+    position: fixed;
+    top: 20px;
+    left: 45%;
+    transform: translateX(-50%);
+    min-width: 300px;
+    max-width: 600px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-size: 1rem;
+}
+#notification ul {
+    list-style-type: none; 
+    padding-left: 0; 
+    margin: 0; 
+}

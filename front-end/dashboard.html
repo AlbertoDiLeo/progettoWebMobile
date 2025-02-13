@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Album Figurine Supereroi</title>
+    <title>Dashboard </title>
+    <link rel="icon" href="images/logo.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Album Figurine Supereroi</a>
+            <a class="navbar-brand" href="#">Album Supereroi</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Dashboard</a>
+                        <a class="nav-link active" href="#">🏠 Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profilo</a>
+                        <a class="nav-link" href="profile.html">🦸‍♂️ Profilo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="exchange.html">Scambi</a>
+                        <a class="nav-link" href="exchange.html">🔄 Scambi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">🚪    Logout</a>
                     </li>
                 </ul>
             </div>
@@ -36,59 +37,56 @@
     <div class="container mt-5">
         <div id="notification" class="alert d-none" role="alert"></div>
         <div class="text-center">
-            <h1 id="welcomeMessage" class="text-primary"></h1>
+            <h1 id="welcomeMessage"></h1>
+            <h5><strong>Gestisci il tuo album, i crediti e gli scambi nel mondo dei supereroi!</strong></h5>
         </div>
 
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1>Benvenuto nella tua Dashboard!</h1>
-                <p>Gestisci il tuo album, i tuoi crediti e gli scambi.</p>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Il tuo Album</h5>
-                        <p class="card-text">Visualizza le figurine che hai raccolto finora.</p>
-                        <a href="album.html" class="btn btn-primary">Vai al tuo Album</a>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">🃏 Il tuo Album</h5>
+                            <p class="card-text">Visualizza le figurine che hai trovato!</p>
+                            <a href="album.html" class="btn btn-custom btn-primary me-2 mb-2">Vai all'Album</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Crediti Disponibili</h5>
-                        <p class="card-text">Crediti attuali: <strong id="crediti">...</strong></p>
-                        <button id="buy-credits-btn" class="btn btn-warning mt-2">Acquista un credito</button>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">📊 Statistiche Album</h5>
+                            <p class="card-text">Completamento album: <strong id="completion-percentage">...</strong></p>
+                            <a href="statistics.html" class="btn btn-custom btn-primary me-2 mb-2">Visualizza Dettagli</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Compra un Pacchetto</h5>
-                        <p class="card-text">Ogni pacchetto costa 1 credito e contiene 5 figurine.</p>
-                        <a id="buy-pack-btn" href="buy-pack.html" class="btn btn-success">Compra un pacchetto</a>
+    
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">💰 Crediti Disponibili</h5>
+                            <p class="card-text">Crediti attuali: <strong id="crediti">...</strong></p>
+                            <button id="buy-credits-btn" class="btn btn-custom btn-primary me-2 mb-2">Acquista un credito</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Statistiche Album</h5>
-                        <p class="card-text">Completamento album: <strong id="completion-percentage">35%</strong></p>
-                        <a href="statistics.html" class="btn btn-primary">Visualizza Dettagli</a>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">🎁 Compra un Pacchetto</h5>
+                            <p class="card-text">Ogni pacchetto costa 1 credito e contiene 5 figurine</p>
+                            <a href="buy-pack.html" class="btn btn-custom btn-primary me-2 mb-2">Compra un pacchetto</a> 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modale di conferma logout -->
         <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -110,13 +108,15 @@
     </div>
 
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2025 Album Figurine Supereroi. Tutti i diritti riservati.</p>
+    <footer>
+        <p>&copy; 2025 Album Figurine Supereroi. Vivi la leggenda, colleziona la tua squadra!</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="dashboard.js"></script>
     <script src="lib.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </body>
 </html>
+
+

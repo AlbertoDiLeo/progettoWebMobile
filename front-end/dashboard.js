@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const welcomeMessage = document.getElementById('welcomeMessage');
         
         if (decoded.name && decoded.favoriteHero) {
-            welcomeMessage.textContent = `Benvenuto, ${decoded.name}! Il tuo supereroe preferito è ${decoded.favoriteHero}.`;
+            welcomeMessage.textContent = `Benvenuto ${decoded.name}! Il tuo supereroe preferito è ${decoded.favoriteHero}`;
         } else {
             welcomeMessage.textContent = 'Benvenuto nella tua Dashboard!';
         }
