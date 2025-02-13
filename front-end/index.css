@@ -109,3 +109,6 @@ footer {
         font-size: 0.9rem;
     }
 }
+#togglePassword, #toggleconfirmPassword {
+    color: black; /* Cambia il colore dell'icona in nero */
+}

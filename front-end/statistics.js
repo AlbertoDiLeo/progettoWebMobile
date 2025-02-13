@@ -27,12 +27,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Conta le figurine trovate
         const foundFigurines = figurine.filter(hero => hero.found).length;
+        console.log("figurine", foundFigurines);
 
         // Conta le figurine mancanti
         const missingFigurines = totalFigurines - foundFigurines;
 
         // Calcola la percentuale di completamento
-        const completionPercentage = ((foundFigurines / totalFigurines) * 100).toFixed(2);
+        const completionPercentage = ((foundFigurines / totalFigurines) * 100).toFixed(0);
 
         // Conta il numero totale di doppioni
         const totalDuplicates = figurine.reduce((acc, hero) => acc + (hero.count - 1 > 0 ? hero.count - 1 : 0), 0);

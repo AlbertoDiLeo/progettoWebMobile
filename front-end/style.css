@@ -164,11 +164,8 @@ body {
     background-color: #F8F8F8;
     color: #1C1C1C;
 }
-.footer {
-    background: rgba(0, 0, 0, 0.9);
-    padding: 15px;
-    margin-top: 20px;
-}
+
+
 footer {
     background-color: rgba(0, 0, 0, 0.85);
     padding: 5px;
@@ -177,6 +174,12 @@ footer {
     position: absolute;
     bottom: 0;
     width: 100%;
+}
+/* Media query per schermi più piccoli */
+@media (max-width: 768px) {
+    footer {
+        position: relative;
+    }
 }
 
 #notification {
