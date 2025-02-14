@@ -143,9 +143,9 @@ exports.addToAlbum = async (req, res) => {
     try {
         const userId = req.user.userId;
         const { idMarvel, name, image } = req.body;
-        console.log("userId =", userId);
-        console.log("body", req.body);
-        console.log("Aggiunta di una figurina all'album:", idMarvel, name, image);
+        //console.log("userId =", userId);
+        //console.log("body", req.body);
+        //console.log("Aggiunta di una figurina all'album:", idMarvel, name, image);
 
         if (!idMarvel || !name || !image) {
             return res.status(400).json({ message: "Dati mancanti" });
@@ -153,7 +153,7 @@ exports.addToAlbum = async (req, res) => {
 
         // Troviamo l'album dell'utente
         let album = await Album.findOne({ userId });
-        console.log("album", album);
+        //console.log("album", album);
 
         if (!album) {
             return res.status(404).json({ message: "Album non trovato" });

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Conta le figurine trovate
         const foundFigurines = figurine.filter(hero => hero.found).length;
-        console.log("figurine", foundFigurines);
+        //console.log("figurine", foundFigurines);
 
         // Conta le figurine mancanti
         const missingFigurines = totalFigurines - foundFigurines;
