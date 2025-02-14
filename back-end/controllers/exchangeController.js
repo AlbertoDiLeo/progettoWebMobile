@@ -479,3 +479,35 @@ exports.createExchange = async (req, res) => {
   }
 }
 
+exports.getMyExchanges = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const exchanges = await Exchange.find({ offeredBy: userId }).populate('offeredFigurines requestedFigurines');
+      console.log(exchanges);
+      
+      res.status(200).json(exchanges);
+    } catch (error) {
+      console.error('Errore nel recupero degli scambi proposti:', error);
+      res.status(500).json({ message: 'Errore nel recupero degli scambi proposti' });
+    }
+}
+
+
+exports.withdrawExchange = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const exchangeId = req.params.id;
+  
+      const exchange = await Exchange.findOne({ _id: exchangeId, offeredBy: userId });
+      if (!exchange) {
+        return res.status(404).json({ message: 'Scambio non trovato o non autorizzato' });
+      }
+  
+      await Exchange.deleteOne({ _id: exchangeId });
+      res.status(200).json({ message: 'Scambio ritirato con successo' });
+    } catch (error) {
+      console.error('Errore nel ritiro dello scambio:', error);
+      res.status(500).json({ message: 'Errore nel ritiro dello scambio' });
+    }
+  }
+
