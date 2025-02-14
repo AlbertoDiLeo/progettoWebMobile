@@ -108,7 +108,7 @@
 
 //document.addEventListener("DOMContentLoaded", async () => {
 
-    const token = localStorage.getItem('token');
+/*    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     // Carica le figurine dell'utente per selezionare cosa offrire
@@ -228,5 +228,27 @@
         loadProposedExchanges();
     });
 
-//});
+//});*/
+
+
+  
+
+
+function showForm() {
+    const selected = document.getElementById('exchangeType').value;
+    document.getElementById('formDoppioni').classList.add('d-none');
+    document.getElementById('formMultiplo').classList.add('d-none');
+    document.getElementById('formCrediti').classList.add('d-none');
+    
+    if (selected === 'doppioni') {
+      document.getElementById('formDoppioni').classList.remove('d-none');
+    } else if (selected === 'multiplo') {
+      document.getElementById('formMultiplo').classList.remove('d-none');
+    } else if (selected === 'crediti') {
+      document.getElementById('formCrediti').classList.remove('d-none');
+    }
+}
+
+
+
 

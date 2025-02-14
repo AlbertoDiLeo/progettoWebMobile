@@ -240,7 +240,7 @@ exports.withdrawExchange = async (req, res) => { //da rivedere
 
 
 
-const Exchange = require('../models/exchange');
+/*const Exchange = require('../models/exchange');
 const Album = require('../models/album');
 const User = require('../models/user');
 const Figurina = require('../models/figurina');
@@ -438,3 +438,44 @@ exports.withdrawExchange = async (req, res) => {
         res.status(500).json({ message: "Errore durante il ritiro dello scambio" });
     }
 };
+*/
+
+
+const Exchange = require('../models/Exchange');
+const User = require('../models/User');
+const Figurina = require('../models/Figurina');
+
+// Funzione per creare uno scambio
+exports.createExchange = async (req, res) => {
+  try {
+    const { offeredFigurines, requestedFigurines, creditAmount, type } = req.body;
+    const userId = req.user.userId;
+
+    // Validazioni base
+    if (!type || !['doppioni', 'multiplo', 'crediti'].includes(type)) {
+      return res.status(400).json({ message: 'Tipo di scambio non valido' });
+    }
+    if (type === 'crediti' && (!creditAmount || creditAmount <= 0)) {
+      return res.status(400).json({ message: 'Importo crediti non valido' });
+    }
+    if (type !== 'crediti' && (!requestedFigurines || requestedFigurines.length === 0)) {
+      return res.status(400).json({ message: 'Figurine richieste obbligatorie' });
+    }
+
+    // Creazione dello scambio
+    const newExchange = new Exchange({
+      offeredBy: userId,
+      offeredFigurines,
+      requestedFigurines: type !== 'crediti' ? requestedFigurines : [],
+      creditAmount: type === 'crediti' ? creditAmount : 0,
+      type,
+    });
+
+    await newExchange.save();
+    res.status(201).json({ message: 'Scambio creato con successo', exchange: newExchange });
+  } catch (error) {
+    console.error('Errore nella creazione dello scambio:', error);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+}
+

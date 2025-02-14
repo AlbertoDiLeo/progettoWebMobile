@@ -1,3 +1,4 @@
+
 async function populateHeroesDropdown() {
     try {
       const response = await fetch('http://localhost:3000/api/marvel/heroes'); 
@@ -17,7 +18,7 @@ async function populateHeroesDropdown() {
       console.error('Errore nel recupero degli eroi:', error);
       showNotification('Errore nel recupero degli eroi. Riprova più tardi.', "danger");
     }
-  }
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
@@ -363,7 +364,10 @@ async function fetchUserProfile(userId) {
         document.getElementById("nameDisplay").innerText = user.name;
         document.getElementById("emailDisplay").innerText = user.email;
         document.getElementById("favoriteHeroDisplay").innerText = user.favoriteHero || "Non specificato";
-        document.getElementById("birthDateDisplay").innerText = user.birthDate || "Non specificata";
+        document.getElementById("birthDateDisplay").innerText = user.birthDate 
+        ? formatDate(user.birthDate) 
+        : "Non specificata";
+
         document.getElementById("phoneDisplay").innerText = user.phone || "Non specificato";
 
         const favoriteHeroSelect = document.getElementById("favoriteHero");
@@ -378,15 +382,18 @@ async function fetchUserProfile(userId) {
     }
 }
 
-/*function validateBirthDate(date) {
-    const parsedDate = new Date(date);
-    return !isNaN(parsedDate.getTime());
-}*/
-
 function validatePhone(phone) {
     return /^[0-9]{10}$/.test(phone);
 }
 
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mesi da 0 a 11
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
 
 
 
