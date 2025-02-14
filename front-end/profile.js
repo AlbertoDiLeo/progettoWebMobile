@@ -1,4 +1,23 @@
-
+async function populateHeroesDropdown() {
+    try {
+      const response = await fetch('http://localhost:3000/api/marvel/heroes'); 
+      if (!response.ok) throw new Error('Errore nel recupero degli eroi');
+  
+      const heroes = await response.json();
+      const select = document.getElementById('favoriteHero');
+      heroes.sort((a, b) => a.localeCompare(b));
+  
+      heroes.forEach(hero => {
+        const option = document.createElement('option');
+        option.value = hero;
+        option.textContent = hero;
+        select.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Errore nel recupero degli eroi:', error);
+      showNotification('Errore nel recupero degli eroi. Riprova più tardi.', "danger");
+    }
+  }
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
@@ -58,6 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    await populateHeroesDropdown();
     fetchUserProfile(userId);
 
     const profileView = document.getElementById("profileView");
@@ -77,11 +97,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("profileEditForm").addEventListener("submit", async function (event) {
         event.preventDefault(); // Evita il refresh della pagina
-    
-        const nameInput = document.getElementById("name").value.trim();
-        const favoriteHeroInput = document.getElementById("favoriteHero").value.trim();
-        const birthDateInput = document.getElementById("birthDate").value.trim();
-        const phoneInput = document.getElementById("phone").value.trim();
+        
+        const nameInput = document.getElementById("name").value;
+        const favoriteHeroInput = document.getElementById("favoriteHero").value;
+        const birthDateInput = document.getElementById("birthDate").value;
+        const phoneInput = document.getElementById("phone").value;
     
         let errorMessages = [];
     
@@ -345,6 +365,14 @@ async function fetchUserProfile(userId) {
         document.getElementById("favoriteHeroDisplay").innerText = user.favoriteHero || "Non specificato";
         document.getElementById("birthDateDisplay").innerText = user.birthDate || "Non specificata";
         document.getElementById("phoneDisplay").innerText = user.phone || "Non specificato";
+
+        const favoriteHeroSelect = document.getElementById("favoriteHero");
+        if (favoriteHeroSelect && user.favoriteHero) {
+            const optionToSelect = Array.from(favoriteHeroSelect.options).find(option => option.value === user.favoriteHero);
+            if (optionToSelect) {
+                optionToSelect.selected = true;
+            }
+        }
     } catch (error) {
         console.error("Errore nel caricamento del profilo:", error);
     }
