@@ -142,32 +142,31 @@ exports.buyPack = async (req, res) => {
 exports.addToAlbum = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { figurine } = req.body;  // Riceviamo le figurine trovate
+        const { idMarvel, name, image } = req.body;
+        console.log("userId =", userId);
+        console.log("body", req.body);
+        console.log("Aggiunta di una figurina all'album:", idMarvel, name, image);
 
-        //console.log("Aggiunta figurine all'album per userId:", userId, "Figurine:", figurine);
+        if (!idMarvel || !name || !image) {
+            return res.status(400).json({ message: "Dati mancanti" });
+        }
 
         // Troviamo l'album dell'utente
         let album = await Album.findOne({ userId });
+        console.log("album", album);
 
         if (!album) {
             return res.status(404).json({ message: "Album non trovato" });
         }
 
-        // Controlliamo i doppioni e aggiorniamo l'album
-        figurine.forEach(figurina => {
-            let existingFigurina = album.figurine.find(f => f.idMarvel === figurina.idMarvel);
+        // Cerca se esiste già la figurina
+        let existingFigurina = album.figurine.find(f => f.idMarvel === idMarvel);
+        if (existingFigurina) {
+            existingFigurina.count += 1; // Aumenta il contatore
+        } else {
+            album.figurine.push({ idMarvel, name, image, count: 1 });
+        }
 
-            if (existingFigurina) {
-                existingFigurina.count += 1;  //Se la figurina è già presente, aumentiamo il conteggio
-            } else {
-                album.figurine.push({
-                    idMarvel: figurina.idMarvel,
-                    name: figurina.name,
-                    image: figurina.image,
-                    count: 1  // Se è nuova, la aggiungiamo con count=1
-                });
-            }
-        });
 
         await album.save();
         //console.log("Album aggiornato:", album);

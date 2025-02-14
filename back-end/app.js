@@ -17,6 +17,7 @@ app.use(cors());
 
 // Middleware per parsing JSON (deve essere posizionato prima delle rotte)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Importa e usa le rotte
 app.use('/api/auth', authRoutes);

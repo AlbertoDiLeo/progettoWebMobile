@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         
     } catch (error) {
         console.error("Errore nel recupero dei crediti:", error);
-        document.getElementById("crediti").textContent = "Errore";
+        document.getElementById("crediti").textContent = "0";
     }
 });
 

@@ -121,6 +121,26 @@ footer {
     width: 100%;
 }
 
+#buy-pack .card.fixed-size {
+    width: 180px;
+    height: 300px;
+}
+#buy-pack .card.fixed-size img {
+    object-fit: cover;
+    height: 150px;
+}
+#buy-pack .card .btn {
+    width: 100px;
+}
+#buy-pack .card-title {
+    white-space: nowrap; /* Impedisce al testo di andare a capo */
+    overflow: hidden; /* Nasconde il testo che eccede la larghezza del contenitore */
+    text-overflow: ellipsis; /* Aggiunge i puntini di sospensione al testo troncato */
+    width: 100%; /* Assicura che il titolo occupi tutta la larghezza disponibile */
+}
+
+
+
 
 .card {
     background-color: white;
@@ -265,7 +285,7 @@ footer {
     padding: 10px;
 }
 .btn-primary:hover {
-    background-color: #fc0101;
+    background-color: #0057B8;
 }
 .btn-secondary {
     background-color: #1C1C1C;
@@ -275,7 +295,6 @@ footer {
     background-color: #F8F8F8;
     color: #1C1C1C;
 }
-
 
 
 
@@ -462,3 +481,22 @@ footer {
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+#notification {
+    position: fixed;
+    top: 20px;
+    left: 45%;
+    transform: translateX(-50%);
+    min-width: 300px;
+    max-width: 600px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-size: 1rem;
+}
+#notification ul {
+    list-style-type: none; 
+    padding-left: 0; 
+    margin: 0; 
+}

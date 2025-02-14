@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user = await profileResponse.json();
 
     if (user.credits < 1) {
-        buyAnotherPackButton.classList.add("disabled");
+        //buyAnotherPackButton.classList.add("disabled");
         buyAnotherPackButton.addEventListener("click", (event) => {
             event.preventDefault();
             showNotification("Crediti insufficienti! Acquista più crediti per comprare un pacchetto.", "danger");
@@ -163,14 +163,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Errore nell'acquisto del pacchetto:", error);
-            showNotification("Errore durante l'acquisto del pacchetto.", "danger");
+            showNotification("Crediti insufficienti", "danger");
         }
     });
 
 });
 
 
-function aggiornaVisualizzazione(figurineScelte) {
+/*function aggiornaVisualizzazione(figurineScelte) {
     const packContainer = document.getElementById("pack-container");
     packContainer.innerHTML = "";
     
@@ -197,4 +197,102 @@ function aggiornaVisualizzazione(figurineScelte) {
     if (figurineScelte.length === 0) {
         packContainer.innerHTML = "<p>Hai finito tutte le figurine nel pacchetto.</p>";
     }
+}*/
+
+function aggiornaVisualizzazione(figurineScelte) {
+    const packContainer = document.getElementById("pack-container");
+    const template = document.getElementById("card-template");
+    const noCardsMessage = document.getElementById("no-cards-message");
+
+    // Rimuove tutte le card tranne il template
+    Array.from(packContainer.children).forEach(child => {
+        if (child !== template) {
+            child.remove();
+        }
+    });
+
+    if (figurineScelte.length === 0) {
+        noCardsMessage.classList.remove("d-none");
+    } else {
+        noCardsMessage.classList.add("d-none");
+        figurineScelte.forEach((figurina, index) => {
+            const cardClone = template.cloneNode(true);
+            cardClone.classList.remove("d-none");
+            cardClone.id = `figurina-${index}`;
+
+            cardClone.querySelector("#card-image").src = figurina.image;
+            cardClone.querySelector("#card-title").textContent = figurina.name;
+
+            const addButton = cardClone.querySelector("#card-add");
+            const discardButton = cardClone.querySelector("#card-discard");
+
+            addButton.dataset.index = index;
+            discardButton.dataset.index = index;
+
+            if (!figurina.found) {
+                const badge = cardClone.querySelector("#new-badge");
+                badge.classList.remove("d-none");
+            }
+
+            addButton.addEventListener("click", () => {
+                aggiungiFigurina(index, cardClone);
+                cardClone.remove();
+            });
+
+            discardButton.addEventListener("click", () => {
+                scartaFigurina(index, cardClone);
+                cardClone.remove();
+            });
+
+            packContainer.appendChild(cardClone);
+        });
+    }
+}
+
+
+
+
+function aggiungiFigurina(index, cardElement) {
+    const figurinaDaAggiungere = tutteLeFigurine[index];
+    cardElement.classList.add("adding"); // Effetto animazione
+
+    setTimeout(async () => {
+        try {
+            const response = await fetch("http://localhost:3000/api/album/add-to-album", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    idMarvel: figurinaDaAggiungere.idMarvel,
+                    name: figurinaDaAggiungere.name,
+                    image: figurinaDaAggiungere.image
+                })
+            });
+    
+
+            if (!response.ok) {
+                throw new Error("Errore nell'aggiunta all'album");
+            }
+            console.log("✅ Figurina aggiunta con successo");
+
+            tutteLeFigurine.splice(index, 1);
+            aggiornaVisualizzazione(tutteLeFigurine);
+        } catch (error) {
+            console.error("Errore durante l'aggiunta all'album:", error);
+            showNotification("Errore nell'aggiunta all'album", "danger");
+        }
+    }, 500);
+}
+
+function scartaFigurina(index) {
+    const cardElement = document.getElementById(`figurina-${index}`);
+    cardElement.classList.add("discarding"); // Effetto di scarto
+
+    setTimeout(() => {
+        tutteLeFigurine.splice(index, 1);
+        aggiornaVisualizzazione(tutteLeFigurine);
+        showNotification("Figurina scartata!", "success");
+    }, 500);
 }

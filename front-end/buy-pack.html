@@ -34,19 +34,51 @@
         </div>
     </nav>
     
-    <div class="container mt-5">
+    <!--<div class="container mt-5">
         <div id="notification" class="alert d-none" role="alert"></div>
         <div id="pack-container" class="row row-cols-1 row-cols-md-5 g-2 mt-3">
-            <!-- Qui le figurine verranno inserite dinamicamente -->
         </div>
         
-        <!-- Bottone per tornare all'album e comprare un altro pacchetto -->
         <div class="row mt-4 justify-content-center">
             <div class="col-auto">
                 <a href="album.html" class="btn btn-primary btn-lg mx-2">📖 Sfoglia l'Album</a>
             </div> 
             <div class="col-auto">
                 <button id="buy-another-pack-btn" class="btn btn-secondary btn-lg mx-2">🎁 Comprane un altro </button>
+            </div>
+        </div>-->
+
+        <div class="container mt-5">
+            <div id="notification" class="alert d-none" role="alert"></div>
+            <div id="pack-container" class="row row-cols-1 row-cols-md-5 g-3 mt-3">
+                <div id="card-template" class="col d-none">
+                    <div class="card shadow-sm position-relative h-100"> <!-- Aggiungi h-100 per altezza uguale -->
+                        <span id="new-badge" class="badge bg-success position-absolute top-0 start-50 translate-middle-x d-none" style="z-index: 10;">Nuova!</span>
+                        <img id="card-image" src="" class="card-img-top" alt="">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <h5 id="card-title" class="card-title text-truncate"> <!-- Aggiungi text-truncate per troncare il testo lungo -->
+                                
+                            </h5>
+                            <div class="d-flex justify-content-center gap-2 mt-2">
+                                <button id="card-add" class="btn btn-outline-success px-3">✅ Aggiungi</button>
+                                <button id="card-discard" class="btn btn-outline-danger px-3">❌ Scarta</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="no-cards-message" class="text-center fw-bold text-secondary d-none">
+                🎉 Hai finito tutte le figurine nel pacchetto! 🃏✨
+            </div>
+            
+            <div class="row mt-4 justify-content-center">
+                <div class="col-auto">
+                    <a href="album.html" class="btn btn-primary btn-lg mx-2 btn-same-size">Sfoglia l'Album</a>
+                </div>
+                <div class="col-auto">
+                    <button id="buy-another-pack-btn" class="btn btn-secondary btn-lg mx-2 btn-same-size">Comprane un altro</button>
+                </div>
             </div>
         </div>
 
