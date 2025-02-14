@@ -213,6 +213,7 @@ function aggiornaVisualizzazione(figurineScelte) {
 
     if (figurineScelte.length === 0) {
         noCardsMessage.classList.remove("d-none");
+        //showNotification("Hai finito tutte le figurine nel pacchetto.", "info");
     } else {
         noCardsMessage.classList.add("d-none");
         figurineScelte.forEach((figurina, index) => {

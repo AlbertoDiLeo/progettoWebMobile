@@ -14,10 +14,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const welcomeMessage = document.getElementById('welcomeMessage');
         
         if (decoded.name && decoded.favoriteHero) {
-            welcomeMessage.textContent = `Benvenuto ${decoded.name}! Il tuo supereroe preferito è ${decoded.favoriteHero}`;
+            welcomeMessage.innerHTML = `
+                <div>Benvenuto ${decoded.name}!</div>
+                <div>Gestisci il tuo album, i crediti e gli scambi nel mondo dei supereroi!</div>
+            `;
         } else {
             welcomeMessage.textContent = 'Benvenuto nella tua Dashboard!';
         }
+        
     } catch (error) {
         console.error('Errore nella decodifica del token:', error);
         showNotification('Errore di autenticazione. Effettua nuovamente il login.', 'danger');
