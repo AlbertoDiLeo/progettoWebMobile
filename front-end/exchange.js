@@ -87,7 +87,7 @@
 });*/
 
 //document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem('token');
+    /*const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     // Recupera gli scambi disponibili per l'utente
@@ -166,4 +166,4 @@
 
     document.addEventListener('DOMContentLoaded', loadExchanges);
 
-//});
+//});*/
