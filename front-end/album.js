@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    searchBar.addEventListener("input", () => {
+    /*searchBar.addEventListener("input", () => {
         const query = searchBar.value.toLowerCase();
 
         if (query === "") {
@@ -204,7 +204,52 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         currentPage = 1;
         renderAlbum();
+    });*/
+
+    /*searchBar.addEventListener("input", () => {
+        const query = searchBar.value.toLowerCase();
+    
+        if (query === "") {
+            figurine = [...figurineOriginali]; // Ripristina l'array originale
+        } else {
+            figurine = figurineOriginali.filter(hero =>
+                hero.name.toLowerCase().startsWith(query) // Filtra solo per inizio parola
+            );
+        }
+        
+        if (figurine.length === 0) {
+        currentPage = 1;
+        renderAlbum();
+        }
+    });*/
+
+    searchBar.addEventListener("input", () => {
+        const query = searchBar.value.toLowerCase();
+        const noResultsMessage = document.getElementById("no-results-message");
+    
+        // Gestisce la visibilità del messaggio di nessun risultato
+        if (query === "") {
+            figurine = [...figurineOriginali]; // Ripristina l'array originale
+            noResultsMessage.classList.add("d-none");
+        } else {
+            figurine = figurineOriginali.filter(hero =>
+                hero.name.toLowerCase().startsWith(query) // Filtra solo per inizio parola
+            );
+        }
+    
+        if (figurine.length === 0) {
+            noResultsMessage.classList.remove("d-none");
+            albumContainer.innerHTML = ""; // Pulisce il contenitore se non ci sono risultati
+        } else {
+            noResultsMessage.classList.add("d-none");
+            currentPage = 1;
+            renderAlbum();
+        }
     });
+    
+
+
+    
 
     // Aggiunge evento per l'ordinamento
     sortOptions.addEventListener("change", () => {
