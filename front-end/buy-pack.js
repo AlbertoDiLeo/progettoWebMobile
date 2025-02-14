@@ -275,7 +275,7 @@ function aggiungiFigurina(index, cardElement) {
             if (!response.ok) {
                 throw new Error("Errore nell'aggiunta all'album");
             }
-            console.log("✅ Figurina aggiunta con successo");
+            //console.log("✅ Figurina aggiunta con successo");
 
             tutteLeFigurine.splice(index, 1);
             aggiornaVisualizzazione(tutteLeFigurine);
@@ -286,6 +286,8 @@ function aggiungiFigurina(index, cardElement) {
     }, 500);
 }
 
+
+
 function scartaFigurina(index) {
     const cardElement = document.getElementById(`figurina-${index}`);
     cardElement.classList.add("discarding"); // Effetto di scarto
@@ -293,6 +295,6 @@ function scartaFigurina(index) {
     setTimeout(() => {
         tutteLeFigurine.splice(index, 1);
         aggiornaVisualizzazione(tutteLeFigurine);
-        showNotification("Figurina scartata!", "success");
+        //showNotification("Figurina scartata!", "success");
     }, 500);
 }
