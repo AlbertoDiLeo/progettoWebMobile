@@ -12,3 +12,4 @@ const albumSchema = new mongoose.Schema({
 
 module.exports = mongoose.model("Album", albumSchema);
 
+module.exports = mongoose.models.Album || mongoose.model("Album", albumSchema);

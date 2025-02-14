@@ -11,5 +11,5 @@ const exchangeSchema = new mongoose.Schema({
 
 //module.exports = mongoose.model("Exchange", exchangeSchema);
 
-const Exchange = mongoose.models.Exchange || mongoose.model("Exchange", exchangeSchema);
+module.exports = mongoose.models.Exchange || mongoose.model("Exchange", exchangeSchema);
 

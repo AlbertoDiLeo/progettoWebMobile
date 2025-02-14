@@ -441,9 +441,9 @@ exports.withdrawExchange = async (req, res) => {
 */
 
 
-const Exchange = require('../models/Exchange');
-const User = require('../models/User');
-const Figurina = require('../models/Figurina');
+const Exchange = require('../models/exchange');
+const User = require('../models/user');
+const Figurina = require('../models/figurina');
 
 // Funzione per creare uno scambio
 exports.createExchange = async (req, res) => {

@@ -9,5 +9,7 @@ const figurinaSchema = new mongoose.Schema({
     image: { type: String, required: true } 
 });
 
-module.exports = mongoose.model("Figurina", figurinaSchema);
+//module.exports = mongoose.model("Figurina", figurinaSchema);
+
+module.exports = mongoose.models.Figurina || mongoose.model("Figurina", figurinaSchema);
 

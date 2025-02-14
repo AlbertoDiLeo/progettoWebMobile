@@ -231,23 +231,82 @@
 //});*/
 
 
+const token = localStorage.getItem('token');
+
+// Avvia il caricamento delle select quando la pagina è pronta
+document.addEventListener('DOMContentLoaded', loadAlbumAndPopulate);
+
+
+// Popola le select per lo scambio di doppioni usando l'album e la collezione delle figurine
+function populateDoppioniSelects(album) {
+    const doppioniSelect = document.getElementById('doppioneOfferto');
+    const mancantiSelect = document.getElementById('doppioneRichiesto');
+  
+    // Filtra doppioni e mancanti dall'album
+    const doppioni = album.figurine.filter(f => f.count > 1);
+    const mancanti = album.figurine.filter(f => f.count === 0 || !f.found);
+  
+    // Pulisce le select
+    doppioniSelect.innerHTML = '<option value="">Seleziona un doppione</option>';
+    mancantiSelect.innerHTML = '<option value="">Seleziona una figurina mancante</option>';
+  
+    // Aggiunge i doppioni alla select
+    doppioni.forEach(fig => {
+      const option = document.createElement('option');
+      option.value = fig.idMarvel;
+      option.textContent = fig.name;
+      doppioniSelect.appendChild(option);
+    });
+  
+    // Aggiunge le mancanti alla select
+    mancanti.forEach(fig => {
+      const option = document.createElement('option');
+      option.value = fig.idMarvel;
+      option.textContent = fig.name;
+      mancantiSelect.appendChild(option);
+    });
+}
+  
+  // Fetch per ottenere l'album e popolare le select
+async function loadAlbumAndPopulate() {
+    try {
+        const response = await fetch("http://localhost:5000/api/album", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.figurine) {
+            populateDoppioniSelects(data);
+        } else {
+            console.error('Errore nel recupero delle figurine:', data.message);
+        }
+    } catch (error) {
+        console.error('Errore nella fetch dell album:', error);
+    }
+}
+  
+  
+  
   
 
 
-function showForm() {
-    const selected = document.getElementById('exchangeType').value;
-    document.getElementById('formDoppioni').classList.add('d-none');
-    document.getElementById('formMultiplo').classList.add('d-none');
-    document.getElementById('formCrediti').classList.add('d-none');
-    
-    if (selected === 'doppioni') {
-      document.getElementById('formDoppioni').classList.remove('d-none');
-    } else if (selected === 'multiplo') {
-      document.getElementById('formMultiplo').classList.remove('d-none');
-    } else if (selected === 'crediti') {
-      document.getElementById('formCrediti').classList.remove('d-none');
+    function showForm() {
+        const selected = document.getElementById('exchangeType').value;
+        document.getElementById('formDoppioni').classList.add('d-none');
+        document.getElementById('formMultiplo').classList.add('d-none');
+        document.getElementById('formCrediti').classList.add('d-none');
+        
+        if (selected === 'doppioni') {
+        document.getElementById('formDoppioni').classList.remove('d-none');
+        } else if (selected === 'multiplo') {
+        document.getElementById('formMultiplo').classList.remove('d-none');
+        } else if (selected === 'crediti') {
+        document.getElementById('formCrediti').classList.remove('d-none');
+        }
     }
-}
 
 
 
