@@ -152,15 +152,17 @@ function populateSelects(album, tipoScambio) {
   
       const result = await response.json();
       if (response.ok) {
-        alert('Scambio creato con successo!');
+        showNotification('Scambio creato con successo!', 'success');
         loadProposedExchanges(); // Aggiorna la lista
-        location.reload(); // Ricarica la pagina per resettare i campi
+        /*setTimeout(() => {
+          location.reload(); // Ricarica la pagina per resettare i campi
+        }, 2000);*/ // Ricarica la pagina per resettare i campi
       } else {
-        alert(`Errore: ${result.message}`);
+        showNotification(`Errore: ${result.message}`, 'danger');
       }
     } catch (error) {
       console.error('Errore nella creazione dello scambio:', error);
-      alert('Errore durante la creazione dello scambio.');
+      showNotification('Errore durante la creazione dello scambio.', 'danger');
     }
   }
   
@@ -174,7 +176,7 @@ function populateSelects(album, tipoScambio) {
     if (tipoScambio === 'doppioni') {
       if (!checkLimit(document.getElementById('doppioneOfferto'), 1) ||
           !checkLimit(document.getElementById('doppioneRichiesto'), 1)) {
-          alert('Puoi selezionare solo una figurina per lo scambio di doppioni.', 'danger');
+          showNotification('Puoi selezionare solo una figurina per lo scambio di doppioni.', 'danger');
         return false;
       }
     } else if (tipoScambio === 'multiplo' || tipoScambio === 'crediti') {
@@ -185,7 +187,7 @@ function populateSelects(album, tipoScambio) {
       if ((multiploOfferti && !checkLimit(multiploOfferti, 3)) ||
           (multiploRichiesti && !checkLimit(multiploRichiesti, 3)) ||
           (multiploCreditiOfferti && !checkLimit(multiploCreditiOfferti, 3))) {
-        alert('Puoi selezionare al massimo 3 figurine.', 'danger');
+          showNotification('Puoi selezionare al massimo 3 figurine.', 'danger');
         return false;
       }
     }
@@ -254,15 +256,15 @@ async function withdrawExchange(exchangeId, cardElement) {
   
       const result = await response.json();
       if (response.ok) {
-        alert('Scambio ritirato con successo!');
-        location.reload(); // Ricarica la pagina per aggiornare la lista
+        showNotification('Scambio ritirato con successo!', 'success');
+        //location.reload(); // Ricarica la pagina per aggiornare la lista
         cardElement.remove(); // Rimuove la card dall'interfaccia
       } else {
-        alert(`Errore: ${result.message}`);
+        showNotification(`Errore: ${result.message}`, 'danger');
       }
     } catch (error) {
       console.error('Errore nel ritiro dello scambio:', error);
-      alert('Errore durante il ritiro dello scambio.');
+      showNotification('Errore durante il ritiro dello scambio.', 'danger');
     }
 }
   
