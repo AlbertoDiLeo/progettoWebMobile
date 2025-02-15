@@ -444,46 +444,86 @@ exports.withdrawExchange = async (req, res) => {
 const Exchange = require('../models/exchange');
 const User = require('../models/user');
 const Figurina = require('../models/figurina');
+const Album = require('../models/album');
 
 // Funzione per creare uno scambio
+/*exports.createExchange = async (req, res) => {
+    try {
+        const { offeredFigurines, requestedFigurines, creditAmount, type } = req.body;
+        const userId = req.user.userId;
+    
+        // Aggiunge direttamente il nome (lo prende dal frontend)
+        const offered = offeredFigurines.map(fig => ({
+          idMarvel: fig.idMarvel,
+          name: fig.name
+        }));
+        const requested = requestedFigurines?.map(fig => ({
+          idMarvel: fig.idMarvel,
+          name: fig.name
+        }));
+    
+        const newExchange = new Exchange({
+          offeredBy: userId,
+          offeredFigurines: offered,
+          requestedFigurines: requested || [],
+          creditAmount: type === 'crediti' ? creditAmount : 0,
+          type,
+        });
+    
+        await newExchange.save();
+        res.status(201).json({ message: 'Scambio creato con successo', exchange: newExchange });
+    } catch (error) {
+        console.error('Errore nella creazione dello scambio:', error);
+        res.status(500).json({ message: 'Errore interno del server', error });
+    }
+}*/
+
+
+
 exports.createExchange = async (req, res) => {
   try {
     const { offeredFigurines, requestedFigurines, creditAmount, type } = req.body;
     const userId = req.user.userId;
 
-    // Validazioni base
-    if (!type || !['doppioni', 'multiplo', 'crediti'].includes(type)) {
-      return res.status(400).json({ message: 'Tipo di scambio non valido' });
-    }
-    if (type === 'crediti' && (!creditAmount || creditAmount <= 0)) {
-      return res.status(400).json({ message: 'Importo crediti non valido' });
-    }
-    if (type !== 'crediti' && (!requestedFigurines || requestedFigurines.length === 0)) {
-      return res.status(400).json({ message: 'Figurine richieste obbligatorie' });
+    const offered = offeredFigurines.map(fig => ({ idMarvel: fig.idMarvel, name: fig.name }));
+    const requested = requestedFigurines?.map(fig => ({ idMarvel: fig.idMarvel, name: fig.name }));
+
+    // Trova e aggiorna l'album
+    const album = await Album.findOne({ userId });
+    if (!album) return res.status(404).json({ message: 'Album non trovato' });
+    for (const figurina of offeredFigurines) {
+        const index = album.figurine.findIndex(f => f.idMarvel === figurina.idMarvel);
+        if (index === -1 || album.figurine[index].count <= 1) {
+            return res.status(400).json({ error: "Non puoi offrire questa figurina perché non è un doppione." });
+        }
+        album.figurine[index].count -= 1;
     }
 
-    // Creazione dello scambio
+    await album.save();  
+
     const newExchange = new Exchange({
       offeredBy: userId,
-      offeredFigurines,
-      requestedFigurines: type !== 'crediti' ? requestedFigurines : [],
+      offeredFigurines: offered,
+      requestedFigurines: requested || [],
       creditAmount: type === 'crediti' ? creditAmount : 0,
       type,
     });
 
     await newExchange.save();
     res.status(201).json({ message: 'Scambio creato con successo', exchange: newExchange });
+
   } catch (error) {
     console.error('Errore nella creazione dello scambio:', error);
-    res.status(500).json({ message: 'Errore interno del server' });
+    res.status(500).json({ message: 'Errore interno del server', error });
   }
-}
+};
+
 
 exports.getMyExchanges = async (req, res) => {
     try {
       const userId = req.user.userId;
       const exchanges = await Exchange.find({ offeredBy: userId }).populate('offeredFigurines requestedFigurines');
-      console.log(exchanges);
+      //console.log(exchanges);
       
       res.status(200).json(exchanges);
     } catch (error) {
@@ -493,7 +533,7 @@ exports.getMyExchanges = async (req, res) => {
 }
 
 
-exports.withdrawExchange = async (req, res) => {
+/*exports.withdrawExchange = async (req, res) => {
     try {
       const userId = req.user.userId;
       const exchangeId = req.params.id;
@@ -509,5 +549,55 @@ exports.withdrawExchange = async (req, res) => {
       console.error('Errore nel ritiro dello scambio:', error);
       res.status(500).json({ message: 'Errore nel ritiro dello scambio' });
     }
-  }
+}*/
+
+exports.withdrawExchange = async (req, res) => {
+
+    try {
+        const userId = req.user.userId;
+        const exchangeId = req.params.id;
+  
+        const exchange = await Exchange.findOne({ _id: exchangeId, offeredBy: userId });
+        if (!exchange) {
+            return res.status(400).json({ error: "Non puoi ritirare questo scambio." });
+        }
+
+        // **Solo chi ha creato lo scambio può ritirarlo**
+        if (exchange.offeredBy.toString() !== userId) {
+            return res.status(403).json({ error: "Non puoi ritirare uno scambio che non hai creato." });
+        }
+
+        const album = await Album.findOne({ userId });
+        if (!album) {
+            return res.status(404).json({ message: 'Album non trovato' });
+        }
+  
+        // Restituisce le figurine offerte all'album
+        for (const figurina of exchange.offeredFigurines) {
+            const index = album.figurine.findIndex(f => f.idMarvel === figurina.idMarvel);
+            if (index > -1) {
+                album.figurine[index].count += 1;  // Aumenta il contatore
+            } 
+        }
+        /*for (const figurinaId of exchange.offeredFigurines) {
+            const figurina = album.figurine.find(f => f.idMarvel === figurinaId);
+            console.log('Figurina:', figurina);
+            if (figurina) {
+                console.log('Aumento il contatore');
+                figurina.count += 1;
+                console.log('Contatore:', figurina.count);
+            } 
+        }*/
+  
+        //await album.save();
+        await album.save().catch(err => console.error('Errore nel salvataggio:', err));
+        await Exchange.deleteOne({ _id: exchangeId });
+  
+        res.status(200).json({ message: 'Scambio ritirato con successo' });
+    } catch (error) {
+        console.error('Errore nel ritiro dello scambio:', error);
+        res.status(500).json({ message: 'Errore nel ritiro dello scambio' });
+    }
+};
+  
 

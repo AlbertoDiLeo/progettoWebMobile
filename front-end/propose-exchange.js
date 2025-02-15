@@ -19,7 +19,7 @@ function populateSelects(album, tipoScambio) {
     }
 }
   
-  // Scambio di Doppioni (già fatto prima)
+  // Scambio di Doppioni 
   function populateDoppioniSelects(album) {
     const doppioniSelect = document.getElementById('doppioneOfferto');
     const mancantiSelect = document.getElementById('doppioneRichiesto');
@@ -32,7 +32,7 @@ function populateSelects(album, tipoScambio) {
     populateSelectOptions(mancantiSelect, mancanti, 'Seleziona una figurina mancante');
   }
   
-  // Scambio Multiplo (Nuova parte)
+  // Scambio Multiplo 
   function populateMultiploSelects(album) {
     multiploOffertiSelect = document.getElementById('multiploOfferti');
     multiploRichiestiSelect = document.getElementById('multiploRichiesti');
@@ -61,7 +61,11 @@ function populateSelects(album, tipoScambio) {
     data.forEach(fig => {
       const option = document.createElement('option');
       option.value = fig.idMarvel;
-      option.textContent = fig.name;
+      if (`${fig.count}` > 0) {
+        option.textContent = `${fig.name} x${fig.count}`;
+      } else {
+        option.textContent = fig.name;
+      }
       selectElement.appendChild(option);
     });
   }
@@ -108,21 +112,32 @@ function populateSelects(album, tipoScambio) {
 
 
   // Modifica la funzione per creare lo scambio con il controllo
-async function createExchange() {
+  async function createExchange() {
     const tipoScambio = document.getElementById('exchangeType').value;
     if (!validateSelections(tipoScambio)) return;
+  
+    // Helper per ottenere { idMarvel, name }
+    const getFigurinaData = (select) => {
+      if (!select) return [];
+      return Array.from(select.selectedOptions).map(opt => ({
+        idMarvel: opt.value,
+        name: opt.textContent.replace(/ x\d+$/, '') // Prende il nome dalla select e rimuove il contatore dal nome  
+      }));
+    };
   
     let payload = { type: tipoScambio };
   
     if (tipoScambio === 'doppioni') {
-      payload.offeredFigurines = [document.getElementById('doppioneOfferto').value];
-      payload.requestedFigurines = [document.getElementById('doppioneRichiesto').value];
+      payload.offeredFigurines = getFigurinaData(document.getElementById('doppioneOfferto'));
+      payload.requestedFigurines = getFigurinaData(document.getElementById('doppioneRichiesto'));
     } else if (tipoScambio === 'multiplo') {
-      payload.offeredFigurines = Array.from(document.getElementById('multiploOfferti').selectedOptions).map(opt => opt.value);
-      payload.requestedFigurines = Array.from(document.getElementById('multiploRichiesti').selectedOptions).map(opt => opt.value);
+      payload.offeredFigurines = getFigurinaData(document.getElementById('multiploOfferti'));
+      payload.requestedFigurines = getFigurinaData(document.getElementById('multiploRichiesti'));
     } else if (tipoScambio === 'crediti') {
-      payload.offeredFigurines = Array.from(document.getElementById('creditiOfferti').selectedOptions).map(opt => opt.value);
-      payload.creditAmount = document.getElementById('creditiRichiesti').value;
+      payload.offeredFigurines = getFigurinaData(document.getElementById('multiploCreditiOfferti'));
+      //payload.creditAmount = document.getElementById('creditiRichiesti').value;
+      const creditInput = document.getElementById('creditiRichiesti');
+      payload.creditAmount = creditInput ? creditInput.value : 0;
     }
   
     try {
@@ -137,15 +152,18 @@ async function createExchange() {
   
       const result = await response.json();
       if (response.ok) {
-        showNotifcation('Scambio creato con successo!', 'success');
-        loadAlbumAndPopulate();
+        alert('Scambio creato con successo!');
+        loadProposedExchanges(); // Aggiorna la lista
+        location.reload(); // Ricarica la pagina per resettare i campi
       } else {
-        showNotifcation(`Errore: ${result.message}`, 'danger');
+        alert(`Errore: ${result.message}`);
       }
     } catch (error) {
       console.error('Errore nella creazione dello scambio:', error);
+      alert('Errore durante la creazione dello scambio.');
     }
   }
+  
   
   document.getElementById('confirmExchangeButton').addEventListener('click', createExchange);
   
@@ -156,18 +174,18 @@ async function createExchange() {
     if (tipoScambio === 'doppioni') {
       if (!checkLimit(document.getElementById('doppioneOfferto'), 1) ||
           !checkLimit(document.getElementById('doppioneRichiesto'), 1)) {
-          showNotifcation('Puoi selezionare solo una figurina per lo scambio di doppioni.', 'danger');
+          alert('Puoi selezionare solo una figurina per lo scambio di doppioni.', 'danger');
         return false;
       }
     } else if (tipoScambio === 'multiplo' || tipoScambio === 'crediti') {
       const multiploOfferti = document.getElementById('multiploOfferti');
       const multiploRichiesti = document.getElementById('multiploRichiesti');
-      const creditiOfferti = document.getElementById('creditiOfferti');
+      const multiploCreditiOfferti = document.getElementById('multiploCreditiOfferti');
   
       if ((multiploOfferti && !checkLimit(multiploOfferti, 3)) ||
           (multiploRichiesti && !checkLimit(multiploRichiesti, 3)) ||
-          (creditiOfferti && !checkLimit(creditiOfferti, 3))) {
-        showNotifcation('Puoi selezionare al massimo 3 figurine.', 'danger');
+          (multiploCreditiOfferti && !checkLimit(multiploCreditiOfferti, 3))) {
+        alert('Puoi selezionare al massimo 3 figurine.', 'danger');
         return false;
       }
     }
@@ -202,18 +220,34 @@ async function loadProposedExchanges() {
 }
   
   // Formatta la descrizione dello scambio
-function formatExchangeDescription(exchange) {
-    const offerti = exchange.offeredFigurines.map(f => f.name).join(', ');
-    const richiesti = exchange.requestedFigurines?.length 
-      ? exchange.requestedFigurines.map(f => f.name).join(', ') 
+/*function formatExchangeDescription(exchange) {
+  const offerti = exchange.offeredFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ');
+  const richiesti = exchange.requestedFigurines?.length 
+      ? exchange.requestedFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ') 
       : `${exchange.creditAmount} crediti`;
-    return `Ti offro: ${offerti} per ${richiesti}`;
+  return `Ti offro: ${offerti} per ${richiesti}`;
+}*/
+
+function formatExchangeDescription(exchange) {
+  let offerti;
+  if (exchange.type === 'crediti') {
+    offerti = exchange.offeredFigurines.map(f => f.name).join(', ');
+  } else {
+    offerti = exchange.offeredFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ');
+  }
+
+  const richiesti = exchange.type === 'crediti' 
+      ? `${exchange.creditAmount} crediti`
+      : exchange.requestedFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ');
+
+  return `Ti offro: ${offerti} per ${richiesti}`;
 }
+
 
 // Funzione per ritirare uno scambio
 async function withdrawExchange(exchangeId, cardElement) {
     try {
-      const response = await fetch(`/api/exchange/${exchangeId}`, {
+      const response = await fetch(`http://localhost:3000/api/exchange/${exchangeId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
@@ -221,6 +255,7 @@ async function withdrawExchange(exchangeId, cardElement) {
       const result = await response.json();
       if (response.ok) {
         alert('Scambio ritirato con successo!');
+        location.reload(); // Ricarica la pagina per aggiornare la lista
         cardElement.remove(); // Rimuove la card dall'interfaccia
       } else {
         alert(`Errore: ${result.message}`);
