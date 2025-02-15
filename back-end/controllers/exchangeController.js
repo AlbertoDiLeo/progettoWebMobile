@@ -1,74 +1,4 @@
-/*const Exchange = require("../models/exchange");
-const Album = require("../models/album");
-const User = require("../models/user");
-const Figurina = require("../models/figurina");
-
-
-exports.getExchanges = async (req, res) => {
-    try {
-        const exchanges = await Exchange.find()
-            .populate("offeredBy", "username")
-            .populate("offeredFigurines", "idMarvel name image")
-            .populate("requestedFigurines", "idMarvel name image");
-
-        res.json(exchanges);
-    } catch (error) {
-        console.error("Errore nel recupero degli scambi:", error);
-        res.status(500).json({ error: "Errore nel recupero degli scambi." });
-    }
-};
-
-
-
-exports.createExchange = async (req, res) => {
-    try {
-        const { offeredFigurineIds, requestedFigurineIds, creditAmount, type } = req.body;
-        const userId = req.user.userId;
-
-        if (!offeredFigurineIds.length || (type !== "crediti" && !requestedFigurineIds.length)) {
-            return res.status(400).json({ error: "Seleziona almeno una figurina da offrire e una da ricevere." });
-        }
-
-        // **Convertiamo gli idMarvel in ObjectId**
-        const offeredFigurines = await Figurina.find({ idMarvel: { $in: offeredFigurineIds } });
-        const requestedFigurines = await Figurina.find({ idMarvel: { $in: requestedFigurineIds } });
-
-        if (offeredFigurines.length !== offeredFigurineIds.length || 
-            (type !== "crediti" && requestedFigurines.length !== requestedFigurineIds.length)) {
-            return res.status(400).json({ error: "Alcune figurine non esistono nel database." });
-        }
-
-        // **Rimuoviamo le figurine offerte dall'album**
-        const userAlbum = await Album.findOne({ userId });
-        for (const figurina of offeredFigurines) {
-            const index = userAlbum.figurine.findIndex(f => f.idMarvel === figurina.idMarvel);
-            if (index === -1 || userAlbum.figurine[index].count <= 1) {
-                return res.status(400).json({ error: "Non puoi offrire questa figurina perché non è un doppione." });
-            }
-            userAlbum.figurine[index].count -= 1;
-        }
-        await userAlbum.save();
-
-        // **Creiamo lo scambio**
-        const newExchange = new Exchange({
-            offeredBy: userId,
-            offeredFigurines: offeredFigurines.map(f => f._id),
-            requestedFigurines: type === "crediti" ? [] : requestedFigurines.map(f => f._id),
-            creditAmount: type === "crediti" ? creditAmount : 0,
-            type
-        });
-
-        await newExchange.save();
-        res.status(201).json({ message: "Scambio proposto con successo", exchange: newExchange });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Errore nel proporre lo scambio." });
-    }
-};
-
-
-
+/*
 
 
 exports.acceptExchange = async (req, res) => { //da rivedere
@@ -188,58 +118,6 @@ exports.rejectExchange = async (req, res) => { //da rivedere
 
 
 
-exports.withdrawExchange = async (req, res) => { //da rivedere
-    try {
-        const exchangeId = req.params.id;
-        const userId = req.user.userId;
-
-        const exchange = await Exchange.findById(exchangeId);
-        if (!exchange || exchange.status !== "pending") {
-            return res.status(400).json({ error: "Non puoi ritirare questo scambio." });
-        }
-
-        // **Solo chi ha creato lo scambio può ritirarlo**
-        if (exchange.offeredBy.toString() !== userId) {
-            return res.status(403).json({ error: "Non puoi ritirare uno scambio che non hai creato." });
-        }
-
-        const userAlbum = await Album.findOne({ userId });
-        if (!userAlbum) {
-            return res.status(404).json({ error: "Album non trovato." });
-        }
-
-        // **Restituiamo le figurine offerte**
-        for (const figurinaId of exchange.offeredFigurineIds) {
-            const figurina = userAlbum.figurine.find(f => f.idMarvel === figurinaId);
-            if (figurina) {
-                figurina.count += 1;
-            } else {
-                userAlbum.figurine.push({ idMarvel: figurinaId, count: 1 });
-            }
-        }
-
-        await userAlbum.save();
-
-        // **Se lo scambio era in crediti, restituiamo i crediti**
-        if (exchange.type === "crediti") {
-            const user = await User.findById(userId);
-            user.credits += exchange.creditAmount;
-            await user.save();
-        }
-
-        // **cancelliamo lo scambio**
-        await Exchange.findByIdAndDelete(exchangeId);
-
-        res.json({ message: "Scambio ritirato con successo." });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Errore nel ritiro dello scambio." });
-    }
-};*/
-
-
-
 /*const Exchange = require('../models/exchange');
 const Album = require('../models/album');
 const User = require('../models/user');
@@ -272,33 +150,6 @@ exports.getExchanges = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Errore durante il recupero degli scambi" });
-    }
-};
-
-// Crea un nuovo scambio
-exports.createExchange = async (req, res) => {
-    const { offeredBy, offeredFigurines, requestedFigurines, creditAmount, type } = req.body;
-
-    try {
-        // Validazione: massimo 3 figurine offerte/richieste
-        if (offeredFigurines.length > 3 || requestedFigurines.length > 3) {
-            return res.status(400).json({ message: "Puoi offrire o richiedere massimo 3 figurine" });
-        }
-
-        const newExchange = new Exchange({
-            offeredBy,
-            offeredFigurines,
-            requestedFigurines,
-            creditAmount,
-            type,
-            status: 'pending'
-        });
-
-        await newExchange.save();
-        res.status(201).json({ message: "Scambio creato con successo", exchange: newExchange });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Errore durante la creazione dello scambio" });
     }
 };
 
@@ -418,26 +269,6 @@ exports.rejectExchange = async (req, res) => {
         res.status(500).json({ message: "Errore durante il rifiuto dello scambio" });
     }
 };
-
-// Ritira uno scambio proposto
-exports.withdrawExchange = async (req, res) => {
-    const userId = req.user.id;
-    const { id } = req.params;
-
-    try {
-        const exchange = await Exchange.findById(id);
-        if (!exchange || exchange.offeredBy.toString() !== userId) {
-            return res.status(403).json({ message: "Non sei autorizzato a ritirare questo scambio" });
-        }
-
-        await Exchange.findByIdAndDelete(id);
-        res.status(200).json({ message: "Scambio ritirato con successo" });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Errore durante il ritiro dello scambio" });
-    }
-};
 */
 
 
@@ -538,5 +369,87 @@ exports.withdrawExchange = async (req, res) => {
         res.status(500).json({ message: 'Errore nel ritiro dello scambio' });
     }
 };
-  
 
+
+// scambi doppioni
+exports.getAvailableExchanges = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const userAlbum = await Album.findOne({ userId });
+      if (!userAlbum) return res.status(404).json({ message: 'Album non trovato' });
+  
+      const allExchanges = await Exchange.find({ status: 'pending', offeredBy: { $ne: userId } });
+  
+      const availableExchanges = allExchanges.filter(exchange => {
+        if (exchange.type !== 'doppioni') return false;
+  
+        const userFigurines = userAlbum.figurine;
+  
+        const hasDoppione = exchange.requestedFigurines.every(reqFig => {
+          const fig = userFigurines.find(f => f.idMarvel === reqFig.idMarvel);
+          return fig && fig.count > 1; // Deve essere un doppione
+        });
+  
+        const isNewFigurina = exchange.offeredFigurines.every(offFig => {
+          const fig = userFigurines.find(f => f.idMarvel === offFig.idMarvel);
+          return !fig || fig.count === 0; // Deve essere nuova
+        });
+  
+        return hasDoppione && isNewFigurina;
+      });
+  
+      res.status(200).json({ exchanges: availableExchanges });
+    } catch (error) {
+      console.error('Errore nel recupero degli scambi disponibili:', error);
+      res.status(500).json({ message: 'Errore nel recupero degli scambi disponibili' });
+    }
+};
+
+
+
+exports.getMultiploExchanges = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const userAlbum = await Album.findOne({ userId });
+      if (!userAlbum) return res.status(404).json({ message: 'Album non trovato' });
+  
+      const allExchanges = await Exchange.find({ status: 'pending', type: 'multiplo', offeredBy: { $ne: userId } });
+  
+      const availableExchanges = allExchanges.filter(exchange => {
+        const userFigurines = userAlbum.figurine;
+  
+        // Controlla se tutte le figurine richieste sono doppioni per l'utente
+        const allDoppioni = exchange.requestedFigurines.every(reqFig => {
+          const fig = userFigurines.find(f => f.idMarvel === reqFig.idMarvel);
+          return fig && fig.count > 1; // Deve essere un doppione
+        });
+  
+        return allDoppioni;
+      });
+  
+      res.status(200).json({ exchanges: availableExchanges });
+    } catch (error) {
+      console.error('Errore nel recupero degli scambi multipli disponibili:', error);
+      res.status(500).json({ message: 'Errore nel recupero degli scambi multipli disponibili' });
+    }
+};
+
+
+exports.getCreditiExchanges = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: 'Utente non trovato' });
+  
+      const allExchanges = await Exchange.find({ status: 'pending', type: 'crediti', offeredBy: { $ne: userId } });
+  
+      const availableExchanges = allExchanges.filter(exchange => {
+        return user.credits >= exchange.creditAmount; // L'utente deve avere abbastanza crediti
+      });
+  
+      res.status(200).json({ exchanges: availableExchanges });
+    } catch (error) {
+      console.error('Errore nel recupero degli scambi per crediti disponibili:', error);
+      res.status(500).json({ message: 'Errore nel recupero degli scambi per crediti disponibili' });
+    }
+  };

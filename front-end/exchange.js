@@ -167,3 +167,74 @@
     document.addEventListener('DOMContentLoaded', loadExchanges);
 
 //});*/
+
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+  
+    async function fetchDoppioniExchanges() {
+      try {
+        const response = await fetch('http://localhost:3000/api/exchange/available', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (response.ok) populateExchanges(data.exchanges, 'doppioniExchanges');
+        else console.error('Errore:', data.message);
+      } catch (error) { console.error('Errore nel recupero degli scambi:', error); }
+    }
+  
+    async function fetchMultiploExchanges() {
+      try {
+        const response = await fetch('http://localhost:3000/api/exchange/available/multiplo', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (response.ok) populateExchanges(data.exchanges, 'multiploExchanges');
+        else console.error('Errore:', data.message);
+      } catch (error) { console.error('Errore nel recupero degli scambi multipli:', error); }
+    }
+
+    async function fetchCreditiExchanges() {
+        try {
+          const response = await fetch('http://localhost:3000/api/exchange/available/crediti', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const data = await response.json();
+          if (response.ok) populateExchanges(data.exchanges, 'creditiExchanges');
+          else console.error('Errore:', data.message);
+        } catch (error) { console.error('Errore nel recupero degli scambi per crediti:', error); }
+    }
+  
+    function populateExchanges(exchanges, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      exchanges.forEach(exchange => {
+        const card = document.createElement('div');
+        card.className = 'card p-3';
+        card.innerHTML = `
+          <h5>Offro: ${exchange.offeredFigurines.map(f => f.name).join(', ')}</h5>
+          <p>Richiedo: ${exchange.requestedFigurines.map(f => f.name).join(', ')}</p>
+          <button class="btn btn-success me-2">Accetta</button>
+          <button class="btn btn-danger">Rifiuta</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+  
+    const select = document.getElementById('exchangeTypeSelect');
+    select.addEventListener('change', () => {
+        document.getElementById('doppioniSection').classList.add('d-none');
+        document.getElementById('multiploSection').classList.add('d-none');
+        document.getElementById('creditiSection').classList.add('d-none');
+  
+        if (select.value === 'doppioni') fetchDoppioniExchanges();
+        else if (select.value === 'multiplo') fetchMultiploExchanges();
+        else if (select.value === 'crediti') fetchCreditiExchanges();
+    });
+  
+    fetchDoppioniExchanges();
+  });
+  
+  
