@@ -378,7 +378,7 @@ exports.getAvailableExchanges = async (req, res) => {
       const userAlbum = await Album.findOne({ userId });
       if (!userAlbum) return res.status(404).json({ message: 'Album non trovato' });
   
-      const allExchanges = await Exchange.find({ status: 'pending', offeredBy: { $ne: userId } });
+      const allExchanges = await Exchange.find({ status: 'pending', offeredBy: { $ne: userId } }).populate('offeredBy', 'name');
   
       const availableExchanges = allExchanges.filter(exchange => {
         if (exchange.type !== 'doppioni') return false;
@@ -416,7 +416,7 @@ exports.getMultiploExchanges = async (req, res) => {
       const userAlbum = await Album.findOne({ userId });
       if (!userAlbum) return res.status(404).json({ message: 'Album non trovato' });
   
-      const allExchanges = await Exchange.find({ status: 'pending', type: 'multiplo', offeredBy: { $ne: userId } });
+      const allExchanges = await Exchange.find({ status: 'pending', type: 'multiplo', offeredBy: { $ne: userId } }).populate('offeredBy', 'name');
   
       const availableExchanges = allExchanges.filter(exchange => {
         const userFigurines = userAlbum.figurine;
@@ -445,7 +445,7 @@ exports.getCreditiExchanges = async (req, res) => {
       const user = await User.findById(userId);
       if (!user) return res.status(404).json({ message: 'Utente non trovato' });
   
-      const allExchanges = await Exchange.find({ status: 'pending', type: 'crediti', offeredBy: { $ne: userId } });
+      const allExchanges = await Exchange.find({ status: 'pending', type: 'crediti', offeredBy: { $ne: userId } }).populate('offeredBy', 'name');
   
       const availableExchanges = allExchanges.filter(exchange => {
         return user.credits >= exchange.creditAmount; // L'utente deve avere abbastanza crediti
@@ -458,59 +458,6 @@ exports.getCreditiExchanges = async (req, res) => {
       res.status(500).json({ message: 'Errore nel recupero degli scambi per crediti disponibili' });
     }
 };
-
-
-  // Backend: Funzione per accettare scambi di doppioni
-/*exports.acceptExchange = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const exchangeId = req.params.id;
-    
-        const exchange = await Exchange.findById(exchangeId);
-        if (!exchange || exchange.status !== 'pending') {
-            return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
-        }
-    
-        const album = await Album.findOne({ userId });
-        if (!album) return res.status(404).json({ message: 'Album non trovato' });
-  
-        if (exchange.type === 'doppioni') {
-            // Verifica se l'utente ha la figurina richiesta come doppione
-            for (const fig of exchange.requestedFigurines) {
-            const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
-            if (!found || found.count <= 1) {
-                return res.status(400).json({ message: 'Non hai i doppioni richiesti per accettare questo scambio' });
-            }
-            }
-    
-            // Aggiorna l'album rimuovendo le richieste e aggiungendo le offerte
-            exchange.requestedFigurines.forEach(fig => {
-            const index = album.figurine.findIndex(f => f.idMarvel === fig.idMarvel);
-            album.figurine[index].count -= 1;
-            if (album.figurine[index].count === 0) album.figurine.splice(index, 1);
-            });
-
-            for (const fig of exchange.offeredFigurines) {
-                const figurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
-                const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
-                if (existing) existing.count += 1;
-                else album.figurine.push({ idMarvel: figurina.idMarvel, name: figurina.name, image: figurina.image, count: 1 });
-            }
-    
-            await album.save();
-            exchange.status = 'accepted';
-            await exchange.save();
-    
-            res.status(200).json({ message: 'Scambio accettato con successo', exchange });
-        } else {
-            res.status(400).json({ message: 'Tipo di scambio non supportato in questa funzione' });
-        }
-  
-    } catch (error) {
-      console.error('Errore nell accettare lo scambio:', error);
-      res.status(500).json({ message: 'Errore interno del server' });
-    }
-};*/
 
 
 exports.acceptExchange = async (req, res) => {

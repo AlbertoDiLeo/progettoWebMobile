@@ -126,8 +126,10 @@
 
             <div class="card-template d-none">
                 <div class="card p-3">
-                <h5 class="offered">Offro: </h5>
-                <p class="requested">Richiedo: </p>
+                <h5 class="exchange-title">Proposta di scambio </h5>
+                <p class="offered">Mi viene offerto: </p>
+                <p class="requested">Perdo: </p>
+                <p class="user">Proposto da: </p>
                 <button class="btn btn-success me-2 accept-btn">Accetta</button>
                 <button class="btn btn-danger reject-btn">Rifiuta</button>
                 </div>
@@ -139,6 +141,32 @@
             <h2>Scambi Rifiutati</h2>
             <div id="rejectedExchanges" class="row g-3"></div>
         </div>
+        <!-- Template per Scambi Rifiutati -->
+        <div class="card-template-rejected d-none">
+            <div class="card p-3">
+            <h5 class="rejected-title">Scambio Rifiutato</h5>
+            <p class="offered-text">Ho offerto: </p>
+            <p class="requested-text">Per: </p>
+            <button class="btn btn-warning withdraw-btn">Ritira Scambio</button>
+            </div>
+        </div>
+
+        <!-- Sezione Scambi Accettati -->
+        <div class="container mb-4">
+            <h2>Scambi Accettati</h2>
+            <div id="acceptedExchanges" class="row g-3"></div>
+        </div>
+        <!-- Template per Scambi Rifiutati -->
+        <div class="card-template-accepted d-none">
+            <div class="card p-3">
+                <h5 class="accepted-title">Scambio andato a buon fine</h5>
+                <p class="offered-text-accepted">Ho ceduto: </p>
+                <p class="acquired-text-accepted">Ho acquistato: </p>
+                <button class="btn btn-danger delete-btn">Cancella</button>
+            </div>
+        </div>
+        
+  
 
         <!-- Bottone per creare nuovi scambi -->
         <div class="container mb-4 text-center">
