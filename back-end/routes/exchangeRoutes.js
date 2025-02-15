@@ -1,7 +1,8 @@
 const express = require('express');
 //const { authenticateToken } = require('../middlewares/authMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
-const { createExchange, getMyExchanges, withdrawExchange, getAvailableExchanges, getMultiploExchanges, fetchCreditiExchanges } = require('../controllers/exchangeController');
+const { createExchange, getMyExchanges, withdrawExchange, getAvailableExchanges, getMultiploExchanges  } = require('../controllers/exchangeController');
+const { getCreditiExchanges, acceptExchange, rejectExchange } = require('../controllers/exchangeController');
 
 const router = express.Router();
 
@@ -23,13 +24,13 @@ router.get('/available', authMiddleware, getAvailableExchanges);
 router.get('/available/multiplo', authMiddleware, getMultiploExchanges);
 
 // Recuperare la lista degli scambi disponibili per crediti
-router.get('/available/crediti', authMiddleware, fetchCreditiExchanges);
+router.get('/available/crediti', authMiddleware, getCreditiExchanges);
 
 // Accettare uno scambio esistente
-//router.put('/:id/accept', authMiddleware, acceptExchange);
+router.put('/:id/accept', authMiddleware, acceptExchange);
 
 // Rifiutare uno scambio esistente
-//router.put('/:id/reject', authMiddleware, rejectExchange);
+router.put('/:id/reject', authMiddleware, rejectExchange);
 
 
 

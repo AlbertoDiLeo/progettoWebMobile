@@ -397,6 +397,9 @@ exports.getAvailableExchanges = async (req, res) => {
   
         return hasDoppione && isNewFigurina;
       });
+
+        console.log('Scambi trovati per scambio doppione:', allExchanges.length);
+        console.log('Scambi filtrati:', availableExchanges.length);
   
       res.status(200).json({ exchanges: availableExchanges });
     } catch (error) {
@@ -426,7 +429,8 @@ exports.getMultiploExchanges = async (req, res) => {
   
         return allDoppioni;
       });
-  
+        console.log('Scambi trovati per scambio multiplo:', allExchanges.length);
+        console.log('Scambi filtrati:', availableExchanges.length);
       res.status(200).json({ exchanges: availableExchanges });
     } catch (error) {
       console.error('Errore nel recupero degli scambi multipli disponibili:', error);
@@ -446,10 +450,166 @@ exports.getCreditiExchanges = async (req, res) => {
       const availableExchanges = allExchanges.filter(exchange => {
         return user.credits >= exchange.creditAmount; // L'utente deve avere abbastanza crediti
       });
-  
+        console.log('Scambi trovati per vendita crediti:', allExchanges.length);
+        console.log('Scambi filtrati:', availableExchanges.length);
       res.status(200).json({ exchanges: availableExchanges });
     } catch (error) {
       console.error('Errore nel recupero degli scambi per crediti disponibili:', error);
       res.status(500).json({ message: 'Errore nel recupero degli scambi per crediti disponibili' });
     }
-  };
+};
+
+
+  // Backend: Funzione per accettare scambi di doppioni
+/*exports.acceptExchange = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const exchangeId = req.params.id;
+    
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange || exchange.status !== 'pending') {
+            return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
+        }
+    
+        const album = await Album.findOne({ userId });
+        if (!album) return res.status(404).json({ message: 'Album non trovato' });
+  
+        if (exchange.type === 'doppioni') {
+            // Verifica se l'utente ha la figurina richiesta come doppione
+            for (const fig of exchange.requestedFigurines) {
+            const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+            if (!found || found.count <= 1) {
+                return res.status(400).json({ message: 'Non hai i doppioni richiesti per accettare questo scambio' });
+            }
+            }
+    
+            // Aggiorna l'album rimuovendo le richieste e aggiungendo le offerte
+            exchange.requestedFigurines.forEach(fig => {
+            const index = album.figurine.findIndex(f => f.idMarvel === fig.idMarvel);
+            album.figurine[index].count -= 1;
+            if (album.figurine[index].count === 0) album.figurine.splice(index, 1);
+            });
+
+            for (const fig of exchange.offeredFigurines) {
+                const figurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+                const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existing) existing.count += 1;
+                else album.figurine.push({ idMarvel: figurina.idMarvel, name: figurina.name, image: figurina.image, count: 1 });
+            }
+    
+            await album.save();
+            exchange.status = 'accepted';
+            await exchange.save();
+    
+            res.status(200).json({ message: 'Scambio accettato con successo', exchange });
+        } else {
+            res.status(400).json({ message: 'Tipo di scambio non supportato in questa funzione' });
+        }
+  
+    } catch (error) {
+      console.error('Errore nell accettare lo scambio:', error);
+      res.status(500).json({ message: 'Errore interno del server' });
+    }
+};*/
+
+
+exports.acceptExchange = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const exchangeId = req.params.id;
+    
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange || exchange.status !== 'pending') {
+            return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
+        }
+
+        console.log('Scambio:', exchange.type);
+    
+        const album = await Album.findOne({ userId });
+        if (!album) return res.status(404).json({ message: 'Album non trovato' });
+  
+        if (exchange.type === 'doppioni') {
+            // Verifica se l'utente ha la figurina richiesta come doppione
+            for (const fig of exchange.requestedFigurines) {
+                const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (!found || found.count <= 1) {
+                    return res.status(400).json({ message: 'Non hai i doppioni richiesti per accettare questo scambio' });
+                }
+            }
+    
+            // Aggiorna l'album rimuovendo le richieste e aggiungendo le offerte
+            exchange.requestedFigurines.forEach(fig => {
+            const index = album.figurine.findIndex(f => f.idMarvel === fig.idMarvel);
+            album.figurine[index].count -= 1;
+            if (album.figurine[index].count === 0) album.figurine.splice(index, 1);
+            });
+
+            for (const fig of exchange.offeredFigurines) {
+                const figurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+                const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existing) existing.count += 1;
+                else album.figurine.push({ idMarvel: figurina.idMarvel, name: figurina.name, image: figurina.image, count: 1 });
+            }
+
+            await album.save();
+            res.status(200).json({ message: 'Scambio accettato con successo', exchange });
+
+        } else if (exchange.type === 'multiplo') {
+            for (const fig of exchange.requestedFigurines) {
+                const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (!found || found.count <= 1) return res.status(400).json({ message: 'Non hai i doppioni richiesti' });
+                found.count -= 1;
+                if (found.count === 0) album.figurine = album.figurine.filter(f => f.idMarvel !== fig.idMarvel);
+            }
+            for (const fig of exchange.offeredFigurines) {
+                const figurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+                const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existing) existing.count += 1;
+                else album.figurine.push({ idMarvel: figurina.idMarvel, name: figurina.name, image: figurina.image, count: 1 });
+            }
+            await album.save();
+        } else if (exchange.type === 'crediti') {
+            const user = await User.findById(userId);
+            if (user.credits < exchange.creditAmount) return res.status(400).json({ message: 'Crediti insufficienti' });
+            user.credits -= exchange.creditAmount;
+            for (const fig of exchange.offeredFigurines) {
+                const figurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+                const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+                if (existing) existing.count += 1;
+                else album.figurine.push({ idMarvel: figurina.idMarvel, name: figurina.name, image: figurina.image, count: 1 });
+            }
+            await album.save();
+            await user.save();
+        } 
+        exchange.status = 'accepted';
+        await exchange.save();
+        res.status(200).json({ message: 'Scambio accettato con successo', exchange });
+
+    } catch (error) {
+      console.error('Errore nell accettare lo scambio:', error);
+      res.status(500).json({ message: 'Errore interno del server' });
+    }
+};
+
+
+
+exports.rejectExchange = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const exchangeId = req.params.id;
+
+        const exchange = await Exchange.findById(exchangeId);
+        if (!exchange || exchange.status !== 'pending') {
+            return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
+        }
+
+        exchange.status = 'rejected';
+        await exchange.save();
+
+        res.status(200).json({ message: 'Scambio rifiutato con successo', exchange });
+
+    } catch (error) {
+        console.error('Errore nel rifiuto dello scambio:', error);
+        res.status(500).json({ message: 'Errore interno del server' });
+    }
+};
