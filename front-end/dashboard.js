@@ -134,9 +134,10 @@ document.getElementById("buy-credits-btn").addEventListener("click", async () =>
         const creditiElement = document.getElementById("crediti");
         if (creditiElement) {
             creditiElement.textContent = data.newCredits;
-            setTimeout(() => { // è la soluzione migliore?
+            /*setTimeout(() => { // è la soluzione migliore?
                 location.reload();
-            }, 50);
+            }, 50);*/
+            location.reload();
         } else {
             console.error("Elemento 'crediti' non trovato!");
         }
