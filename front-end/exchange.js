@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         const data = await response.json();
         if (response.ok) {
-          populateExchanges(data.exchanges, containerId);
+          populateExchanges(data, containerId);
         } else {
           console.error('Errore:', data.message);
         }
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     .then(response => response.json())
     .then(data => {
-        const acceptedExchanges = data.exchanges.filter(ex => ex.status === 'accepted');
+        const acceptedExchanges = data.filter(ex => ex.status === 'accepted');
         const container = document.getElementById('acceptedExchanges');
         container.innerHTML = '';
 
@@ -265,3 +265,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 }
 
 document.addEventListener('DOMContentLoaded', loadAcceptedExchanges);
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+  tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+          // Carica dinamicamente gli scambi in base alla tab selezionata
+          if(tab.id === 'available-tab') loadAvailableExchanges();
+          if(tab.id === 'rejected-tab') loadRejectedExchanges();
+          if(tab.id === 'accepted-tab') loadAcceptedExchanges();
+      });
+  });
+});

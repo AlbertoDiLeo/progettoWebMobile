@@ -3,71 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scambio Figurine</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="dashboard.html">Album Figurine</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="album.html">Album</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="exchange.html">Scambi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="profile.html">Profilo</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <h1 class="text-center">Scambio Figurine</h1>
-
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5 class="card-title">Proponi uno scambio</h5>
-                <form id="exchangeForm">
-                    <div class="mb-3">
-                        <label for="offeredFigurina" class="form-label">Figurina doppione:</label>
-                        <select id="offeredFigurina" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="requestedFigurina" class="form-label">Figurina mancante:</label>
-                        <select id="requestedFigurina" class="form-select"></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Proponi Scambio</button>
-                </form>
-            </div>
-        </div>
-
-        <h2 class="mt-4">Scambi Disponibili</h2>
-        <div id="exchangeList" class="row mt-3"></div>
-    </div>
-
-    <footer class="bg-dark text-white text-center py-3 mt-4">
-        <p>&copy; 2025 Album Figurine Supereroi</p>
-    </footer>
-
-    <script src="exchange.js"></script>
-    <script src="lib.js"></script>
-</body>
-</html> -->
-
-
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scambi Disponibili</title>
     <link rel="icon" href="images/logo.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="prova.css">-->
     <link rel="stylesheet" href="exchange.css">
 </head>
 <body class="bg-light">
@@ -99,84 +37,86 @@
 
     <div class="container py-5">
         <div id="notification" class="alert d-none" role="alert"></div>
-        <!-- Sezione Scambi Disponibili -->
-        <div class="container mb-4">
-            <h2>Scambi Disponibili</h2>
-            <select class="form-select mb-3" id="exchangeTypeSelect">
-            <option value="doppioni">Scambi Doppioni</option>
-            <option value="multiplo">Scambi Multipli</option>
-            <option value="crediti">Vendita per Crediti</option>
+        <h2 class="title">Scambi Disponibili</h2>
+
+        <div class="mb-4">
+            <label for="exchangeType" class="form-label">Seleziona il tipo di scambio</label>
+            <select class="form-select w-25 mb-3" id="exchangeTypeSelect">
+                <option value="">-- Seleziona --</option>
+                <option value="doppioni">Scambi Doppioni</option>
+                <option value="multiplo">Scambi Multipli</option>
+                <option value="crediti">Vendita per Crediti</option>
             </select>
+        </div>
 
-            <div id="doppioniSection" >
-            <h4>Scambi Doppioni Disponibili</h4>
-            <div id="doppioniExchanges" class="row g-3"></div>
-            </div>
+        <div id="doppioniSection">
+            <h4 class="title">Scambi Doppioni Disponibili</h4>
+            <div id="doppioniExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
 
-            <div id="multiploSection" >
-            <h4>Scambi Multipli Disponibili</h4>
-            <div id="multiploExchanges" class="row g-3"></div>
-            </div>
+        <div id="multiploSection" >
+            <h4 class="title">Scambi Multipli Disponibili</h4>
+            <div id="multiploExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
 
-            <div id="creditiSection" >
-            <h4>Vendita per Crediti Disponibili</h4>
-            <div id="creditiExchanges" class="row g-3"></div>
-            </div>
+        <div id="creditiSection" >
+            <h4 class="title">Vendita per Crediti Disponibili</h4>
+            <div id="creditiExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
         
 
-            <div class="card-template d-none">
-                <div class="card p-3">
-                <h5 class="exchange-title">Proposta di scambio </h5>
-                <p class="offered">Mi viene offerto: </p>
-                <p class="requested">Perdo: </p>
-                <p class="user">Proposto da: </p>
-                <button class="btn btn-success me-2 accept-btn">Accetta</button>
-                <button class="btn btn-danger reject-btn">Rifiuta</button>
+        <div class="card-template d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="exchange-title">Proposta di scambio</h5>
+                    <p class="offered text-start">Mi viene offerto:</p>
+                    <p class="requested text-start">Perdo:</p>
+                    <p class="user text-start">Proposto da:</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-success me-2 accept-btn">Accetta</button>
+                    <button class="btn btn-danger reject-btn">Rifiuta</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Sezione Scambi Rifiutati -->
-        <div class="container mb-4">
-            <h2>Scambi Rifiutati</h2>
-            <div id="rejectedExchanges" class="row g-3"></div>
-        </div>
-        <!-- Template per Scambi Rifiutati -->
-        <div class="card-template-rejected d-none">
-            <div class="card p-3">
-            <h5 class="rejected-title">Scambio Rifiutato</h5>
-            <p class="offered-text">Ho offerto: </p>
-            <p class="requested-text">Per: </p>
+    <div class="container mb-4">
+        <h2 class="title">Scambi Rifiutati</h2>
+        <div id="rejectedExchanges" class="row g-3"></div>
+    </div>
+    <div class="card-template-rejected d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="rejected-title">Scambio Rifiutato</h5>
+                <p class="offered-text text-start">Ho offerto:</p>
+                <p class="requested-text text-start">Per:</p>
+            </div>
             <button class="btn btn-warning withdraw-btn">Ritira Scambio</button>
-            </div>
         </div>
+    </div>
 
-        <!-- Sezione Scambi Accettati -->
-        <div class="container mb-4">
-            <h2>Scambi Accettati</h2>
-            <div id="acceptedExchanges" class="row g-3"></div>
-        </div>
-        <!-- Template per Scambi Rifiutati -->
-        <div class="card-template-accepted d-none">
-            <div class="card p-3">
+    <div class="container mb-4">
+        <h2 class="title">Scambi Accettati</h2>
+        <div id="acceptedExchanges" class="row g-3"></div>
+    </div>
+
+    <div class="card-template-accepted d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
                 <h5 class="accepted-title">Scambio andato a buon fine</h5>
-                <p class="offered-text-accepted">Ho ceduto: </p>
-                <p class="acquired-text-accepted">Ho acquistato: </p>
-                <button class="btn btn-danger delete-btn">Cancella</button>
+                <p class="offered-text-accepted text-start">Ho ceduto:</p>
+                <p class="acquired-text-accepted text-start">Ho acquistato:</p>
             </div>
+            <button class="btn btn-danger delete-btn">Cancella</button>
         </div>
-        
-  
+    </div>
 
-        <!-- Bottone per creare nuovi scambi -->
-        <div class="container mb-4 text-center">
-            <button class="btn btn-primary" onclick="window.location.href='propose-exchange.html'">Crea Nuovo Scambio</button>
-        </div>
+    <div class="container mb-4 text-center">
+        <button class="btn btn-primary" onclick="window.location.href='propose-exchange.html'">Crea Nuovo Scambio</button>
+    </div>
 
-
-
-        <!-- Modale di conferma logout -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -192,8 +132,151 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
+    <footer>
+        <p>&copy; 2025 Album Figurine Supereroi. Vivi la leggenda, colleziona la tua squadra!</p>
+    </footer>
+
+    <script src="exchange.js"></script>
+    <script src="lib.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scambi Disponibili</title>
+    <link rel="icon" href="images/logo.jpg" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="exchange.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Album Supereroi</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">🦸‍♂️ Profilo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">🔄 Scambi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">🚪    Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div id="notification" class="alert d-none" role="alert"></div>
+        
+
+        <ul class="nav nav-pills mb-4 justify-content-center" id="exchangeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button" role="tab">Scambi Disponibili</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">Scambi Rifiutati</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" data-bs-target="#accepted" type="button" role="tab">Scambi Accettati</button>
+            </li>
+        </ul>
+
+        <div class="mb-4 tab-content" id="exchangeContent">
+            <div class="tab-pane fade show active" id="available" role="tabpanel">
+            <h2 class="title">Scambi Disponibili</h2>
+            <label for="exchangeType" class="form-label">Seleziona il tipo di scambio</label>
+            <select class="form-select w-25 mb-3" id="exchangeTypeSelect">
+                <option value="">-- Seleziona --</option>
+                <option value="doppioni">Scambi Doppioni</option>
+                <option value="multiplo">Scambi Multipli</option>
+                <option value="crediti">Vendita per Crediti</option>
+            </select>
+        </div>
+        
+        <div class="card-template d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="exchange-title">Proposta di scambio</h5>
+                    <p class="offered text-start">Mi viene offerto:</p>
+                    <p class="requested text-start">Perdo:</p>
+                    <p class="user text-start">Proposto da:</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-success me-2 accept-btn">Accetta</button>
+                    <button class="btn btn-danger reject-btn">Rifiuta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="rejected" role="tabpanel">
+        <h2 class="title">Scambi Rifiutati</h2>
+        <div id="rejectedExchanges" class="row g-3"></div>
+    </div>
+    <div class="card-template-rejected d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="rejected-title">Scambio Rifiutato</h5>
+                <p class="offered-text text-start">Ho offerto:</p>
+                <p class="requested-text text-start">Per:</p>
+            </div>
+            <button class="btn btn-warning withdraw-btn">Ritira Scambio</button>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="accepted" role="tabpanel">
+        <h2 class="title">Scambi Accettati</h2>
+        <div id="acceptedExchanges" class="row g-3"></div>
+    </div>
+
+    <div class="card-template-accepted d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="accepted-title">Scambio andato a buon fine</h5>
+                <p class="accepted-offered offered-text-accepted text-start">Ho ceduto:</p>
+                <p class="accepted-received acquired-text-accepted text-start">Ho acquistato:</p>
+            </div>
+            <button class="btn btn-danger delete-btn">Cancella</button>
+        </div>
+    </div>
+
+    <div class="container mb-4 text-center">
+        <button class="btn btn-primary" onclick="window.location.href='propose-exchange.html'">Crea Nuovo Scambio</button>
+    </div>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="logoutModalLabel">Esci dall'account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler effettuare il logout?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Esci</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -205,4 +288,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
-
