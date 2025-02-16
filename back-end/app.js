@@ -59,17 +59,3 @@ app.listen(PORT, async () => {
     console.log(`Server in ascolto sulla porta ${PORT}`);
     await populateFigurine(); // Popola la collection con i 100 eroi casuali
 });
-
-
-/*
-Caricato Variabili di Ambiente:
-
-    Usiamo dotenv per mantenere sicure informazioni sensibili come la connessione a MongoDB.
-
-Configurato un Server Base:
-
-    Con Express abbiamo creato un server che risponde con un messaggio semplice quando visiti la rotta /.
-
-Gestito la Connessione a MongoDB:
-
-    Usiamo Mongoose per connetterci al database.*/

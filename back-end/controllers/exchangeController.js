@@ -134,7 +134,7 @@ exports.getAvailableExchanges = async (req, res) => {
 
 
 
-exports.getMultiploExchanges = async (req, res) => {
+exports.getMultiploExchanges = async (req, res) => { //fare un controllo sugli scambi fatti dall'utente stesso
     try {
       const userId = req.user.userId;
       const userAlbum = await Album.findOne({ userId });
@@ -162,7 +162,7 @@ exports.getMultiploExchanges = async (req, res) => {
 };
 
 
-exports.getCreditiExchanges = async (req, res) => {
+exports.getCreditiExchanges = async (req, res) => { //fare un controllo sugli scambi fatti dall'utente stesso
     try {
       const userId = req.user.userId;
       const user = await User.findById(userId);
@@ -183,7 +183,7 @@ exports.getCreditiExchanges = async (req, res) => {
 };
 
 
-exports.acceptExchange = async (req, res) => {
+exports.acceptExchange = async (req, res) => { //non posso accettare uno scambio fatto da me stesso
     try {
         const userId = req.user.userId;
         const exchangeId = req.params.id;
@@ -263,7 +263,7 @@ exports.acceptExchange = async (req, res) => {
 
 
 
-exports.rejectExchange = async (req, res) => {
+exports.rejectExchange = async (req, res) => { //non posso rifiutare uno scambio fatto da me stesso
     try {
         const userId = req.user.userId;
         const exchangeId = req.params.id;
