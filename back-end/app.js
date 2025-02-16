@@ -2,6 +2,7 @@ require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // Importa il middleware CORS
+
 const { populateFigurine } = require("./controllers/marvelController");
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require("./routes/userRoutes");
@@ -9,6 +10,9 @@ const albumRoutes = require('./routes/albumRoutes');
 const marvelRoutes = require('./routes/marvelRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
 //const Figurina = require("./models/figurina");
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./config/swagger-output.json');
 
 const app = express();
 
@@ -19,10 +23,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Importa e usa le rotte
 app.use('/api/auth', authRoutes);
 
-// Importa e usa le rotte per user
 app.use("/api/user", userRoutes);
 
 app.use('/api/album', albumRoutes);
@@ -30,6 +32,9 @@ app.use('/api/album', albumRoutes);
 app.use('/api/marvel', marvelRoutes);
 
 app.use('/api/exchange', exchangeRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+console.log('Swagger disponibile su http://localhost:3000/api-docs');
 
 /*const resetFigurine = async () => {
     await Figurina.deleteMany({});

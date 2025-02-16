@@ -6,6 +6,24 @@ const Exchange = require("../models/exchange");
 const mongoose = require("mongoose");
 
 
+
+exports.getUserProfile = async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.user.userId)) {
+            return res.status(400).json({ message: "ID utente non valido" });
+        }
+        const user = await User.findById(req.user.userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error("Errore del server:", err);
+        res.status(500).json({ message: "Errore del server" });
+    }
+};
+
+
 exports.updateUserProfile = async (req, res) => {
     try {
         const { name, favoriteHero, birthDate, phone } = req.body;

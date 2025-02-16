@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { getHeroDetails } = require("../controllers/marvelController");
-//const { getHeroComics } = require("../controllers/marvelController");
 const Figurina = require("../models/figurina");
 
 // Rotta per ottenere i dettagli di un supereroe specifico
