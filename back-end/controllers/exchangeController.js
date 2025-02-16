@@ -319,7 +319,7 @@ exports.createExchange = async (req, res) => {
 exports.getMyExchanges = async (req, res) => {
     try {
       const userId = req.user.userId;
-      const exchanges = await Exchange.find({ offeredBy: userId }).populate('offeredFigurines requestedFigurines');
+      const exchanges = await Exchange.find({ offeredBy: userId, status: 'pending' }).populate('offeredFigurines requestedFigurines');
       //console.log(exchanges);
       
       res.status(200).json(exchanges);

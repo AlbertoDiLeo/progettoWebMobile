@@ -196,14 +196,17 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" data-bs-target="#accepted" type="button" role="tab">Scambi Accettati</button>
             </li>
+            <li class="nav-item">
+                <button class="nav-link"  type="button" role="tab" onclick="window.location.href='propose-exchange.html'">Crea Nuovo Scambio</button>
+            </li>
         </ul>
 
         <div class="mb-4 tab-content" id="exchangeContent">
             <div class="tab-pane fade show active" id="available" role="tabpanel">
             <h2 class="title">Scambi Disponibili</h2>
-            <label for="exchangeType" class="form-label">Seleziona il tipo di scambio</label>
+            <label for="exchangeType" class="form-label"></label>
             <select class="form-select w-25 mb-3" id="exchangeTypeSelect">
-                <option value="">-- Seleziona --</option>
+                <option value="">-- Seleziona il tipo di scambio --</option>
                 <option value="doppioni">Scambi Doppioni</option>
                 <option value="multiplo">Scambi Multipli</option>
                 <option value="crediti">Vendita per Crediti</option>
@@ -211,17 +214,17 @@
         </div>
 
         <div id="doppioniSection" class="d-none">
-            <h4 class="title">Scambi Doppioni Disponibili</h4>
+            <!--<h4 class="title">Scambi Doppioni Disponibili</h4>-->
             <div id="doppioniExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
         </div>
 
         <div id="multiploSection" class="d-none">
-            <h4 class="title">Scambi Multipli Disponibili</h4>
+            <!--<h4 class="title">Scambi Multipli Disponibili</h4>-->
             <div id="multiploExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
         </div>
 
         <div id="creditiSection" class="d-none">
-            <h4 class="title">Vendita per Crediti Disponibili</h4>
+            <!--<h4 class="title">Vendita per Crediti Disponibili</h4>-->
             <div id="creditiExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
         </div>
         
@@ -239,56 +242,53 @@
                 </div>
             </div>
         </div>
-    </div>
+    
 
-    <div class="tab-pane fade" id="rejected" role="tabpanel">
-        <h2 class="title">Scambi Rifiutati</h2>
-        <div id="rejectedExchanges" class="row g-3"></div>
-    </div>
-    <div class="card-template-rejected d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
-            <div>
-                <h5 class="rejected-title">Scambio Rifiutato</h5>
-                <p class="offered-text text-start">Ho offerto:</p>
-                <p class="requested-text text-start">Per:</p>
-            </div>
-            <button class="btn btn-warning withdraw-btn">Ritira Scambio</button>
+        <div class="tab-pane fade" id="rejected" role="tabpanel">
+            <h2 class="title">Scambi Rifiutati</h2>
+            <div id="rejectedExchanges" class="row g-3"></div>
         </div>
-    </div>
-
-    <div class="tab-pane fade" id="accepted" role="tabpanel">
-        <h2 class="title">Scambi Accettati</h2>
-        <div id="acceptedExchanges" class="row g-3"></div>
-    </div>
-
-    <div class="card-template-accepted d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card p-3 h-100 d-flex flex-column justify-content-between">
-            <div>
-                <h5 class="accepted-title">Scambio andato a buon fine</h5>
-                <p class="accepted-offered offered-text-accepted text-start">Ho ceduto:</p>
-                <p class="accepted-received acquired-text-accepted text-start">Ho acquistato:</p>
+        <div class="card-template-rejected d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="rejected-title">Scambio Rifiutato</h5>
+                    <p class="offered-text text-start">Ho offerto:</p>
+                    <p class="requested-text text-start">Per:</p>
+                </div>
+                <button class="btn btn-warning withdraw-btn">Ritira Scambio</button>
             </div>
-            <button class="btn btn-danger delete-btn">Cancella</button>
         </div>
-    </div>
 
-    <div class="container mb-4 text-center">
-        <button class="btn btn-primary" onclick="window.location.href='propose-exchange.html'">Crea Nuovo Scambio</button>
-    </div>
+        <div class="tab-pane fade" id="accepted" role="tabpanel">
+            <h2 class="title">Scambi Accettati</h2>
+            <div id="acceptedExchanges" class="row g-3"></div>
+        </div>
 
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title text-danger" id="logoutModalLabel">Esci dall'account</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        <div class="card-template-accepted d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <h5 class="accepted-title">Scambio andato a buon fine</h5>
+                    <p class="accepted-offered offered-text-accepted text-start">Ho ceduto:</p>
+                    <p class="accepted-received acquired-text-accepted text-start">Ho acquistato:</p>
                 </div>
-                <div class="modal-body">
-                    <p>Sei sicuro di voler effettuare il logout?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-danger" id="confirmLogout">Esci</button>
+                <button class="btn btn-danger delete-btn">Cancella</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title text-danger" id="logoutModalLabel">Esci dall'account</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sei sicuro di voler effettuare il logout?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button type="button" class="btn btn-danger" id="confirmLogout">Esci</button>
+                    </div>
                 </div>
             </div>
         </div>

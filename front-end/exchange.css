@@ -3,6 +3,9 @@ body {
   background-size: cover;
   color: white;
   font-family: 'Marvel', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .navbar {
@@ -115,11 +118,19 @@ footer {
   bottom: 0;
   width: 100%;
   margin-top: auto;
+  box-sizing: border-box; /* Aggiungi questa linea */
+}
+.container {
+  flex: 1;
 }
 
-.container {
-  text-align: center;
+.container.py-5 {
+  min-height: 95vh; /* Altezza minima del container */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
 
 .form-select {
   width: 50% !important;
@@ -153,7 +164,7 @@ footer {
 .card-body .btn {
   align-self: center;
   width: 100px; 
-  margin-top: auto
+  margin-top: auto;
 }
 
 
