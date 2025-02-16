@@ -103,8 +103,6 @@ exports.withdrawExchange = async (req, res) => {
 exports.getAvailableExchanges = async (req, res) => {
     try {
       const userId = req.user.userId;
-      const nome = req.user.name;
-      console.log('Utente:', nome);
       const userAlbum = await Album.findOne({ userId });
       if (!userAlbum) return res.status(404).json({ message: 'Album non trovato' });
   
