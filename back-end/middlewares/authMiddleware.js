@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 function authenticateToken(req, res, next) {
     const authHeader = req.header("Authorization");
-    //const token = authHeader && authHeader.split(" ")[1];
     let token;
     if (authHeader) {
         const parts = authHeader.split(" ");
@@ -17,11 +16,9 @@ function authenticateToken(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        //console.log("Token decodificato:", decoded);
-        req.user = decoded; // Salva i dati del token (es. userId) per l'uso nelle rotte
+        req.user = decoded; 
         req.user = { userId: decoded.userId };
-        //console.log("🔹 ID utente memorizzato in req.user:", req.user.userId); 
-        next(); // Continua verso la rotta successiva
+        next(); 
     } catch (err) {
         return res.status(403).json({ message: "Token non valido" });
     }

@@ -5,7 +5,6 @@ let figurinePossedute = [];
 let tutteLeFigurine = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-    /*const token = localStorage.getItem("token");*/
     if (!token) {
         window.location.href = "login.html";
         return;
@@ -47,23 +46,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             found: figurinePossedute.includes(figurina.idMarvel),
         }));
 
-        //console.log("✅ Figurine trovate nel pacchetto:", figurineScelte);
-
         tutteLeFigurine = tutteLeFigurine.concat(figurineScelte);
         aggiornaVisualizzazione(tutteLeFigurine);
 
         const packContainer = document.getElementById("pack-container");
 
-        // 🔹 Evento per aggiungere una figurina all'album
+        // Evento per aggiungere una figurina all'album
         packContainer.addEventListener("click", async (event) => {
             if (event.target.classList.contains("add-to-album")) {
-                //const index = event.target.getAttribute("data-index");
                 const index = parseInt(event.target.getAttribute("data-index"), 10);
-                //const figurinaDaAggiungere = figurineScelte[index];
                 const figurinaDaAggiungere = tutteLeFigurine[index];
                 const cardElement = document.getElementById(`figurina-${index}`);
 
-                cardElement.classList.add("adding"); // Effetto animazione
+                cardElement.classList.add("adding"); 
                 setTimeout(async () => {
                     await fetch("http://localhost:3000/api/album/add-to-album", {
                         method: "POST",
@@ -81,13 +76,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // 🔹 Evento per scartare una figurina
+        // Evento per scartare una figurina
         packContainer.addEventListener("click", (event) => {
             if (event.target.classList.contains("discard")) {
                 const index = event.target.getAttribute("data-index");
                 const cardElement = document.getElementById(`figurina-${index}`);
 
-                cardElement.classList.add("discarding"); // Effetto di scarto
+                cardElement.classList.add("discarding"); 
                 setTimeout(() => {
                     tutteLeFigurine.splice(index, 1);
                     cardElement.remove();
@@ -108,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const buyAnotherPackButton = document.getElementById("buy-another-pack-btn");
 
-    // 🔹 Controlliamo i crediti dell'utente
+    // Controlliamo i crediti dell'utente
     const profileResponse = await fetch("http://localhost:3000/api/user/profile", {
         method: "GET",
         headers: {
@@ -119,14 +114,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user = await profileResponse.json();
 
     if (user.credits < 1) {
-        //buyAnotherPackButton.classList.add("disabled");
         buyAnotherPackButton.addEventListener("click", (event) => {
             event.preventDefault();
             showNotification("Crediti insufficienti! Acquista più crediti per comprare un pacchetto.", "danger");
         });
     }
 
-    // 🔹 Evento per acquistare un nuovo pacchetto
+    // Evento per acquistare un nuovo pacchetto
     buyAnotherPackButton.addEventListener("click", async () => {
         if (user.credits < 1) {
             showNotification("Crediti esauriti!", "danger");
@@ -169,36 +163,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
-
-/*function aggiornaVisualizzazione(figurineScelte) {
-    const packContainer = document.getElementById("pack-container");
-    packContainer.innerHTML = "";
-    
-    figurineScelte.forEach((figurina, index) => {
-        const card = document.createElement("div");
-        card.className = "col";
-        card.id = `figurina-${index}`;
-
-        card.innerHTML = `
-            <div class="card shadow-sm position-relative">
-                ${!figurina.found ? `<span class="badge bg-success position-absolute top-0 start-50 translate-middle-x" style="z-index: 10;">Nuova!</span>` : ""}
-                <img src="${figurina.image}" class="card-img-top ${figurina.found ? 'found' : ''}" alt="${figurina.name}">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="card-title">${figurina.name}</h5>
-                    <button class="btn btn-success add-to-album" data-index="${index}">✅ Aggiungi</button>
-                    <button class="btn btn-danger discard" data-index="${index}">❌ Scarta</button>
-                </div>
-            </div>
-        `;
-
-        packContainer.appendChild(card);
-    });
-
-    if (figurineScelte.length === 0) {
-        packContainer.innerHTML = "<p>Hai finito tutte le figurine nel pacchetto.</p>";
-    }
-}*/
-
 function aggiornaVisualizzazione(figurineScelte) {
     const packContainer = document.getElementById("pack-container");
     const template = document.getElementById("card-template");
@@ -213,7 +177,6 @@ function aggiornaVisualizzazione(figurineScelte) {
 
     if (figurineScelte.length === 0) {
         noCardsMessage.classList.remove("d-none");
-        //showNotification("Hai finito tutte le figurine nel pacchetto.", "info");
     } else {
         noCardsMessage.classList.add("d-none");
         figurineScelte.forEach((figurina, index) => {
@@ -276,8 +239,6 @@ function aggiungiFigurina(index, cardElement) {
             if (!response.ok) {
                 throw new Error("Errore nell'aggiunta all'album");
             }
-            //console.log("✅ Figurina aggiunta con successo");
-
             tutteLeFigurine.splice(index, 1);
             aggiornaVisualizzazione(tutteLeFigurine);
         } catch (error) {
@@ -291,11 +252,10 @@ function aggiungiFigurina(index, cardElement) {
 
 function scartaFigurina(index) {
     const cardElement = document.getElementById(`figurina-${index}`);
-    cardElement.classList.add("discarding"); // Effetto di scarto
+    cardElement.classList.add("discarding"); 
 
     setTimeout(() => {
         tutteLeFigurine.splice(index, 1);
         aggiornaVisualizzazione(tutteLeFigurine);
-        //showNotification("Figurina scartata!", "success");
     }, 500);
 }

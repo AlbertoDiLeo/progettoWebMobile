@@ -41,7 +41,6 @@ exports.getAlbum = async (req, res) => {
 
         // Recuperiamo tutte le figurine disponibili
         const allPossibleFigurines = await Figurina.find({});
-        //console.log("Figurine totali disponibili:", allPossibleFigurines.length);
 
         if (allPossibleFigurines.length === 0) {
             return res.status(500).json({ message: "Errore: nessuna figurina disponibile nella collezione globale" });
@@ -53,7 +52,6 @@ exports.getAlbum = async (req, res) => {
             acc[f.idMarvel] = f.count;
             return acc;
         }, {});
-        //console.log("Figurine possedute dall'utente:", figurinePossedute);
 
         // Formattiamo i dati per il frontend
         const albumData = allPossibleFigurines.map(hero => ({
@@ -76,22 +74,18 @@ exports.getAlbum = async (req, res) => {
 exports.buyPack = async (req, res) => {
     try {
         const userId = req.user.userId;
-        //console.log(`Acquisto pacchetto per userId: ${userId}`);
 
         let album = await Album.findOne({ userId });
         if (!album) {
-            //console.log("Album non trovato per questo utente.");
             return res.status(404).json({ message: "Album non trovato" });
         }
 
         const user = await User.findById(userId);
         if (!user) {
-            //console.log("Utente non trovato.");
             return res.status(404).json({ message: "Utente non trovato" });
         }
 
         if (user.credits < 1) {
-            //console.log("Crediti insufficienti per acquistare un pacchetto.");
             return res.status(400).json({ message: "Crediti insufficienti" });
         }
 
@@ -101,16 +95,8 @@ exports.buyPack = async (req, res) => {
         // Troviamo le figurine disponibili nel database
         const allPossibleFigurines = await Figurina.find({});
         if (allPossibleFigurines.length === 0) {
-            //console.log("Nessuna figurina disponibile per il pacchetto!");
             return res.status(500).json({ message: "Nessuna figurina disponibile" });
         }
-
-        // Estrazione casuale di 5 figurine
-        /*let figurineTrovate = [];
-        for (let i = 0; i < 5; i++) {
-            const randomIndex = getRandomInt(0, allPossibleFigurines.length - 1);
-            figurineTrovate.push(allPossibleFigurines[randomIndex]);
-        }*/
        
         let figurineTrovate = new Set();
         while (figurineTrovate.size < 5) {
@@ -119,14 +105,8 @@ exports.buyPack = async (req, res) => {
         }
         figurineTrovate = Array.from(figurineTrovate); // Convertiamo il Set in Array
        
-
-        
-
-        //console.log("📜 Figurine trovate prima di inviare al frontend:", figurineTrovate);
-
         // Invio delle figurine trovate al frontend, **ma non vengono ancora salvate nell'album**
         res.json({ figurine: figurineTrovate, credits: user.credits });
-        //console.log("✅ Crediti inviati al frontend:", user.credits);
 
     } catch (error) {
         console.error("Errore nell'acquisto del pacchetto:", error);
@@ -143,33 +123,25 @@ exports.addToAlbum = async (req, res) => {
     try {
         const userId = req.user.userId;
         const { idMarvel, name, image } = req.body;
-        //console.log("userId =", userId);
-        //console.log("body", req.body);
-        //console.log("Aggiunta di una figurina all'album:", idMarvel, name, image);
 
         if (!idMarvel || !name || !image) {
             return res.status(400).json({ message: "Dati mancanti" });
         }
 
-        // Troviamo l'album dell'utente
         let album = await Album.findOne({ userId });
-        //console.log("album", album);
 
         if (!album) {
             return res.status(404).json({ message: "Album non trovato" });
         }
 
-        // Cerca se esiste già la figurina
         let existingFigurina = album.figurine.find(f => f.idMarvel === idMarvel);
         if (existingFigurina) {
-            existingFigurina.count += 1; // Aumenta il contatore
+            existingFigurina.count += 1; 
         } else {
             album.figurine.push({ idMarvel, name, image, count: 1 });
         }
 
-
         await album.save();
-        //console.log("Album aggiornato:", album);
         
         res.json({ message: "Figurine aggiunte all'album", album });
 

@@ -33,7 +33,6 @@ exports.populateFigurine = async () => {
             }
         }
 
-        //console.log("📌 Salvataggio delle figurine nel database...", allPossibleFigurines);
         await Figurina.insertMany(Array.from(allPossibleFigurines));
         //console.log("100 figurine salvate con successo in MongoDB.", allPossibleFigurines);
     } catch (error) {
@@ -45,11 +44,8 @@ exports.populateFigurine = async () => {
 exports.getHeroDetails = async (req, res) => {
     try {
         const heroId = req.params.id;
-        //console.log(`Recupero dettagli per eroe ID: ${heroId}`);
 
         const response = await getFromMarvel(`public/characters/${heroId}`);
-        //console.log("Risposta API Marvel:", response);
-
 
         if (!response || !response.data || !response.data.results.length) {
             return res.status(404).json({ message: "Eroe non trovato nella Marvel API" });
@@ -75,28 +71,15 @@ exports.getHeroDetails = async (req, res) => {
 };
 
 
-/*exports.getHeroComics = async (req, res) => {
+exports.getHeroNames = async (req, res) => {
     try {
-        const heroId = req.params.id;
-        console.log(`Recupero fumetti per eroe ID: ${heroId}`);
-
-        const response = await getFromMarvel(`public/characters/${heroId}/comics`);
-        
-        if (!response || !response.data || !response.data.results.length) {
-            return res.status(404).json({ message: "Nessun fumetto trovato" });
-        }
-
-        const comics = response.data.results.map(comic => ({
-            title: comic.title,
-            thumbnail: {
-                path: comic.thumbnail.path,
-                extension: comic.thumbnail.extension
-            }
-        }));
-
-        res.json(comics);
+        const heroes = await Figurina.find({}, "name").lean(); // lean() migliora la performance
+        const heroNames = heroes.map(hero => hero.name);
+        res.json(heroNames);
     } catch (error) {
-        console.error("Errore nel recupero dei fumetti:", error);
-        res.status(500).json({ message: "Errore nel recupero dei fumetti", error });
+        console.error("Errore backend nel recupero degli eroi:", error.message);
+        res.status(500).json({ error: `Errore nel recupero degli eroi: ${error.message}` });
     }
-};*/
+};
+
+

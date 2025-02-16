@@ -1,7 +1,7 @@
 require('dotenv').config(); // Carica variabili di ambiente dal file .env
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // Importa il middleware CORS
+const cors = require('cors'); 
 
 const { populateFigurine } = require("./controllers/marvelController");
 const authRoutes = require('./routes/authRoutes');
@@ -16,10 +16,8 @@ const swaggerDocument = require('./config/swagger-output.json');
 
 const app = express();
 
-// Abilita CORS
 app.use(cors());
 
-// Middleware per parsing JSON (deve essere posizionato prima delle rotte)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,24 +41,10 @@ console.log('Swagger disponibile su http://localhost:3000/api-docs');
 };
 resetFigurine();*/
 
-
-
 app.use((req, res, next) => {
     console.log(`Richiesta ricevuta: ${req.method} ${req.url}`);
     next();
 });
-
-/*app._router.stack.forEach((middleware) => {
-    if (middleware.route) {
-        console.log(middleware.route.path);
-    } else if (middleware.name === "router") {
-        middleware.handle.stack.forEach((handler) => {
-            if (handler.route) {
-                console.log(handler.route.stack[0].method.toUpperCase(), handler.route.path);
-            }
-        });
-    }
-});*/
 
 
 
@@ -71,11 +55,8 @@ mongoose.connect(process.env.MONGO_URI)
 
 const PORT = process.env.PORT || 3000;
 
-// Avvia il server
-//app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
-
 app.listen(PORT, async () => {
-    console.log(`🚀 Server in ascolto sulla porta ${PORT}`);
+    console.log(`Server in ascolto sulla porta ${PORT}`);
     await populateFigurine(); // Popola la collection con i 100 eroi casuali
 });
 

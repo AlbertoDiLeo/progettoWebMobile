@@ -13,7 +13,6 @@ exports.createExchange = async (req, res) => {
     const offered = offeredFigurines.map(fig => ({ idMarvel: fig.idMarvel, name: fig.name }));
     const requested = requestedFigurines?.map(fig => ({ idMarvel: fig.idMarvel, name: fig.name }));
 
-    // Trova e aggiorna l'album
     const album = await Album.findOne({ userId });
     if (!album) return res.status(404).json({ message: 'Album non trovato' });
     for (const figurina of offeredFigurines) {
@@ -48,7 +47,6 @@ exports.getMyExchanges = async (req, res) => {
     try {
       const userId = req.user.userId;
       const exchanges = await Exchange.find({ offeredBy: userId, status: 'pending' }).populate('offeredFigurines requestedFigurines');
-      //console.log(exchanges);
       
       res.status(200).json(exchanges);
     } catch (error) {
@@ -79,15 +77,13 @@ exports.withdrawExchange = async (req, res) => {
             return res.status(404).json({ message: 'Album non trovato' });
         }
   
-        // Restituisce le figurine offerte all'album
         for (const figurina of exchange.offeredFigurines) {
             const index = album.figurine.findIndex(f => f.idMarvel === figurina.idMarvel);
             if (index > -1) {
-                album.figurine[index].count += 1;  // Aumenta il contatore
+                album.figurine[index].count += 1;  
             } 
         }
   
-        //await album.save();
         await album.save().catch(err => console.error('Errore nel salvataggio:', err));
         await Exchange.deleteOne({ _id: exchangeId });
   
