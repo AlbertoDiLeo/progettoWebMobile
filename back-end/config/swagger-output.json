@@ -120,7 +120,7 @@
         }
       }
     },
-    "/api/user/users/{id}": {
+    "/api/user/{id}": {
       "put": {
         "description": "",
         "parameters": [
@@ -245,10 +245,18 @@
         }
       }
     },
-    "/api/user/change-password": {
+    "/api/user/change-password/{id}": {
       "put": {
         "description": "",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "Authorization",
             "in": "header",
