@@ -1,190 +1,94 @@
 
-<!-- <!DOCTYPE html>
-<html lang="en">
+<!--<!DOCTYPE html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Album Supereroi</title>
-    <link rel="icon" href="images/logo.jpg" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <title>Scambi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="exchange.css">
 </head>
-<body class="bg-light marvel-bg">
-    <nav class="navbar navbar-expand-lg navbar-dark marvel-navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand text-marvel" href="#">ALBUM MARVEL</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">🏠 Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.html">👤 Profilo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="exchange.html">🔄 Scambi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link logout-btn" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">🚪 Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body>
 
-    <div class="container mt-5">
-        <div id="notification" class="alert d-none" role="alert"></div>
-        <div class="text-center">
-            <h1 id="welcomeMessage" class="text-marvel">Benvenuto, eroe!</h1>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Album Supereroi</a>
+    </div>
+</nav>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card marvel-card">
-                    <div class="card-body">
-                        <h5 class="card-title">📖 Il tuo Album</h5>
-                        <p class="card-text">Esplora le figurine dei tuoi supereroi preferiti.</p>
-                        <a href="album.html" class="btn marvel-btn">Vai al tuo Album</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card marvel-card">
-                    <div class="card-body">
-                        <h5 class="card-title">💰 Crediti Disponibili</h5>
-                        <p class="card-text">Saldo attuale: <strong id="crediti">...</strong></p>
-                        <button id="buy-credits-btn" class="btn marvel-btn-warning">Acquista Crediti</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container py-5">
+    <h2>Gestione Scambi</h2>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card marvel-card">
-                    <div class="card-body">
-                        <h5 class="card-title">🎁 Compra un Pacchetto</h5>
-                        <p class="card-text">Ottieni nuove figurine per completare la tua collezione!</p>
-                        <a id="buy-pack-btn" href="buy-pack.html" class="btn marvel-btn-success">Compra un Pacchetto</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card marvel-card">
-                    <div class="card-body">
-                        <h5 class="card-title">📊 Progressi</h5>
-                        <p class="card-text">Completamento album: <strong id="completion-percentage">35%</strong></p>
-                        <a href="statistics.html" class="btn marvel-btn">Statistiche</a>
-                    </div>
-                </div>
-            </div>
+    <ul class="nav nav-pills mb-4 justify-content-center" id="exchangeTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button" role="tab">Scambi Disponibili</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">Scambi Rifiutati</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" data-bs-target="#accepted" type="button" role="tab">Scambi Accettati</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="exchangeContent">
+        <div class="tab-pane fade show active" id="available" role="tabpanel">
+            <h4>Scambi Disponibili</h4>
+            <div id="availableExchanges" class="row g-3"></div>
+        </div>
+        <div class="tab-pane fade" id="rejected" role="tabpanel">
+            <h4>Scambi Rifiutati</h4>
+            <div id="rejectedExchanges" class="row g-3"></div>
+        </div>
+        <div class="tab-pane fade" id="accepted" role="tabpanel">
+            <h4>Scambi Accettati</h4>
+            <div id="acceptedExchanges" class="row g-3"></div>
         </div>
     </div>
+</div>
 
-    <footer class="marvel-footer text-center py-3 mt-5">
-        <p>&copy; 2025 Album Marvel. Tutti i diritti riservati.</p>
-    </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="exchange.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                if(tab.id === 'available-tab') loadAvailableExchanges();
+                if(tab.id === 'rejected-tab') loadRejectedExchanges();
+                if(tab.id === 'accepted-tab') loadAcceptedExchanges();
+            });
+        });
+    });
 
-    <script src="dashboard.js"></script>
-    <script src="lib.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    function loadAvailableExchanges() {
+        fetch('http://localhost:3000/api/exchange/available', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('availableExchanges');
+            container.innerHTML = '';
+            data.exchanges.forEach(exchange => {
+                const card = `<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                                    <h5>Proposta di scambio</h5>
+                                    <p>Mi viene offerto: ${exchange.offeredFigurines.map(f => f.name).join(', ')}</p>
+                                    <p>Perdo: ${exchange.requestedFigurines.map(f => f.name).join(', ')}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-success">Accetta</button>
+                                        <button class="btn btn-danger">Rifiuta</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                container.innerHTML += card;
+            });
+        })
+        .catch(error => console.error('Errore nel caricamento degli scambi disponibili:', error));
+    }
+
+    function loadRejectedExchanges() { /* codice esistente */ }
+    function loadAcceptedExchanges() { /* codice esistente */ }
+</script>
 </body>
-</html>
-
-/* Stile Marvel Potenziato con background visibile */
-
-.marvel-bg {
-    background-image: url('images/dashboard.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.marvel-navbar {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.text-marvel {
-    font-size: 2rem;
-    color: var(--marvel-light);
-    text-transform: uppercase;
-    font-weight: bold;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
-    text-align: center;
-}
-
-.marvel-card {
-    background: rgba(255, 255, 255, 0.85);
-    border: 2px solid var(--marvel-red);
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    padding: 15px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.marvel-card:hover {
-    transform: translateY(-5px);
-}
-
-.marvel-btn {
-    background: var(--marvel-red);
-    border: none;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-}
-
-.marvel-btn:hover {
-    background: var(--marvel-blue);
-    transform: scale(1.05);
-}
-
-.marvel-footer {
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
-    padding: 10px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-/* Ridimensionamento contenuti per evitare scrolling */
-.container {
-    max-width: 90vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-}
-
-.card {
-    flex: 1 1 45%;
-    min-width: 280px;
-    max-width: 320px;
-}
--->
+</html>-->
