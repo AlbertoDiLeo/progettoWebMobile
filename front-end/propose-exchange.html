@@ -79,26 +79,26 @@
         <select multiple class="form-select mb-3" id="multiploCreditiOfferti">
             <option>Seleziona fino a 3 figurine</option>
         </select>
-        <input type="number" class="form-control mb-3" id="creditiRichiesti" placeholder="Inserisci crediti">
+        <input type="number" class="form-control mb-3 w-50 mx-auto" id="creditiRichiesti" placeholder="Inserisci crediti">
         </div>
 
         <!-- Bottone Conferma -->
-        <button id="confirmExchangeButton" class="btn btn-primary w-100">Conferma Scambio</button>
+        <button id="confirmExchangeButton" class="btn btn-primary w-50 mx-auto d-block">Conferma Scambio</button>
 
         <!-- Scambi Proposti -->
         <!--<div class="mt-5">-->
-            <h4>Scambi Proposti</h4>
+            <h4 class="mt-5">I miei scambi in attesa</h4>
             <!-- Template per le Card degli Scambi Proposti -->
             <div id="exchangeCardTemplate" class="card mb-3 d-none">
                 <div class="card-body">
                 <h5 class="card-title">Scambio Proposto</h5>
                 <p class="card-text" id="exchangeDescription"></p>
-                <button class="btn btn-danger btn-sm" id="withdrawButton">Ritira Scambio</button>
+                <button class="btn btn-danger btn-sm mt-auto" id="withdrawButton">Ritira Scambio</button>
                 </div>
             </div>
             
             <!-- Contenitore per tutte le Card degli Scambi -->
-            <div id="proposedExchanges" class="row"></div>
+            <div id="proposedExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
             
         <!--</div>-->
 

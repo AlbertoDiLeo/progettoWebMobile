@@ -209,7 +209,7 @@ async function loadProposedExchanges() {
         const template = document.getElementById('exchangeCardTemplate');
         const clone = template.cloneNode(true);
         clone.classList.remove('d-none');
-        clone.querySelector('#exchangeDescription').textContent = 
+        clone.querySelector('#exchangeDescription').innerHTML = 
           formatExchangeDescription(exchange);
         clone.querySelector('#withdrawButton').addEventListener('click', () => 
           withdrawExchange(exchange._id, clone)
@@ -242,7 +242,7 @@ function formatExchangeDescription(exchange) {
       ? `${exchange.creditAmount} crediti`
       : exchange.requestedFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ');
 
-  return `Ti offro: ${offerti} per ${richiesti}`;
+  return `Ti offro: ${offerti}<br>In cambio di: ${richiesti}`;
 }
 
 

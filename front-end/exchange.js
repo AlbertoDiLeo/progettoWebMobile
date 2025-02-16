@@ -81,7 +81,6 @@
 
 
 
-  // Modifica temporanea per rimuovere l'uso di d-none
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
@@ -93,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await response.json();
+        console.log('Risposta ricevuta:', data);
         if (response.ok) {
           populateExchanges(data, containerId);
         } else {
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     function populateExchanges(exchanges, containerId) {
       const container = document.getElementById(containerId);
+      console.log('Exchanges ricevuti per', containerId, exchanges);
       container.innerHTML = '';
       const template = document.querySelector('.card-template');
   
@@ -147,7 +148,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-
     async function handleReject(exchangeId) {
         try {
             const response = await fetch(`http://localhost:3000/api/exchange/${exchangeId}/reject`, {
@@ -178,8 +178,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     select.dispatchEvent(new Event('change'));
   });
-  
-  
+
+  function loadAvailableExchanges() {
+    fetch('http://localhost:3000/api/exchange/available', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('doppioniExchanges');
+        console.log('Exchanges ricevuti:', data);
+        console.log('Container:', container);
+        container.innerHTML = '';
+        data.exchanges.forEach(exchange => {
+            const template = document.querySelector('.card-template');
+            const cardClone = template.cloneNode(true);
+            cardClone.classList.remove('d-none');
+            cardClone.querySelector('.offered').textContent = `Mi viene offerto: ${exchange.offeredFigurines.map(f => f.name).join(', ')}`;
+            cardClone.querySelector('.requested').textContent = `Perdo: ${exchange.requestedFigurines.map(f => f.name).join(', ')}`;
+            container.appendChild(cardClone);
+        });
+    })
+    .catch(error => console.error('Errore nel caricamento degli scambi disponibili:', error));
+  }
+
+  document.addEventListener('DOMContentLoaded', loadAvailableExchanges);
+
   
   async function loadRejectedExchanges() {
     try {
@@ -278,3 +301,5 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 });
+
+
