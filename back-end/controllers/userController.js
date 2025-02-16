@@ -6,6 +6,22 @@ const Exchange = require("../models/exchange");
 const mongoose = require("mongoose");
 
 
+exports.getUserProfile = async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.user.userId)) {
+            return res.status(400).json({ message: "ID utente non valido" });
+        }
+        const user = await User.findById(req.user.userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error("Errore del server:", err);
+        res.status(500).json({ message: "Errore del server" });
+    }
+}
+
 exports.updateUserProfile = async (req, res) => {
     try {
         const { name, favoriteHero, birthDate, phone } = req.body;
@@ -54,6 +70,35 @@ exports.updateUserProfile = async (req, res) => {
     } catch (error) {
         console.error("Errore durante l'aggiornamento del profilo:", error);
         res.status(500).json({ error: `Errore del server: ${error.message}` });
+    }
+};
+
+
+exports.getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Errore del server" });
+    }
+};
+
+exports.checkUsername = async (req, res) => {
+    try {
+        const { name } = req.params;
+    
+        const existingUser = await User.findOne({ name });
+        if (existingUser) {
+            return res.json({ available: false });
+        }
+    
+        res.json({ available: true });
+    } catch (error) {
+        res.status(500).json({ error: "Errore nel controllo del nome utente." });
     }
 };
 

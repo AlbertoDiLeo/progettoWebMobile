@@ -129,9 +129,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const userId = getUserIdFromToken(token);
             
             // Recupera i dati attuali dell'utente
-            const response = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
+            const response = await fetch(`http://localhost:3000/api/user/${userId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
-            }); //da rivedere
+            });
     
             if (!response.ok) throw new Error("Errore nel recupero del profilo.");
     
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
     
             // Invia solo i dati aggiornati al server
-            const updateResponse = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
+            const updateResponse = await fetch(`http://localhost:3000/api/user/${userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -354,7 +354,7 @@ async function fetchUserProfile(userId) {
     }
     
     try {
-        const response = await fetch(`http://localhost:3000/api/user/users/${userId}`, {
+        const response = await fetch(`http://localhost:3000/api/user/${userId}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
