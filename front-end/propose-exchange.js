@@ -114,6 +114,28 @@ function populateSelects(album, tipoScambio) {
   // Modifica la funzione per creare lo scambio con il controllo
   async function createExchange() {
     const tipoScambio = document.getElementById('exchangeType').value;
+    
+    if (!tipoScambio) {
+      showNotification('Devi selezionare un tipo di scambio.', 'danger');
+      return;
+    }
+    if (tipoScambio === 'doppioni') {
+      if (!document.getElementById('doppioneOfferto').value || !document.getElementById('doppioneRichiesto').value) {
+          showNotification('Seleziona sia la figurina da offrire che quella da ricevere.', 'danger');
+          return;
+        }
+    } else if (tipoScambio === 'multiplo') {
+      if (document.getElementById('multiploOfferti').selectedOptions.length === 0 || document.getElementById('multiploRichiesti').selectedOptions.length === 0) {
+          showNotification('Seleziona almeno una figurina da offrire e una da ricevere.', 'danger');
+          return;
+      }
+    } else if (tipoScambio === 'crediti') {
+      if (document.getElementById('multiploCreditiOfferti').selectedOptions.length === 0 || !document.getElementById('creditiRichiesti').value) {
+          showNotification('Seleziona almeno una figurina da offrire e inserisci l importo dei crediti.', 'danger');
+          return;
+        }
+    }
+
     if (!validateSelections(tipoScambio)) return;
   
     // Helper per ottenere { idMarvel, name }
@@ -204,6 +226,15 @@ async function loadProposedExchanges() {
   
       const container = document.getElementById('proposedExchanges');
       container.innerHTML = ''; // Pulisce il contenitore
+
+      if (exchanges.length === 0) {
+        const noMessage = document.getElementById('noProposedExchangesMessage');
+        noMessage.textContent = 'Non hai ancora proposto nessuno scambio';
+        noMessage.classList.remove('d-none');
+        return;
+      } else {
+        noMessage.classList.add('d-none');
+      }
   
       exchanges.forEach(exchange => {
         const template = document.getElementById('exchangeCardTemplate');
