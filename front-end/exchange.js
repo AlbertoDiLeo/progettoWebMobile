@@ -1,87 +1,5 @@
 
 
-
-
-
-/*document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');
-  
-    async function fetchDoppioniExchanges() {
-      try {
-        const response = await fetch('http://localhost:3000/api/exchange/available', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (response.ok) populateExchanges(data.exchanges, 'doppioniExchanges');
-        else console.error('Errore:', data.message);
-      } catch (error) { console.error('Errore nel recupero degli scambi:', error); }
-    }
-  
-    async function fetchMultiploExchanges() {
-      try {
-        const response = await fetch('http://localhost:3000/api/exchange/available/multiplo', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (response.ok) populateExchanges(data.exchanges, 'multiploExchanges');
-        else console.error('Errore:', data.message);
-      } catch (error) { console.error('Errore nel recupero degli scambi multipli:', error); }
-    }
-
-    async function fetchCreditiExchanges() {
-        try {
-          const response = await fetch('http://localhost:3000/api/exchange/available/crediti', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          const data = await response.json();
-          if (response.ok) populateExchanges(data.exchanges, 'creditiExchanges');
-          else console.error('Errore:', data.message);
-        } catch (error) { console.error('Errore nel recupero degli scambi per crediti:', error); }
-    }
-  
-    function populateExchanges(exchanges, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      exchanges.forEach(exchange => {
-        const card = document.createElement('div');
-        card.className = 'card p-3';
-        card.innerHTML = `
-          <h5>Offro: ${exchange.offeredFigurines.map(f => f.name).join(', ')}</h5>
-          <p>Richiedo: ${exchange.requestedFigurines.map(f => f.name).join(', ')}</p>
-          <button class="btn btn-success me-2">Accetta</button>
-          <button class="btn btn-danger">Rifiuta</button>
-        `;
-        /*card.innerHTML = `
-            <h5>Offro: ${exchange.offeredFigurines.map(f => f.idMarvel).join(', ')}</h5>
-            <p>Richiedo: ${exchange.requestedFigurines.map(f => f.idMarvel).join(', ')}</p>
-            <button class="btn btn-success me-2">Accetta</button>
-            <button class="btn btn-danger">Rifiuta</button>
-        `;
-        container.appendChild(card);
-      });
-      console.log('Exchanges ricevuti per', containerId, exchanges);
-    }
-
-    
-  
-    const select = document.getElementById('exchangeTypeSelect');
-    select.addEventListener('change', () => {
-        document.getElementById('doppioniSection').classList.add('d-none');
-        document.getElementById('multiploSection').classList.add('d-none');
-        document.getElementById('creditiSection').classList.add('d-none');
-  
-        if (select.value === 'doppioni') fetchDoppioniExchanges();
-        else if (select.value === 'multiplo') fetchMultiploExchanges();
-        else if (select.value === 'crediti') fetchCreditiExchanges();
-    });
-  
-    select.dispatchEvent(new Event('change'));
-  });*/
-  
-
-
-
-
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     //console.log('Token:', token);
@@ -105,9 +23,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     function populateExchanges(exchanges, containerId) {
       const container = document.getElementById(containerId);
-      console.log('Exchanges ricevuti per', containerId, exchanges);
       container.innerHTML = '';
       const template = document.querySelector('.card-template');
+      console.log(containerId);
+      if (exchanges.length === 0) {
+        showNoExchangesMessage(document.getElementById(containerId), 'Nessuno scambio al momento');
+        return;
+      }    
   
       exchanges.forEach(exchange => {
         const cardClone = template.cloneNode(true);
@@ -170,12 +92,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     const select = document.getElementById('exchangeTypeSelect');
     select.addEventListener('change', () => {
-      // Rimosso temporaneamente il toggle d-none
-      /*if (select.value === 'doppioni') fetchExchanges('http://localhost:3000/api/exchange/available', 'doppioniExchanges');
-      else if (select.value === 'multiplo') fetchExchanges('http://localhost:3000/api/exchange/available/multiplo', 'multiploExchanges');
-      else if (select.value === 'crediti') fetchExchanges('http://localhost:3000/api/exchange/available/crediti', 'creditiExchanges');
-      */
-
       document.getElementById('doppioniSection').classList.add('d-none');
       document.getElementById('multiploSection').classList.add('d-none');
       document.getElementById('creditiSection').classList.add('d-none');
@@ -228,6 +144,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const data = await response.json();
       if (response.ok) {
         const rejectedExchanges = data.filter(ex => ex.status === 'rejected');
+        if (rejectedExchanges.length === 0) {
+          showNoExchangesMessage(document.getElementById('rejectedMessage'), 'Nessun tuo scambio è stato rifiutato al momento');
+          return;
+        }        
         const container = document.getElementById('rejectedExchanges');
         container.innerHTML = '';
         rejectedExchanges.forEach(exchange => {
@@ -280,6 +200,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     .then(response => response.json())
     .then(data => {
         const acceptedExchanges = data.filter(ex => ex.status === 'accepted');
+        if (acceptedExchanges.length === 0) {
+          showNoExchangesMessage(document.getElementById('acceptedMessage'), 'Nessun tuo scambio è stato accettato al momento');
+          return;
+        }
         const container = document.getElementById('acceptedExchanges');
         container.innerHTML = '';
 
@@ -322,3 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+/*function showNoExchangesMessage(container, message) {
+  if (!container) return; 
+  container.textContent = message;
+  container.classList.remove('d-none'); 
+  container.classList.add('text-center', 'text-muted', 'mt-3');
+}*/
+
+function showNoExchangesMessage(container, message) {
+  if (!container) return;
+  container.innerHTML = '';
+  const msg = document.createElement('p');
+  msg.textContent = message;
+  container.classList.remove('d-none'); 
+  msg.classList.add('no-exchanges-message');
+  container.appendChild(msg);
+}
