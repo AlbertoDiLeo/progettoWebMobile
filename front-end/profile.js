@@ -221,10 +221,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const newPassword = document.getElementById("newPassword").value.trim();
         const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
 
-        let errorMessages = []; // Array per raccogliere errori
+        let errorMessages = []; 
+
+        const token = localStorage.getItem("token");
+        const userId = getUserIdFromToken(token);
 
         try {
-            const response = await fetch(`http://localhost:3000/api/user/change-password`, {
+            const response = await fetch(`http://localhost:3000/api/user/change-password/${userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -243,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            if (!oldPassword.trim()) { //serve?
+            if (!oldPassword.trim()) { 
                 errorMessages.push("Inserisci la vecchia password.");
             }
             if (oldPassword === newPassword) {
@@ -262,7 +265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             setTimeout(() => {
                 localStorage.removeItem("token"); // Disconnette l'utente
-                window.location.href = "login.html"; // Reindirizza alla login
+                window.location.href = "login.html"; 
             }, 2000);
 
         } catch (error) {

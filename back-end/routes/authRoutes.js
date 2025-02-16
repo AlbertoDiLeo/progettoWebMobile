@@ -32,10 +32,24 @@ router.post("/register", register);
  *   post:
  *     summary: Effettua il login
  *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: mario.rossi@example.com
+ *               password:
+ *                 type: string
+ *                 example: Password123
  *     responses:
  *       default:
  *         description: ""
  */
 router.post("/login", login);
+
 
 module.exports = router;

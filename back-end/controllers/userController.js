@@ -106,8 +106,13 @@ exports.checkUsername = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
     try {
-        const userId = req.user.userId; 
+        const userId = req.params.id;
+        //const userId = req.user.userId; 
         const { oldPassword, newPassword } = req.body;
+
+        if (req.user.userId !== userId) {  
+            return res.status(403).json({ error: "Non autorizzato" });
+        }
 
         const user = await User.findById(userId);
         if (!user) {
@@ -133,7 +138,7 @@ exports.changePassword = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try {
-        const userId = req.user.userId; // L'ID utente è già nel token, quindi lo usiamo direttamente.
+        const userId = req.user.userId; 
 
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ error: "ID utente non valido." });
