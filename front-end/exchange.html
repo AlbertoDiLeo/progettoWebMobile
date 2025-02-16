@@ -209,6 +209,21 @@
                 <option value="crediti">Vendita per Crediti</option>
             </select>
         </div>
+
+        <div id="doppioniSection" class="d-none">
+            <h4 class="title">Scambi Doppioni Disponibili</h4>
+            <div id="doppioniExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
+
+        <div id="multiploSection" class="d-none">
+            <h4 class="title">Scambi Multipli Disponibili</h4>
+            <div id="multiploExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
+
+        <div id="creditiSection" class="d-none">
+            <h4 class="title">Vendita per Crediti Disponibili</h4>
+            <div id="creditiExchanges" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"></div>
+        </div>
         
         <div class="card-template d-none col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card p-3 h-100 d-flex flex-column justify-content-between">
@@ -219,7 +234,7 @@
                     <p class="user text-start">Proposto da:</p>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-success me-2 accept-btn">Accetta</button>
+                    <button class="btn btn-success accept-btn">Accetta</button>
                     <button class="btn btn-danger reject-btn">Rifiuta</button>
                 </div>
             </div>
@@ -265,7 +280,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="logoutModalLabel">Esci dall'account</h5>
+                    <h3 class="modal-title text-danger" id="logoutModalLabel">Esci dall'account</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body">

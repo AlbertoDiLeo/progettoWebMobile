@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await response.json();
         console.log('Risposta ricevuta:', data);
         if (response.ok) {
-          populateExchanges(data, containerId);
+          populateExchanges(data.exchanges, containerId);
         } else {
           console.error('Errore:', data.message);
         }
@@ -171,9 +171,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const select = document.getElementById('exchangeTypeSelect');
     select.addEventListener('change', () => {
       // Rimosso temporaneamente il toggle d-none
-      if (select.value === 'doppioni') fetchExchanges('http://localhost:3000/api/exchange/available', 'doppioniExchanges');
+      /*if (select.value === 'doppioni') fetchExchanges('http://localhost:3000/api/exchange/available', 'doppioniExchanges');
       else if (select.value === 'multiplo') fetchExchanges('http://localhost:3000/api/exchange/available/multiplo', 'multiploExchanges');
       else if (select.value === 'crediti') fetchExchanges('http://localhost:3000/api/exchange/available/crediti', 'creditiExchanges');
+      */
+
+      document.getElementById('doppioniSection').classList.add('d-none');
+      document.getElementById('multiploSection').classList.add('d-none');
+      document.getElementById('creditiSection').classList.add('d-none');
+
+      if (select.value === 'doppioni') {
+          document.getElementById('doppioniSection').classList.remove('d-none');
+          fetchExchanges('http://localhost:3000/api/exchange/available', 'doppioniExchanges');
+      } else if (select.value === 'multiplo') {
+          document.getElementById('multiploSection').classList.remove('d-none');
+          fetchExchanges('http://localhost:3000/api/exchange/available/multiplo', 'multiploExchanges');
+      } else if (select.value === 'crediti') {
+          document.getElementById('creditiSection').classList.remove('d-none');
+          fetchExchanges('http://localhost:3000/api/exchange/available/crediti', 'creditiExchanges');
+      }
     });
   
     select.dispatchEvent(new Event('change'));
@@ -294,6 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
   tabs.forEach(tab => {
       tab.addEventListener('click', () => {
+          document.getElementById('doppioniSection').classList.add('d-none');
+          document.getElementById('multiploSection').classList.add('d-none');
+          document.getElementById('creditiSection').classList.add('d-none');
           // Carica dinamicamente gli scambi in base alla tab selezionata
           if(tab.id === 'available-tab') loadAvailableExchanges();
           if(tab.id === 'rejected-tab') loadRejectedExchanges();

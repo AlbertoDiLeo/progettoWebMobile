@@ -51,10 +51,7 @@ body {
 }
 
 #logoutModal .modal-content {
-  background-color: #1a1a2e;
   color: white;
-  border: 2px solid #e23636;
-  box-shadow: 0px 0px 20px rgba(226, 54, 54, 0.7);
 }
 
 #logoutModal .btn-danger {
@@ -71,6 +68,20 @@ body {
   font-size: 1.1rem;
   text-align: center;
   color: black;
+}
+
+/* Personalizzazione del modale */
+.modal-content {
+  background-color: #fff; /* Sfondo bianco */
+  color: #000; /* Testo nero */
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6; /* Bordo inferiore */
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6; /* Bordo superiore */
 }
 
 @keyframes glow {
@@ -217,3 +228,26 @@ h2, h4, h5 {
 .section.active {
   display: block;
 }
+
+
+/* Personalizzazione dei pulsanti delle tab */
+.nav-pills .nav-link {
+  background-color: rgba(0, 0, 0, 0.85); /* Sfondo scuro */
+  color: #e23636; /* Testo rosso */
+  border: 1px solid #e23636; /* Bordo rosso */
+  border-radius: 5px;
+  margin: 0 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: #e23636; /* Sfondo rosso al passaggio del mouse */
+  color: #fff; /* Testo bianco al passaggio del mouse */
+}
+
+.nav-pills .nav-link.active {
+  background-color: #e23636; /* Sfondo rosso per la tab attiva */
+  color: #fff; /* Testo bianco per la tab attiva */
+  border-color: #e23636; /* Bordo rosso per la tab attiva */
+}
+
