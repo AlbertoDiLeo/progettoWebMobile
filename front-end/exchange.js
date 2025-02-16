@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
         cardClone.querySelector('.offered').textContent = `Mi viene offerto: ${exchange.offeredFigurines.map(f => f.name).join(', ')}`;
         cardClone.querySelector('.requested').textContent = `Perdo: ${exchange.requestedFigurines.map(f => f.name).join(', ') || exchange.creditAmount + ' crediti'}`;
-        //cardClone.querySelector('.user').textContent = `Proposto da: ${exchange.offerBy.name}`;
+        cardClone.querySelector('.user').textContent = `Proposto da: ${exchange.offeredBy ? exchange.offeredBy.email : 'Sconosciuto'}`;
 
         const acceptBtn = cardClone.querySelector('.accept-btn');
         const rejectBtn = cardClone.querySelector('.reject-btn');
