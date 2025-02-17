@@ -176,9 +176,6 @@ function populateSelects(album, tipoScambio) {
       if (response.ok) {
         showNotification('Scambio creato con successo!', 'success');
         loadProposedExchanges(); // Aggiorna la lista
-        /*setTimeout(() => {
-          location.reload(); // Ricarica la pagina per resettare i campi
-        }, 2000);*/ // Ricarica la pagina per resettare i campi
       } else {
         showNotification(`Errore: ${result.message}`, 'danger');
       }
@@ -250,15 +247,6 @@ async function loadProposedExchanges() {
       console.error('Errore nel recupero degli scambi proposti:', error);
     }
 }
-  
-  // Formatta la descrizione dello scambio
-/*function formatExchangeDescription(exchange) {
-  const offerti = exchange.offeredFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ');
-  const richiesti = exchange.requestedFigurines?.length 
-      ? exchange.requestedFigurines.map(f => f.name.replace(/ x\d+$/, '')).join(', ') 
-      : `${exchange.creditAmount} crediti`;
-  return `Ti offro: ${offerti} per ${richiesti}`;
-}*/
 
 function formatExchangeDescription(exchange) {
   let offerti;
@@ -287,7 +275,6 @@ async function withdrawExchange(exchangeId, cardElement) {
       const result = await response.json();
       if (response.ok) {
         showNotification('Scambio ritirato con successo!', 'success');
-        //location.reload(); // Ricarica la pagina per aggiornare la lista
         cardElement.remove(); // Rimuove la card dall'interfaccia
       } else {
         showNotification(`Errore: ${result.message}`, 'danger');

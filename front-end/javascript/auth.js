@@ -31,7 +31,6 @@ if (registerForm) {
   registerForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Previene il refresh della pagina
 
-    // Ottieni i dati dal form
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -40,7 +39,6 @@ if (registerForm) {
 
     let errors = [];
 
-    // Validazione lato client
     if (!name || !email || !password || !favoriteHero) {
       errors.push("Tutti i campi sono obbligatori");
     }
@@ -49,16 +47,11 @@ if (registerForm) {
       errors.push("Le password non corrispondono");
     }
 
-    // Verifica se l'input del nome utente è valido (opzionale)
+    // Verifica se l'input del nome utente è valido 
     const usernameFeedback = document.getElementById('usernameFeedback');
     if (usernameFeedback && (usernameFeedback.classList.contains("text-danger") || usernameFeedback.classList.contains("text-warning"))) {
       errors.push("Nome utente non valido");
     }
-
-    /*if (errors.length > 0) {
-      errors.forEach(error => showNotification(error, "danger"));
-      return;
-    }*/
 
     // Effettua la registrazione
     try {
@@ -69,16 +62,6 @@ if (registerForm) {
       });
 
       const data = await response.json();
-
-      /*if (!response.ok) {
-        if (Array.isArray(data.messages)) {
-          data.messages.forEach(msg => showNotification(msg, "danger"));
-          errors.forEach(error => showNotification(error, "danger"));
-        } else {
-          showNotification(data.message || "Errore durante la registrazione", "danger");
-        }
-        return;
-      }*/
 
         if (!response.ok) {
           let allErrors = [];
@@ -116,7 +99,7 @@ const loginForm = document.getElementById('loginForm');
 
 if (loginForm) {
     loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Previene il refresh della pagina
+        event.preventDefault(); 
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;

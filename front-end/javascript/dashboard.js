@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const decoded = jwt_decode(token); // Decodifica il token (includi jwt-decode nel progetto)
+        const decoded = jwt_decode(token); // Decodifica il token 
         const welcomeMessage = document.getElementById('welcomeMessage');
         
         if (decoded.name && decoded.favoriteHero) {
@@ -134,9 +134,6 @@ document.getElementById("buy-credits-btn").addEventListener("click", async () =>
         const creditiElement = document.getElementById("crediti");
         if (creditiElement) {
             creditiElement.textContent = data.newCredits;
-            /*setTimeout(() => { // è la soluzione migliore?
-                location.reload();
-            }, 50);*/
             location.reload();
         } else {
             console.error("Elemento 'crediti' non trovato!");

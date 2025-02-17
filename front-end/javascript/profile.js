@@ -42,13 +42,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`, // Invia il token al server
+                Authorization: `Bearer ${token}`, 
             },
         });
 
         if (!response.ok) {
             const error = await response.json();
-            console.error("Errore API:", error.message); // Log dell'errore API
+            console.error("Errore API:", error.message); 
             throw new Error("Errore nella richiesta del profilo");
         }
         const user = await response.json();
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailDisplay.textContent = user.email || "Non specificato";
         favoriteHeroDisplay.textContent = user.favoriteHero || "Non specificato";
     } catch (err) {
-        console.error("Errore nel recupero del profilo:", err.message); // Log dell'errore
+        console.error("Errore nel recupero del profilo:", err.message); 
         showNotification("Errore nel caricamento del profilo.", "danger"); 
     }
 });
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
 
     document.getElementById("profileEditForm").addEventListener("submit", async function (event) {
-        event.preventDefault(); // Evita il refresh della pagina
+        event.preventDefault(); 
         
         const nameInput = document.getElementById("name").value;
         const favoriteHeroInput = document.getElementById("favoriteHero").value;
@@ -170,7 +170,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     
             setTimeout(() => {
                 location.reload();
-                //window.location.href = "dashboard.html";
             }, 1500);
     
         } catch (error) {
@@ -214,9 +213,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Gestione del submit per la modifica della password
     document.getElementById("passwordChangeForm").addEventListener("submit", async function (event) {
-        event.preventDefault(); // Blocca il comportamento predefinito
+        event.preventDefault(); 
 
-        // Prendi i valori dagli input
         const oldPassword = document.getElementById("oldPassword").value.trim();
         const newPassword = document.getElementById("newPassword").value.trim();
         const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
@@ -393,7 +391,7 @@ function validatePhone(phone) {
 function formatDate(dateString) {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mesi da 0 a 11
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
 }

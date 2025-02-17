@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
-    //console.log('Token:', token);
   
     async function fetchExchanges(url, containerId) {
       try {
@@ -244,14 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 });
-
-
-/*function showNoExchangesMessage(container, message) {
-  if (!container) return; 
-  container.textContent = message;
-  container.classList.remove('d-none'); 
-  container.classList.add('text-center', 'text-muted', 'mt-3');
-}*/
 
 function showNoExchangesMessage(container, message) {
   if (!container) return;

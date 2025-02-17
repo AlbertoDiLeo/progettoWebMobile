@@ -7,14 +7,13 @@ body {
 }
 
 .navbar {
-    background-color: rgba(20, 20, 20, 0.6); /* Nero semi-trasparente */
-    backdrop-filter: blur(8px); /* Sfocatura leggera */
-    border-bottom: 2px solid #e23636; /* Rosso Marvel */
+    background-color: rgba(20, 20, 20, 0.6); 
+    backdrop-filter: blur(8px); 
+    border-bottom: 2px solid #e23636; 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8);
     transition: background-color 0.3s ease-in-out;
 }
 
-/* Logo Album Supereroi */
 .navbar-brand {
     font-family: 'Bebas Neue', 'Arial Black', sans-serif;
     font-size: 32px;
@@ -30,7 +29,6 @@ body {
     color: #ff4d4d !important;
 }
 
-/* Link Navbar */
 .navbar-nav .nav-link {
     font-size: 18px;
     font-weight: bold;
@@ -44,7 +42,6 @@ body {
     text-shadow: 0px 0px 8px rgba(226, 54, 54, 0.8);
 }
 
-/* Pulsante Toggle (mobile) */
 .navbar-toggler {
     border-color: rgba(226, 54, 54, 0.8);
 }
@@ -54,7 +51,6 @@ body {
     border-radius: 3px;
 }
 
-/* Modal Logout */
 #logoutModal #deleteAccountModal .modal-content {
     background-color: #1a1a2e;
     color: white;
@@ -78,7 +74,6 @@ body {
     color: black;
 }
 
-/* Effetto Glow (opzionale) */
 @keyframes glow {
     0% {
         box-shadow: 0 0 5px #e23636;
@@ -91,7 +86,6 @@ body {
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .navbar-nav {
         text-align: center;
@@ -137,19 +131,16 @@ footer {
     width: 100px;
 }
 #buy-pack .card-title {
-    white-space: nowrap; /* Impedisce al testo di andare a capo */
-    overflow: hidden; /* Nasconde il testo che eccede la larghezza del contenitore */
-    text-overflow: ellipsis; /* Aggiunge i puntini di sospensione al testo troncato */
-    width: 100%; /* Assicura che il titolo occupi tutta la larghezza disponibile */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    width: 100%; 
 }
-
-
-
 
 .card {
     background-color: white;
     border-radius: 15px;
-    border: 4px solid #FFD700; /* Bordo dorato */
+    border: 4px solid #FFD700; 
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out;
     overflow: hidden;
@@ -189,12 +180,6 @@ footer {
     transform: scale(1.1);
 }
 
-/*.col:hover {
-    transform: scale(1.03);
-    z-index: 10;
-}*/
-
-
 .card-title:hover {
     background-color: #FFE4B5;
 }
@@ -233,24 +218,20 @@ footer {
 
 
 
-/* Effetto quando una figurina viene aggiunta all'album */
 .adding {
     animation: fadeOutUp 0.5s ease-out forwards;
 }
 
-/* Effetto quando una figurina viene scartata */
 .discarding {
     animation: shatter 0.5s ease-out forwards;
 }
 
-/* Animazione per far svanire verso l'alto */
 @keyframes fadeOutUp {
     0% { opacity: 1; transform: translateY(0); }
     50% { opacity: 0.8; transform: translateY(-10px); }
     100% { opacity: 0; transform: translateY(-50px); }
 }
 
-/* Animazione per simulare la distruzione della figurina */
 @keyframes shatter {
     0% { opacity: 1; transform: scale(1) rotate(0deg); }
     25% { opacity: 0.8; transform: scale(0.9) rotate(5deg); }
@@ -276,10 +257,9 @@ footer {
     }
 }
 
-/* per la figurina doppiona trovata nel pacchetto */
 .found {
-    opacity: 0.7; /* Riduce leggermente l'opacità */
-    transition: opacity 0.3s ease-in-out; /* Aggiunge una transizione fluida */
+    opacity: 0.7; 
+    transition: opacity 0.3s ease-in-out; 
 }
 
 .btn-primary {
@@ -302,7 +282,6 @@ footer {
 
 
 
-/* dettagli eroe */
 #hero-details .hero-card {
     background: rgba(0, 0, 0, 0.7);
     border-radius: 15px;
@@ -355,9 +334,6 @@ footer {
     border-radius: 50%;
     padding: 6px 10px;
 }
-
-/* album*/
-/* Palette colori Marvel */
 :root {
     --marvel-red: #ED1D24;
     --marvel-blue: #0057B8;
@@ -365,7 +341,6 @@ footer {
     --marvel-light: #F8F8F8;
 }
 
-/* Stile per il titolo */
 .text-marvel {
     font-size: 2.2rem;
     color: var(--marvel-red);
@@ -384,7 +359,6 @@ footer {
 
 
 
-/* Pulsanti di paginazione */
 #prev-page, #next-page {
     font-weight: bold;
     border-radius: 20px;
@@ -396,7 +370,6 @@ footer {
     color: white;
 }
 
-/* Stile per l'ordinamento */
 .sort-dropdown {
     width: 200px;
     border-radius: 10px;

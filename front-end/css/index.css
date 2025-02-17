@@ -72,18 +72,6 @@ footer {
     bottom: 0;
     width: 100%;
 }
-
-/*#register {
-    height: auto;
-    overflow: auto;
-}
-
-#register footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}*/
-
 #notification {
     position: fixed;
     top: 20px;
@@ -121,5 +109,5 @@ footer {
     }
 }
 #togglePassword, #toggleconfirmPassword {
-    color: black; /* Cambia il colore dell'icona in nero */
+    color: black; 
 }

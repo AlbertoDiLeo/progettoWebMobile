@@ -67,16 +67,16 @@
 
 /* Personalizzazione del modale */
 .modal-content {
-  background-color: #fff; /* Sfondo bianco */
-  color: #000; /* Testo nero */
+  background-color: #fff; 
+  color: #000; 
 }
 
 .modal-header {
-  border-bottom: 1px solid #dee2e6; /* Bordo inferiore */
+  border-bottom: 1px solid #dee2e6; 
 }
 
 .modal-footer {
-  border-top: 1px solid #dee2e6; /* Bordo superiore */
+  border-top: 1px solid #dee2e6; 
 }
 
 @keyframes glow {
@@ -141,12 +141,12 @@ footer {
 }
 
 .card {
-  background-color: rgba(0, 0, 0, 0.85); /* Più scura e opaca */
+  background-color: rgba(0, 0, 0, 0.85); 
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   color: #fff;
-  min-height: 250px; /* Altezza uniforme */
+  min-height: 250px; 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -245,23 +245,23 @@ h2, h4, h5 {
 
 /* Personalizzazione dei pulsanti delle tab */
 .nav-pills .nav-link {
-  background-color: rgba(0, 0, 0, 0.85); /* Sfondo scuro */
-  color: #e23636; /* Testo rosso */
-  border: 1px solid #e23636; /* Bordo rosso */
+  background-color: rgba(0, 0, 0, 0.85); 
+  color: #e23636; 
+  border: 1px solid #e23636; 
   border-radius: 5px;
   margin: 0 5px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .nav-pills .nav-link:hover {
-  background-color: #e23636; /* Sfondo rosso al passaggio del mouse */
-  color: #fff; /* Testo bianco al passaggio del mouse */
+  background-color: #e23636; 
+  color: #fff; 
 }
 
 .nav-pills .nav-link.active {
-  background-color: #e23636; /* Sfondo rosso per la tab attiva */
-  color: #fff; /* Testo bianco per la tab attiva */
-  border-color: #e23636; /* Bordo rosso per la tab attiva */
+  background-color: #e23636; 
+  color: #fff; 
+  border-color: #e23636; 
 }
 
 #notification {

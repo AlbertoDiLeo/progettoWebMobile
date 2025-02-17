@@ -7,15 +7,9 @@ function removeToken() {
     localStorage.removeItem('token');
 }
 
-//function setLocalStorage(chiave, valore){
-    //  localStorage.setItem(chiave, JSON.stringify(valore))
-//}
-
 function setLocalStorage(chiave, valore){
     localStorage.setItem(chiave, valore);
 }
-
-
 
 function getLocalStorage(chiave){
     return JSON.parse(localStorage.getItem(chiave))
@@ -89,7 +83,7 @@ async function checkUsernameAvailability(name) {
             console.error("Errore nel controllo del nome utente:", error);
             updateUsernameFeedback("⚠️ Errore nel controllo del nome. Riprova.", "danger");
         }
-    }, 500); // Attende 500ms prima di eseguire la chiamata API
+    }, 500); 
 }
 
 
