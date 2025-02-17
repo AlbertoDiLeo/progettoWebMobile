@@ -1,7 +1,7 @@
 
 
 body {
-    background: url('images/home.jpg') no-repeat center center fixed;
+    background: url('/front-end/images/home.jpg') no-repeat center center fixed;
     background-size: cover;
     color: white;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);

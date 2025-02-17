@@ -55,10 +55,10 @@ if (registerForm) {
       errors.push("Nome utente non valido");
     }
 
-    if (errors.length > 0) {
+    /*if (errors.length > 0) {
       errors.forEach(error => showNotification(error, "danger"));
       return;
-    }
+    }*/
 
     // Effettua la registrazione
     try {
@@ -70,14 +70,31 @@ if (registerForm) {
 
       const data = await response.json();
 
-      if (!response.ok) {
+      /*if (!response.ok) {
         if (Array.isArray(data.messages)) {
           data.messages.forEach(msg => showNotification(msg, "danger"));
+          errors.forEach(error => showNotification(error, "danger"));
         } else {
           showNotification(data.message || "Errore durante la registrazione", "danger");
         }
         return;
-      }
+      }*/
+
+        if (!response.ok) {
+          let allErrors = [];
+          if (Array.isArray(data.messages)) {
+              allErrors = allErrors.concat(data.messages);
+          }
+          if (errors.length > 0) {
+              allErrors = allErrors.concat(errors);
+          }
+          if (allErrors.length > 0) {
+              allErrors.forEach(error => showNotification(error, "danger"));
+          } else {
+              showNotification(data.message || "Errore durante la registrazione", "danger");
+          }
+          return;
+        }
 
       showNotification("Registrazione avvenuta con successo!", "success");
 
