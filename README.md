@@ -1,59 +1,64 @@
 progetto-afse/
 ├── front-end/
 │   ├── css/
-│   │   └── styles.css               # Stile personalizzato del progetto
-│   ├── js/
-|   |   ├── auth.js                  # Script per login, registrazione logout e controlli
-│   │   ├── lib.js                   # Script JavaScript lato client
+│   │   ├── style.css               # Pagina di stile per dashboard, statisitcs, profile
+|   |   ├── album.css               # Pagina di stile per album, buy-pack, hero-details
+|   |   ├── index.css               # Pagina di stile per index, login e register
+|   |   └── exchange.css            # Pagina di stile per exchange e propose-exchange
+│   ├── javascrpit/
+|   |   ├── auth.js                  # Script per login, registrazione e controlli
+│   │   ├── utils.js                 # Script showNotification, logout, checkUsername e PasswordStrength
 |   |   ├── dashboard.js             # Script per dashboard
-|   |   ├── profile.js               # Script per il profilo
+|   |   ├── profile.js               # Script per il profile
 |   |   ├── album.js                 # Script per l'album
-|   |   ├── buy-pack.js              # Script per il pacchetto acquistato
-|   |   └── hero-details.js
+|   |   ├── buy-pack.js              # Script per il buy-pack
+|   |   ├── hero-details.js          # Script per i dettagli dell'eroe selezionato nell'album
+|   |   ├── statistics.js            # Script per statistics
+|   |   ├── exchange.js              # Script per exchange
+|   |   └── propose-exchange.js      # Script per propose-exchange.js
 │   ├── img/
-│   │   └── (immagini statiche, icone, ecc.)
-│   ├── index.html                   # Pagina principale del sito
-│   ├── login.html                   # Pagina di login
-│   ├── register.html                # Pagina di registrazione
-│   ├── dashboard.html               # Dashboard dell'utente
-│   ├── profile.html                 # Gestione del profilo utente
-│   ├── album.html                   # Visualizzazione e gestione dell'album
-│   ├── exchange.html                # Scambio figurine
-│   ├── statistics.html              # Statistiche dell'album
-|   ├── buy-pack.html                # Acquisto pacchetto
-|   ├── statistics.html              # Statistiche album
-|   └── hero-details.html
+│   │   └── (immagini statiche e icona)
+│   ├── html/
+|   |   ├── index.html               # Pagina iniziale per scelta login o registrazione
+│   |   ├── login.html               # Pagina di login
+│   |   ├── register.html            # Pagina di registrazione
+│   |   ├── dashboard.html           # Pagina home dell'utente che ha effettuato il login
+│   |   ├── profile.html             # Pagina di modifica del profilo utente
+│   |   ├── album.html               # Pagina di visualizzazione dell'album
+│   |   ├── hero-details.html        # Pagina di visualizzazione dettagli dell'eroe selezionato nell'album
+│   |   ├── statistics.html          # Pagina di visualizzazione statistiche figurine trovate 
+|   |   ├── buy-pack.html            # Pagina che mostra cosa contiene il pacchetto comprato
+|   |   ├── exchange.html            # Pagina di visualizzazion degli scambio di figurine disponibili
+|   |   └── propose-exchange.html    # Pagina in cui si creano i tre tipi di scambi            
 |  
 ├── back-end/
 │   ├── controllers/
 │   │   ├── authController.js        # Logica per registrazione e login
 │   │   ├── userController.js        # Logica per operazioni sugli utenti
-│   │   ├── albumController.js       # Logica per gestione dell'album e figurine
-|   |   └── marvelController.js      # Logica per la gestione delle figurine di marvel
-|   ├── middleware/
+│   │   ├── albumController.js       # Logica per gestione dell'album 
+|   |   ├── marvelController.js      # Logica per la gestione delle figurine marvel
+|   |   └── exchangeController.js    # Logica per gli scambi 
+|   ├── middlewares/
 │   │   └── authMiddleware.js        # Middleware per l'autenticazione
 │   ├── models/
 │   │   ├── user.js                  # Modello utente per MongoDB
 │   │   ├── album.js                 # Modello album per MongoDB
-|   |   └── figurine.js              # Modello per le figurine
+|   |   ├── figurine.js              # Modello figurine per MongoDB
+|   |   └── exchange.js              # Modello scambi figurine per MongoDB
 │   ├── routes/
 │   │   ├── authRoutes.js            # Rotte per autenticazione (login, registrazione)
 │   │   ├── userRoutes.js            # Rotte per operazioni generali sugli utenti
-│   │   ├── albumRoutes.js           # Rotte per gestione album e figurine
-|   |   └── marvelRoutes.js
+│   │   ├── albumRoutes.js           # Rotte per gestione album 
+|   |   ├── marvelRoutes.js          # Rotte per figurine marvel
+|   |   └── exchangeRoutes.js        # Rotte per scambi figurine
 │   ├── config/
-│   │   └── db.js                    # Configurazione connessione a MongoDB
+│   │   ├── swagger.json             # Documentazione delle API con Swagger
+|   |   └──swagger-output.json       # Documentazione delle API con Swagger
 │   ├── app.js                       # Configurazione principale di Node.js
 |   ├── marvel.js                    # API Marvel
 │   ├── package.json                 # Dipendenze del progetto
-│   ├── .env                         # Variabili di ambiente (es. credenziali MongoDB)
-│   └── swagger.json                 # Documentazione delle API con Swagger
-├── docs/
-│   └── relazione.pdf                # Documentazione del progetto
-├── tests/
-│   ├── auth.test.js                 # Test per registrazione e login
-│   ├── user.test.js                 # Test per operazioni sul profilo utente
-│   └── album.test.js                # Test per gestione dell'album
+│   └── .env                         # Variabili di ambiente (es. credenziali MongoDB)
+|
 └── README.md                        # Descrizione del progetto
 
 
@@ -77,16 +82,9 @@ exchange.html:
     Gestione degli scambi di figurine.
     Form per proporre nuovi scambi.
 
-credits.html:
-
-    Visualizza il saldo dei crediti.
-    Pulsante o form per acquistare nuovi crediti.
 
 statistics.html:
 
     Visualizza i progressi dell'utente.
     Percentuale di completamento dell'album, figurine doppie, ecc.
 
-logout.html:
-
-    Conferma il logout e reindirizza alla pagina principale.

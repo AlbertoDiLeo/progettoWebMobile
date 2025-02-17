@@ -1,5 +1,3 @@
-//const fetch = require("node-fetch");
-//const crypto = require("crypto");
 require("dotenv").config();
 
 async function getFromMarvel(url, query=""){
@@ -22,24 +20,5 @@ function getRandomInt(min, max) {
      max = Math.floor(max);
      return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-
-
-/*async function getFromMarvel(url, query="") {
-    const timestamp = Date.now();
-    const publicApiKey = process.env.MARVEL_PUBLIC_KEY;  // Chiavi prese da .env
-    const privateApiKey = process.env.MARVEL_PRIVATE_KEY;
-    const hash = crypto.createHash("md5").update(timestamp + privateApiKey + publicApiKey).digest("hex");
-
-    const fullUrl = `https://gateway.marvel.com/v1/${url}?ts=${timestamp}&apikey=${publicApiKey}&hash=${hash}&${query}`;
-
-    try {
-        const response = await fetch(fullUrl);
-        return await response.json();
-    } catch (error) {
-        console.error("❌ Errore nella chiamata API Marvel:", error);
-        throw error;
-    }
-}*/
 
 module.exports = { getRandomInt, getFromMarvel };
