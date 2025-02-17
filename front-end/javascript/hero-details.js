@@ -26,7 +26,7 @@ function mostraDettagli(hero) {
     document.getElementById("hero-image").src = hero.image;
     document.getElementById("hero-description").textContent = hero.description || "Nessuna descrizione disponibile.";
     //document.body.style.backgroundImage = `url(${hero.image})`;
-    document.body.style.backgroundImage = `url('images/background.jpg')`;
+    document.body.style.backgroundImage = `url('/front-end/images/background.jpg')`;
     riempiLista("hero-series", hero.series);
     riempiLista("hero-events", hero.events);
     riempiLista("hero-comics", hero.comics);

@@ -1,6 +1,6 @@
 
 body {
-    background: url('images/dashboard.jpg') no-repeat center center fixed;
+    background: url('/front-end/images/dashboard.jpg') no-repeat center center fixed;
     background-size: cover;
     color: white;
     font-family: 'Marvel', sans-serif;

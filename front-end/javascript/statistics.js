@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Conta le figurine trovate
         const foundFigurines = figurine.filter(hero => hero.found).length;
-        //console.log("figurine", foundFigurines);
 
         // Conta le figurine mancanti
         const missingFigurines = totalFigurines - foundFigurines;
@@ -56,7 +55,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Trova l'ultima figurina trovata
         const lastFoundHero = figurine.length > 0 ? figurine[figurine.length - 1] : { name: "Nessuno" };
 
-        // Aggiorna il DOM con i dati calcolati
         document.getElementById("completion").textContent = completionPercentage;
         document.getElementById("found").textContent = foundFigurines;
         document.getElementById("missing").textContent = missingFigurines;
