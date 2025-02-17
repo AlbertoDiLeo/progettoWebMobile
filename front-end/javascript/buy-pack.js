@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const figurinaDaAggiungere = tutteLeFigurine[index];
                 const cardElement = document.getElementById(`figurina-${index}`);
 
-                cardElement.classList.add("adding"); 
+                //cardElement.classList.add("adding"); 
                 setTimeout(async () => {
                     await fetch("http://localhost:3000/api/album/add-to-album", {
                         method: "POST",
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const index = event.target.getAttribute("data-index");
                 const cardElement = document.getElementById(`figurina-${index}`);
 
-                cardElement.classList.add("discarding"); 
+                //cardElement.classList.add("discarding"); 
                 setTimeout(() => {
                     tutteLeFigurine.splice(index, 1);
                     cardElement.remove();
@@ -90,6 +90,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }, 500);
             }
         });
+
+        const buyAnotherPackButton = document.getElementById("buy-another-pack-btn");
+
+        // Controlliamo i crediti dell'utente
+        const profileResponse = await fetch("http://localhost:3000/api/user/profile", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        const user = await profileResponse.json();
+
+        if (user.credits < 1) {
+            buyAnotherPackButton.classList.add("disabled");
+        }
 
     } catch (error) {
         console.error("Errore nello spacchettamento:", error);
@@ -113,21 +129,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     const user = await profileResponse.json();
 
-    if (user.credits < 1) {
-        buyAnotherPackButton.addEventListener("click", (event) => {
-            event.preventDefault();
-            showNotification("Crediti insufficienti! Acquista più crediti per comprare un pacchetto.", "danger");
-        });
-    }
-
     // Evento per acquistare un nuovo pacchetto
     buyAnotherPackButton.addEventListener("click", async () => {
-        if (user.credits < 1) {
-            showNotification("Crediti esauriti!", "danger");
-            return;
-        }
 
-        try {
+        try {      
             const buyResponse = await fetch("http://localhost:3000/api/album/buy-pack", {
                 method: "POST",
                 headers: {
@@ -157,7 +162,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Errore nell'acquisto del pacchetto:", error);
-            showNotification("Crediti insufficienti", "danger");
         }
     });
 
@@ -218,7 +222,7 @@ function aggiornaVisualizzazione(figurineScelte) {
 
 function aggiungiFigurina(index, cardElement) {
     const figurinaDaAggiungere = tutteLeFigurine[index];
-    cardElement.classList.add("adding"); // Effetto animazione
+    //cardElement.classList.add("adding"); 
 
     setTimeout(async () => {
         try {
@@ -252,7 +256,7 @@ function aggiungiFigurina(index, cardElement) {
 
 function scartaFigurina(index) {
     const cardElement = document.getElementById(`figurina-${index}`);
-    cardElement.classList.add("discarding"); 
+    //cardElement.classList.add("discarding"); 
 
     setTimeout(() => {
         tutteLeFigurine.splice(index, 1);
