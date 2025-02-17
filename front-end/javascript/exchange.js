@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await response.json();
-        console.log('Risposta ricevuta:', data);
+        //console.log('Risposta ricevuta:', data);
         if (response.ok) {
           populateExchanges(data.exchanges, containerId);
         } else {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
       const template = document.querySelector('.card-template');
-      console.log(containerId);
+      //console.log(containerId);
       if (exchanges.length === 0) {
         showNoExchangesMessage(document.getElementById(containerId), 'Nessuno scambio al momento');
         return;
@@ -54,18 +54,18 @@ document.addEventListener('DOMContentLoaded', async () => {
               method: 'PUT',
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            console.log('Risposta ricevuta:', response);
+            //console.log('Risposta ricevuta:', response);
             const result = await response.json();
-            console.log('Risultato JSON:', result);
+            //console.log('Risultato JSON:', result);
             if (response.ok) {
-              alert('Scambio accettato con successo!');
-              location.reload();
+              showNotification('Scambio accettato con successo!', 'success');
+              setTimeout(() => location.reload(), 1000);
             } else {
-              alert(`Errore: ${result.message}`);
+              showNotification(`Errore: ${result.message}`, 'danger');
             }
         } catch (error) {
             console.error('Errore nell accettare lo scambio:', error);
-            alert('Errore durante l accettazione dello scambio.');
+            showNotification('Errore durante l accettazione dello scambio.', 'danger');
         }
     }
 
@@ -78,14 +78,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const result = await response.json();
             if (response.ok) {
-                alert('Scambio rifiutato con successo!');
-                location.reload();
+               showNotification('Scambio rifiutato con successo!', 'success');
+                setTimeout(() => location.reload(), 1000);
             } else {
-                alert(`Errore: ${result.message}`);
+                showNotification(`Errore: ${result.message}`, 'danger');
             }
         } catch (error) {
             console.error('Errore nel rifiutare lo scambio:', error);
-            alert('Errore durante il rifiuto dello scambio.');
+            showNotification('Errore durante il rifiuto dello scambio.', 'danger');
         }
     }
   
@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     .then(response => response.json())
     .then(data => {
         const container = document.getElementById('doppioniExchanges');
-        console.log('Exchanges ricevuti:', data);
-        console.log('Container:', container);
+        //console.log('Exchanges ricevuti:', data);
+        //console.log('Container:', container);
         container.innerHTML = '';
         data.exchanges.forEach(exchange => {
             const template = document.querySelector('.card-template');
@@ -157,7 +157,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           cardClone.querySelector('.requested-text').textContent = `Per: ${exchange.requestedFigurines.length ? exchange.requestedFigurines.map(f => f.name).join(', ') : `${exchange.creditAmount} crediti`}`;
           
           const withdrawBtn = cardClone.querySelector('.withdraw-btn');
-          withdrawBtn.addEventListener('click', () => withdrawExchange(exchange._id));
+          withdrawBtn.addEventListener('click', () => {
+            withdrawExchange(exchange._id);
+            cardClone.remove();
+          });
           
           container.appendChild(cardClone);
         });
@@ -177,10 +180,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       const result = await response.json();
       if (response.ok) {
-        alert(result.message);
+        showNotification(result.message);
         loadRejectedExchanges(); // Ricarica gli scambi
       } else {
-        alert(`Errore: ${result.message}`);
+        showNotification(`Errore: ${result.message}`);
       }
     } catch (error) {
       console.error('Errore nel ritiro dello scambio:', error);
@@ -210,16 +213,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             const template = document.querySelector('.card-template-accepted');
             const cardClone = template.cloneNode(true);
             cardClone.classList.remove('d-none');
-            cardClone.querySelector('.accepted-offered').textContent = `Ho ceduto: ${exchange.requestedFigurines.map(f => f.name).join(', ')}`;
-            cardClone.querySelector('.accepted-received').textContent = `Ho acquistato: ${exchange.offeredFigurines.map(f => f.name).join(', ') || exchange.creditAmount + ' crediti'}`;
             
-            // Aggiunto bottone cancella
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('btn', 'btn-secondary', 'mt-2');
-            deleteBtn.textContent = 'Cancella';
-            deleteBtn.addEventListener('click', () => cardClone.remove());
+            cardClone.querySelector('.accepted-offered').textContent = `Ho ceduto: ${exchange.offeredFigurines.map(f => f.name).join(', ') }`;
+            //cardClone.querySelector('.accepted-received').textContent = `Ho acquistato: ${exchange.requestedFigurines.map(f => f.name).join(', ') || exchange.creditAmount + ' crediti'}`;
+            cardClone.querySelector('.accepted-received').textContent = `Ho acquistato: ${exchange.requestedFigurines.length ? exchange.requestedFigurines.map(f => f.name).join(', ') : `${exchange.creditAmount} crediti`}`;
 
-            cardClone.appendChild(deleteBtn);
+            // Aggiunto bottone cancella
+            const deleteBtn = cardClone.querySelector('.delete-btn');
+            deleteBtn.classList.add('btn', 'btn-secondary', 'mt-2');
+            deleteBtn.addEventListener('click', () => {
+              cardClone.remove();
+            });
             container.appendChild(cardClone);
         });
     })

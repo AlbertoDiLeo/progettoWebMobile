@@ -56,9 +56,9 @@ exports.updateUserProfile = async (req, res) => {
         const newToken = jwt.sign(
             { userId: updatedUser._id, 
                 name: updatedUser.name, 
-                favoriteHero: updatedUser.favoriteHero,
-                birthDate: updatedUser.birthDate, 
-                phone: updatedUser.phone
+                //favoriteHero: updatedUser.favoriteHero,
+                //birthDate: updatedUser.birthDate, 
+                //phone: updatedUser.phone
             },
             process.env.JWT_SECRET,
             { expiresIn: "24h" }

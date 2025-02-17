@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const User = require("./models/User");
-const Album = require("./models/Album");
-const Exchange = require("./models/Exchange");
-const Figurina = require("./models/Figurina");
+const User = require("./models/user");
+const Album = require("./models/album");
+const Exchange = require("./models/exchange");
+const Figurina = require("./models/figurina");
 
 async function findValidExchange() {
     try {

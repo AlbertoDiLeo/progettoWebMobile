@@ -46,7 +46,7 @@ exports.createExchange = async (req, res) => {
 exports.getMyExchanges = async (req, res) => {
     try {
       const userId = req.user.userId;
-      const exchanges = await Exchange.find({ offeredBy: userId, status: 'pending' }).populate('offeredFigurines requestedFigurines');
+      const exchanges = await Exchange.find({ offeredBy: userId }).populate('offeredFigurines requestedFigurines');
       
       res.status(200).json(exchanges);
     } catch (error) {
@@ -134,7 +134,7 @@ exports.getAvailableExchanges = async (req, res) => {
 
 
 
-exports.getMultiploExchanges = async (req, res) => { //fare un controllo sugli scambi fatti dall'utente stesso
+exports.getMultiploExchanges = async (req, res) => { 
     try {
       const userId = req.user.userId;
       const userAlbum = await Album.findOne({ userId });
@@ -162,7 +162,7 @@ exports.getMultiploExchanges = async (req, res) => { //fare un controllo sugli s
 };
 
 
-exports.getCreditiExchanges = async (req, res) => { //fare un controllo sugli scambi fatti dall'utente stesso
+exports.getCreditiExchanges = async (req, res) => { 
     try {
       const userId = req.user.userId;
       const user = await User.findById(userId);
@@ -183,7 +183,7 @@ exports.getCreditiExchanges = async (req, res) => { //fare un controllo sugli sc
 };
 
 
-exports.acceptExchange = async (req, res) => { //non posso accettare uno scambio fatto da me stesso
+/*exports.acceptExchange = async (req, res) => { //non posso accettare uno scambio fatto da me stesso
     try {
         const userId = req.user.userId;
         const exchangeId = req.params.id;
@@ -259,7 +259,181 @@ exports.acceptExchange = async (req, res) => { //non posso accettare uno scambio
       console.error('Errore nell accettare lo scambio:', error);
       res.status(500).json({ message: 'Errore interno del server' });
     }
+};*/
+
+/*exports.acceptExchange = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const exchangeId = req.params.id;
+
+    const exchange = await Exchange.findById(exchangeId);
+    if (!exchange || exchange.status !== 'pending') {
+      return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
+    }
+
+    if (exchange.offeredBy.toString() === userId) {
+      return res.status(400).json({ message: 'Non puoi accettare un tuo scambio' });
+    }
+
+    const album = await Album.findOne({ userId });
+    if (!album) return res.status(404).json({ message: 'Album non trovato' });
+
+    const ownerAlbum = await Album.findOne({ userId: exchange.offeredBy });
+    if (!ownerAlbum) return res.status(404).json({ message: 'Album del proponente non trovato' });
+
+    const user = await User.findById(userId);
+    const owner = await User.findById(exchange.offeredBy);
+
+    const removeFigurines = (album, figurines) => {
+      for (const fig of figurines) {
+        const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (!found || found.count <= 1) return false;
+        found.count -= 1;
+        if (found.count === 0) album.figurine = album.figurine.filter(f => f.idMarvel !== fig.idMarvel);
+      }
+      return true;
+    };
+
+    const addFigurines = async (album, figurines) => {
+      for (const fig of figurines) {
+        const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (existing) {
+          existing.count += 1;
+        } else {
+          const dbFigurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+          album.figurine.push({ idMarvel: dbFigurina.idMarvel, name: dbFigurina.name, image: dbFigurina.image, count: 1 });
+        }
+      }
+    };
+
+    if (exchange.type === 'doppioni' || exchange.type === 'multiplo') {
+      if (!removeFigurines(album, exchange.requestedFigurines)) {
+        return res.status(400).json({ message: 'Non hai le figurine richieste' });
+      }
+      await addFigurines(album, exchange.offeredFigurines);
+      await addFigurines(ownerAlbum, exchange.requestedFigurines);
+
+    } else if (exchange.type === 'crediti') {
+      if (user.credits < exchange.creditAmount) return res.status(400).json({ message: 'Crediti insufficienti' });
+      user.credits -= exchange.creditAmount;
+      owner.credits += exchange.creditAmount;
+      await addFigurines(album, exchange.offeredFigurines);
+      //await addFigurines(ownerAlbum, exchange.requestedFigurines);
+    }
+
+    await album.save();
+    await ownerAlbum.save();
+    await user.save();
+    await owner.save();
+
+    exchange.status = 'accepted';
+    await exchange.save();
+
+    res.status(200).json({ message: 'Scambio accettato con successo', exchange });
+
+  } catch (error) {
+    console.error('Errore nell accettare lo scambio:', error);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+};*/
+
+exports.acceptExchange = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const exchangeId = req.params.id;
+
+    const exchange = await Exchange.findById(exchangeId);
+    if (!exchange || exchange.status !== 'pending') {
+      return res.status(404).json({ message: 'Scambio non trovato o già concluso' });
+    }
+
+    if (exchange.offeredBy.toString() === userId) {
+      return res.status(400).json({ message: 'Non puoi accettare un tuo scambio' });
+    }
+
+    const album = await Album.findOne({ userId });
+    if (!album) return res.status(404).json({ message: 'Album non trovato' });
+
+    const ownerAlbum = await Album.findOne({ userId: exchange.offeredBy });
+    if (!ownerAlbum) return res.status(404).json({ message: 'Album del proponente non trovato' });
+
+    const user = await User.findById(userId);
+    const owner = await User.findById(exchange.offeredBy);
+
+    const removeFigurines = (album, figurines) => {
+      for (const fig of figurines) {
+        const found = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (!found || found.count <= 1) return false;
+        found.count -= 1;
+        if (found.count === 0) album.figurine = album.figurine.filter(f => f.idMarvel !== fig.idMarvel);
+      }
+      return true;
+    };
+
+    if (exchange.type === 'doppioni' || exchange.type === 'multiplo') {
+      if (!removeFigurines(album, exchange.requestedFigurines)) {
+        return res.status(400).json({ message: 'Non hai le figurine richieste' });
+      }
+      for (const fig of exchange.offeredFigurines) {
+        const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (existing) existing.count += 1;
+        else {
+          const dbFigurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+          album.figurine.push({ idMarvel: dbFigurina.idMarvel, name: dbFigurina.name, image: dbFigurina.image, count: 1 });
+        }
+      }
+      for (const fig of exchange.requestedFigurines) {
+        const existing = ownerAlbum.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (existing) existing.count += 1;
+        else {
+          const dbFigurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+          ownerAlbum.figurine.push({ idMarvel: dbFigurina.idMarvel, name: dbFigurina.name, image: dbFigurina.image, count: 1 });
+        }
+      }
+    } else if (exchange.type === 'crediti') {
+      if (user.credits < exchange.creditAmount) return res.status(400).json({ message: 'Crediti insufficienti' });
+      user.credits -= exchange.creditAmount;
+      owner.credits += exchange.creditAmount;
+      for (const fig of exchange.offeredFigurines) {
+        const existing = album.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (existing) existing.count += 1;
+        else {
+          const dbFigurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+          album.figurine.push({ idMarvel: dbFigurina.idMarvel, name: dbFigurina.name, image: dbFigurina.image, count: 1 });
+        }
+      }
+      for (const fig of exchange.requestedFigurines) {
+        const existing = ownerAlbum.figurine.find(f => f.idMarvel === fig.idMarvel);
+        if (existing) existing.count += 1;
+        else {
+          const dbFigurina = await Figurina.findOne({ idMarvel: fig.idMarvel });
+          ownerAlbum.figurine.push({ idMarvel: dbFigurina.idMarvel, name: dbFigurina.name, image: dbFigurina.image, count: 1 });
+        }
+      }
+    }
+
+    await album.save();
+    await ownerAlbum.save();
+    await user.save();
+    await owner.save();
+
+    exchange.status = 'accepted';
+    await exchange.save();
+
+    res.status(200).json({ message: 'Scambio accettato con successo', exchange });
+
+  } catch (error) {
+    console.error('Errore nell accettare lo scambio:', error);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
 };
+
+
+
+
+
+
+
 
 
 

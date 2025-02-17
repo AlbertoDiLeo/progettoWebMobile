@@ -1,7 +1,7 @@
 
 
 const token = localStorage.getItem('token');
-console.log(token);
+//console.log(token);
 
 let multiploOffertiSelect;
 let multiploRichiestiSelect;
@@ -176,6 +176,9 @@ function populateSelects(album, tipoScambio) {
       if (response.ok) {
         showNotification('Scambio creato con successo!', 'success');
         loadProposedExchanges(); // Aggiorna la lista
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       } else {
         showNotification(`Errore: ${result.message}`, 'danger');
       }
@@ -220,7 +223,7 @@ async function loadProposedExchanges() {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const exchanges = await response.json();
-  
+      const pendingExchanges = exchanges.filter(e => e.status === 'pending');
       const container = document.getElementById('proposedExchanges');
       container.innerHTML = ''; // Pulisce il contenitore
       const noMessage = document.getElementById('noProposedExchangesMessage');
@@ -232,7 +235,7 @@ async function loadProposedExchanges() {
         noMessage.classList.add('d-none');
       }
   
-      exchanges.forEach(exchange => {
+      pendingExchanges.forEach(exchange => {
         const template = document.getElementById('exchangeCardTemplate');
         const clone = template.cloneNode(true);
         clone.classList.remove('d-none');
@@ -276,6 +279,9 @@ async function withdrawExchange(exchangeId, cardElement) {
       if (response.ok) {
         showNotification('Scambio ritirato con successo!', 'success');
         cardElement.remove(); // Rimuove la card dall'interfaccia
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       } else {
         showNotification(`Errore: ${result.message}`, 'danger');
       }
