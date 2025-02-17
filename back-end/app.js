@@ -12,7 +12,7 @@ const exchangeRoutes = require('./routes/exchangeRoutes');
 //const Figurina = require("./models/figurina");
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./config/swagger-output.json');
+const swaggerDocument = require('./docs/swagger-output.json');
 
 const app = express();
 
@@ -41,10 +41,10 @@ console.log('Swagger disponibile su http://localhost:3000/api-docs');
 };
 resetFigurine();*/
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
     console.log(`Richiesta ricevuta: ${req.method} ${req.url}`);
     next();
-});
+});*/
 
 
 

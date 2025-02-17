@@ -88,7 +88,7 @@ const doc = {
   schemes: ['http']
 };
 
-const outputFile = './config/swagger-output.json'; 
+const outputFile = './docs/swagger-output.json'; 
 const routes = ['./app.js']; 
 
 swaggerAutogen(outputFile, routes, doc);

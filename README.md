@@ -51,7 +51,7 @@ progetto-afse/
 │   │   ├── albumRoutes.js           # Rotte per gestione album 
 |   |   ├── marvelRoutes.js          # Rotte per figurine marvel
 |   |   └── exchangeRoutes.js        # Rotte per scambi figurine
-│   ├── config/
+│   ├── docs/
 │   │   ├── swagger.json             # Documentazione delle API con Swagger
 |   |   └──swagger-output.json       # Documentazione delle API con Swagger
 │   ├── app.js                       # Configurazione principale di Node.js
