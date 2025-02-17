@@ -226,9 +226,8 @@ async function loadProposedExchanges() {
   
       const container = document.getElementById('proposedExchanges');
       container.innerHTML = ''; // Pulisce il contenitore
-
+      const noMessage = document.getElementById('noProposedExchangesMessage');
       if (exchanges.length === 0) {
-        const noMessage = document.getElementById('noProposedExchangesMessage');
         noMessage.textContent = 'Non hai ancora proposto nessuno scambio';
         noMessage.classList.remove('d-none');
         return;
